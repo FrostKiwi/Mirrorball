@@ -1,8 +1,8 @@
 CC=cc
-CFLAGS=-pipe -O2 -s -flto -Wall $$(pkg-config --static --cflags glfw3 cglm) -DGLEW_STATIC
+CFLAGS=-pipe -O2 -s -flto=12 -Wall $$(pkg-config --static --cflags glfw3 cglm) -DGLEW_STATIC
 INC=-I inc
 LIBS=-lopengl32 -lole32 -lgdi32 -luuid -lpthread -lm $$(pkg-config --static --libs glfw3 cglm) -static
-EXTRA=lib/icon.res lib/version.res
+EXTRA=lib/windows_icon.res lib/windows_version.res lib/windows_libnfd.a
 
 # If resources are present, generate the resource file res.o
 ifneq (,$(shell find res -type f | tr '\n' ' '))
@@ -28,7 +28,7 @@ NM_STRUCT=$$($(NM_SIZE) | sed -e 's/size A /start, /' -e 's/$$/};/' -e 's/.*_sta
 # Format size lines to get extern definitions
 NM_EXTERN=$$($(NM_SIZE) | sed -e 's/_size .*/_start[];/' -e 's/^/extern const char /')
 # Struct definition
-RES_STRUCT=\#ifndef RESDEF\n\#define RESDEF\nstruct resource { const char * pnt; const int size; };\n\#endif
+RES_STRUCT=struct resource { const char * pnt; const int size; };\n
 # File Message
 RES_MSG=/* auto-generated resource handler, kinda awesome :] */
 # Git log info of last commit
@@ -37,17 +37,17 @@ GIT_DATE=static const char * LAST_COMMIT_DATE = \"$(shell git log -1 --pretty=fo
 GIT_MSG=static const char * LAST_COMMIT_MSG = \"$(shell git log -1 --pretty=%B)\";
 
 obj/res.o: $(shell find res -type f | tr '\n' ' ')
-	@mkdir -p bin obj obj/external
+	@mkdir -p obj
 	@echo -e "\033[96m-- Updating resources --\033[0m"
 #	cd first, to prevent ld from generating _res_ prefixes
 	cd res; ld -r -b binary $(shell cd res; find * -type f | tr '\n' ' ') -o ../$@
 	@stat -c "%s" obj/res.o | numfmt --to=iec | xargs -0 printf "\033[92mResource name list\033[0m - total resource binary size: %s"
 	@nm $@ | sed -E '/size$$/d;s/[^ ]* D* //;s/_binary_//;s/_end//;s/_start//' | sed -n 'n;p' | xargs -0 printf "\033[94m%s\033[0m"
-	@echo -e "$(RES_MSG)\n\n$(GIT_AUTHOR)\n$(GIT_DATE)\n$(GIT_MSG)\n\n$(RES_STRUCT)\n\n$(NM_EXTERN)\n\n$(NM_STRUCT)" > inc/res.h
+	@echo -e "$(RES_MSG)\n\n#ifndef RESDEF\n#define RESDEF\n$(GIT_AUTHOR)\n$(GIT_DATE)\n$(GIT_MSG)\n\n$(RES_STRUCT)\n\n$(NM_EXTERN)\n\n$(NM_STRUCT)\n#endif" > inc/res.h
 
 .PHONY: clean run
 run:
 	@bin/main
 clean:
 	@echo *scrub scrub*
-	rm -f bin/* obj/*
+	rm -f bin/* obj/* inc/res.h
