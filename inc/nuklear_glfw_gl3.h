@@ -132,8 +132,8 @@ nk_glfw3_device_create(struct nk_glfw* glfw)
     dev->prog = glCreateProgram();
     dev->vert_shdr = glCreateShader(GL_VERTEX_SHADER);
     dev->frag_shdr = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(dev->vert_shdr, 1, &nuklear_vertex.pnt, &nuklear_vertex.size);
-    glShaderSource(dev->frag_shdr, 1, &nuklear_fragment.pnt, &nuklear_fragment.size);
+    glShaderSource(dev->vert_shdr, 1, &nuklear_vert.pnt, &nuklear_vert.size);
+    glShaderSource(dev->frag_shdr, 1, &nuklear_frag.pnt, &nuklear_frag.size);
     glCompileShader(dev->vert_shdr);
     glCompileShader(dev->frag_shdr);
     glGetShaderiv(dev->vert_shdr, GL_COMPILE_STATUS, &status);
@@ -226,7 +226,8 @@ nk_glfw3_render(struct nk_glfw* glfw, enum nk_anti_aliasing AA, int max_vertex_b
     /* setup global state */
     glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    /* glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); */
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, 1, 1);
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_SCISSOR_TEST);

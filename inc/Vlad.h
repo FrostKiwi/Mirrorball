@@ -475,6 +475,9 @@ void gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity,
 		      GLsizei length, GLchar const* message,
 		      void const* user_param)
 {
+    /* Ignore low priority things. */
+    if(severity == GL_DEBUG_SEVERITY_NOTIFICATION || type == GL_DEBUG_TYPE_OTHER)
+	return;
     char * src_str = NULL;
     char * svr_str = NULL;
     switch (source){
@@ -524,6 +527,7 @@ void gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity,
     case GL_DEBUG_SEVERITY_HIGH:
 	svr_str = TXT_RED "High" TXT_OFF; break;
     }
+    
     printf("Severity: %s - Message origin: %s\n", svr_str, src_str);
     puts(message);
 }
