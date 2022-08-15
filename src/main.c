@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
+#include <inttypes.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include "res.h"
 #define VLAD_STD
@@ -19,6 +22,25 @@
 #include "nuklear.h"
 #include "nuklear_glfw_gl3.h"
 #include "cglm/cglm.h"
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+
+// print out the steps and errors
+static void logging(const char *fmt, ...);
+// decode packets into frames
+static int decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pFrame);
+
+
+
+static void logging(const char *fmt, ...)
+{
+    /* va_list args; */
+    /* fprintf( stderr, "LOG: " ); */
+    /* va_start( args, fmt ); */
+    /* vfprintf( stderr, fmt, args ); */
+    /* va_end( args ); */
+    /* fprintf( stderr, "\n" ); */
+}
 
 /* Global state */
 struct{
@@ -52,6 +74,9 @@ struct crop_rect {
 struct channel {
     bool enabled;
     GLuint tex;
+    GLuint tex_Y;
+    GLuint tex_U;
+    GLuint tex_V;
     int width;
     int height;
     int color_depth;
@@ -72,7 +97,105 @@ struct channel {
 	GLint crop;
 	GLint scaler;
     }projection_shader;
+
+    /* Video struct */
+    bool video;
+    AVFrame *pFrame;
+    AVPacket *pPacket;
+    AVCodecContext *pCodecContext;
+    AVFormatContext *pFormatContext;
+    AVCodec *pCodec;
+    AVCodecParameters *pCodecParameters;
+    AVCodecParameters *pLocalCodecParameters;
+    AVCodec *pLocalCodec;
+    int video_stream_index;
+    struct {
+	GLuint shader;
+	GLint aspect_w;
+	GLint aspect_h;	
+	GLint crop;
+    }vid_crop_shader;
+    struct {
+	GLuint shader;
+	GLint pos;
+	GLint viewray;
+	GLint crop;
+	GLint scaler;
+    }vid_projection_shader;
 };
+
+void fetch_frame(struct channel *ch)
+{
+    av_read_frame(ch->pFormatContext, ch->pPacket);
+
+    // if it's the video stream
+    if (ch->pPacket->stream_index == ch->video_stream_index) {
+	logging("AVPacket->pts %" PRId64, ch->pPacket->pts);
+		
+	int response = avcodec_send_packet(ch->pCodecContext, ch->pPacket);
+
+	if (response < 0) {
+	    logging("Error while sending a packet to the decoder: %s", av_err2str(response));
+	}
+
+	while (response >= 0)
+	    {
+		// Return decoded output data (into a frame) from a decoder
+		// https://ffmpeg.org/doxygen/trunk/group__lavc__decoding.html#ga11e6542c4e66d3028668788a1a74217c
+		response = avcodec_receive_frame(ch->pCodecContext, ch->pFrame);
+
+		if (response == AVERROR(EAGAIN) || response == AVERROR_EOF) {
+		    break;
+		} else if (response < 0) {
+		    logging("Error while receiving a frame from the decoder: %s", av_err2str(response));
+		}
+
+		if (response >= 0) {
+		    logging(
+			"Frame %d (type=%c, size=%d bytes, format=%d) pts %d key_frame %d [DTS %d]",
+			ch->pCodecContext->frame_number,
+			av_get_picture_type_char(ch->pFrame->pict_type),
+			ch->pFrame->pkt_size,
+			ch->pFrame->format,
+			ch->pFrame->pts,
+			ch->pFrame->key_frame,
+			ch->pFrame->coded_picture_number
+			);
+
+		    // Check if the frame is a planar YUV 4:2:0, 12bpp
+		    // That is the format of the provided .mp4 file
+		    // RGB formats will definitely not give a gray image
+		    // Other YUV image may do so, but untested, so give a warning
+		    glActiveTexture(GL_TEXTURE0);
+		    glBindTexture(GL_TEXTURE_2D, ch->tex_Y);
+		    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, ch->width, ch->height, GL_RED,
+				    GL_UNSIGNED_BYTE, ch->pFrame->data[0]);
+
+		    glActiveTexture(GL_TEXTURE1);
+		    glBindTexture(GL_TEXTURE_2D, ch->tex_U);
+		    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, ch->width/2, ch->height/2, GL_RED,
+				    GL_UNSIGNED_BYTE, ch->pFrame->data[1]);
+
+		    glActiveTexture(GL_TEXTURE2);
+		    glBindTexture(GL_TEXTURE_2D, ch->tex_V);
+		    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, ch->width/2, ch->height/2, GL_RED,
+				    GL_UNSIGNED_BYTE, ch->pFrame->data[2]);
+		}
+	    }
+	// https://ffmpeg.org/doxygen/trunk/group__lavc__packet.html#ga63d5a489b419bd5d45cfd09091cbcbc2
+    }
+    av_packet_unref(ch->pPacket);
+
+    double fps = (double)(ch->pFormatContext->streams[ch->video_stream_index]->r_frame_rate.num)/
+	(double)(ch->pFormatContext->streams[ch->video_stream_index]->r_frame_rate.den);
+    double dur = (double)ch->pFormatContext->duration / (double)AV_TIME_BASE;
+    dur = dur - 0.5;
+    printf("%f, %f\n", fps, dur);
+    if ((double)ch->pCodecContext->frame_number > (dur * fps) ) {
+	av_seek_frame(ch->pFormatContext, ch->video_stream_index, 0, 0);
+	ch->pCodecContext->frame_number = 0;
+    }
+}
 
 bool load_channel_image(struct channel *ch)
 {
@@ -111,6 +234,210 @@ bool load_channel_image(struct channel *ch)
     }
 }
 
+bool load_channel_video(struct channel *ch)
+{
+    avformat_close_input(&ch->pFormatContext);
+    av_packet_free(&ch->pPacket);
+    av_frame_free(&ch->pFrame);
+    avcodec_free_context(&ch->pCodecContext);
+    
+    nfdchar_t *outPath;
+    nfdfilteritem_t filterItem[2] = { { "Videos", "mp4,m4v,avi,mov" }, {"All Files", "*" } };
+    nfdresult_t result = NFD_OpenDialog(&outPath, filterItem, 2, NULL);
+    if (result == NFD_OKAY){
+
+	    // Allocating memory for this component
+	    // http://ffmpeg.org/doxygen/trunk/structAVFormatContext.html
+	    ch->pFormatContext = avformat_alloc_context();
+	if (!ch->pFormatContext) {
+	    logging("ERROR could not allocate memory for Format Context");
+	    return -1;
+	}
+
+	logging("opening the input file (%s) and loading format (container) header", outPath);
+	// Open the file and read its header. The codecs are not opened.
+	// The function arguments are:
+	// AVFormatContext (the component we allocated memory for),
+	// url (filename),
+	// AVInputFormat (if you pass NULL it'll do the auto detect)
+	// and AVDictionary (which are options to the demuxer)
+	// http://ffmpeg.org/doxygen/trunk/group__lavf__decoding.html#ga31d601155e9035d5b0e7efedc894ee49
+	if (avformat_open_input(&ch->pFormatContext, outPath, NULL, NULL) != 0) {
+	    logging("ERROR could not open the file");
+	    return -1;
+	}
+
+	// now we have access to some information about our file
+	// since we read its header we can say what format (container) it's
+	// and some other information related to the format itself.
+	logging("format %s, duration %lld us, bit_rate %lld", ch->pFormatContext->iformat->name, ch->pFormatContext->duration, ch->pFormatContext->bit_rate);
+
+	logging("finding stream info from format");
+	// read Packets from the Format to get stream information
+	// this function populates pFormatContext->streams
+	// (of size equals to pFormatContext->nb_streams)
+	// the arguments are:
+	// the AVFormatContext
+	// and options contains options for codec corresponding to i-th stream.
+	// On return each dictionary will be filled with options that were not found.
+	// https://ffmpeg.org/doxygen/trunk/group__lavf__decoding.html#gad42172e27cddafb81096939783b157bb
+	if (avformat_find_stream_info(ch->pFormatContext,  NULL) < 0) {
+	    logging("ERROR could not get the stream info");
+	    return -1;
+	}
+
+	// the component that knows how to enCOde and DECode the stream
+	// it's the codec (audio or video)
+	// http://ffmpeg.org/doxygen/trunk/structAVCodec.html
+	ch->pCodec = NULL;
+	// this component describes the properties of a codec used by the stream i
+	// https://ffmpeg.org/doxygen/trunk/structAVCodecParameters.html
+	ch->pCodecParameters =  NULL;
+	ch->video_stream_index = -1;
+
+	// loop though all the streams and print its main information
+	for (int i = 0; i < ch->pFormatContext->nb_streams; i++)
+	    {
+		ch->pLocalCodecParameters =  NULL;
+		ch->pLocalCodecParameters = ch->pFormatContext->streams[i]->codecpar;
+		logging("AVStream->time_base before open coded %d/%d", ch->pFormatContext->streams[i]->time_base.num, ch->pFormatContext->streams[i]->time_base.den);
+		logging("AVStream->r_frame_rate before open coded %d/%d", ch->pFormatContext->streams[i]->r_frame_rate.num, ch->pFormatContext->streams[i]->r_frame_rate.den);
+		logging("AVStream->start_time %" PRId64, ch->pFormatContext->streams[i]->start_time);
+		logging("AVStream->duration %" PRId64, ch->pFormatContext->streams[i]->duration);
+
+		logging("finding the proper decoder (CODEC)");
+
+		ch->pLocalCodec = NULL;
+
+		// finds the registered decoder for a codec ID
+		// https://ffmpeg.org/doxygen/trunk/group__lavc__decoding.html#ga19a0ca553277f019dd5b0fec6e1f9dca
+		ch->pLocalCodec = avcodec_find_decoder(ch->pLocalCodecParameters->codec_id);
+
+		if (ch->pLocalCodec==NULL) {
+		    logging("ERROR unsupported codec!");
+		    // In this example if the codec is not found we just skip it
+		    continue;
+		}
+
+		// when the stream is a video we store its index, codec parameters and codec
+		if (ch->pLocalCodecParameters->codec_type == AVMEDIA_TYPE_VIDEO) {
+		    if (ch->video_stream_index == -1) {
+			ch->video_stream_index = i;
+			ch->pCodec = ch->pLocalCodec;
+			ch->pCodecParameters = ch->pLocalCodecParameters;
+		    }
+
+		    logging("Video Codec: resolution %d x %d", ch->pLocalCodecParameters->width, ch->pLocalCodecParameters->height);
+		} else if (ch->pLocalCodecParameters->codec_type == AVMEDIA_TYPE_AUDIO) {
+		    logging("Audio Codec: %d channels, sample rate %d", ch->pLocalCodecParameters->channels, ch->pLocalCodecParameters->sample_rate);
+		}
+
+		// print its name, id and bitrate
+		logging("\tCodec %s ID %d bit_rate %lld", ch->pLocalCodec->name, ch->pLocalCodec->id, ch->pLocalCodecParameters->bit_rate);
+	    }
+
+	if (ch->video_stream_index == -1) {
+	    logging("File %s does not contain a video stream!", outPath);
+	    return -1;
+	}
+
+	// https://ffmpeg.org/doxygen/trunk/structAVCodecContext.html
+	ch->pCodecContext = avcodec_alloc_context3(ch->pCodec);
+	if (!ch->pCodecContext)
+	    {
+		logging("failed to allocated memory for AVCodecContext");
+		return -1;
+	    }
+
+	// Fill the codec context based on the values from the supplied codec parameters
+	// https://ffmpeg.org/doxygen/trunk/group__lavc__core.html#gac7b282f51540ca7a99416a3ba6ee0d16
+	if (avcodec_parameters_to_context(ch->pCodecContext, ch->pCodecParameters) < 0)
+	    {
+		logging("failed to copy codec params to codec context");
+		return -1;
+	    }
+
+	// Initialize the AVCodecContext to use the given AVCodec.
+	// https://ffmpeg.org/doxygen/trunk/group__lavc__core.html#ga11f785a188d7d9df71621001465b0f1d
+	ch->pCodecContext->thread_count = 8;
+	ch->pCodecContext->thread_type = FF_THREAD_FRAME;
+	if (avcodec_open2(ch->pCodecContext, ch->pCodec, NULL) < 0)
+	    {
+		logging("failed to open codec through avcodec_open2");
+		return -1;
+	    }
+
+	// https://ffmpeg.org/doxygen/trunk/structAVFrame.html
+	ch->pFrame = av_frame_alloc();
+	if (!ch->pFrame)
+	    {
+		logging("failed to allocate memory for AVFrame");
+		return -1;
+	    }
+	// https://ffmpeg.org/doxygen/trunk/structAVPacket.html
+	ch->pPacket = av_packet_alloc();
+	if (!ch->pPacket)
+	    {
+		logging("failed to allocate memory for AVPacket");
+		return -1;
+	    }
+
+	/* int response = 0; */
+	/* int how_many_packets_to_process = 8; */
+
+	// fill the Packet with data from the Stream
+	// https://ffmpeg.org/doxygen/trunk/group__lavf__decoding.html#ga4fdb3084415a82e3810de6ee60e46a61
+	/* int outer_response = 0; */
+	/* while (av_read_frame(ch->pFormatContext, pPacket) >= 0) */
+	/*     { */
+	/* 	// if it's the video stream */
+	/* 	if (pPacket->stream_index == video_stream_index) { */
+	/* 	    logging("AVPacket->pts %" PRId64, pPacket->pts); */
+	/* 	    outer_response = decode_packet(pPacket, ch->pCodecContext, ch->pFrame); */
+	/* 	    if (outer_response < 0) */
+	/* 		break; */
+	/* 	} */
+	/* 	// https://ffmpeg.org/doxygen/trunk/group__lavc__packet.html#ga63d5a489b419bd5d45cfd09091cbcbc2 */
+	/* 	av_packet_unref(pPacket); */
+	/*     } */
+
+	ch->width = ch->pLocalCodecParameters->width; 
+	ch->height = ch->pLocalCodecParameters->height;
+	glDeleteTextures(1, &ch->tex_Y);
+	glGenTextures(1, &ch->tex_Y);
+	glBindTexture(GL_TEXTURE_2D, ch->tex_Y);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, ch->width, ch->height, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glDeleteTextures(1, &ch->tex_U);
+	glGenTextures(1, &ch->tex_U);
+	glBindTexture(GL_TEXTURE_2D, ch->tex_U);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, ch->width/2, ch->height/2, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glDeleteTextures(1, &ch->tex_V);
+	glGenTextures(1, &ch->tex_V);
+	glBindTexture(GL_TEXTURE_2D, ch->tex_V);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, ch->width/2, ch->height/2, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	NFD_FreePath(outPath);
+	return true;
+    }
+    else if (result == NFD_CANCEL){
+	puts("User pressed cancel.");
+	return false;
+    }
+    else {
+	printf("Error: %s\n", NFD_GetError());
+	puts(TXT_RED "Error when opening a file, aborting!" TXT_OFF);
+	return false;
+    }
+}
+
 static void error_callback(int e, const char *d)
 {
     if(e != 65548)		/* Ignore the Wayland window size error */
@@ -121,7 +448,7 @@ static void keypress(GLFWwindow* win, int key, int scancode, int act, int mod)
 {
     /* Escape to close */
     if (key == GLFW_KEY_ESCAPE && act == GLFW_PRESS)
-        glfwSetWindowShouldClose(win, GLFW_TRUE);
+	glfwSetWindowShouldClose(win, GLFW_TRUE);
 }
 
 void load_icons(GLFWwindow * window)
@@ -153,7 +480,9 @@ int init(){
     load_icons(gctx.window);
     glfwMakeContextCurrent(gctx.window);
     glfwSetKeyCallback(gctx.window, keypress);
+    glfwSwapInterval(1);
     glewInit();
+    glPointSize(20);
 
     /* Some basic OpenGL Settings */
     print_glinfo();
@@ -295,12 +624,12 @@ int main(void){
 		     NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 		     NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
 	    ctx->style.button = buttonstock;
-            nk_layout_row_dynamic(ctx, 32, 1);
+	    nk_layout_row_dynamic(ctx, 32, 1);
 	    nk_style_set_font(ctx, &small->handle);
-            if (nk_button_label(ctx, "Reset camera rotation")) {
+	    if (nk_button_label(ctx, "Reset camera rotation")) {
 		glm_vec3_zero(gctx.camera_rotation);
-            }
-            if (nk_option_label(ctx, "Crop image", !projection)) projection = false;
+	    }
+	    if (nk_option_label(ctx, "Crop image", !projection)) projection = false;
 	    if (nk_option_label(ctx, "Project image", projection)) projection = true;
 	    
 	    /* Image Channls */
@@ -320,13 +649,14 @@ int main(void){
 		if (nk_button_label(ctx, "")) {
 		    if (load_channel_image(&ch1)) {
 			ch1.enabled = true;
+			ch1.video = false;
 			ch1.crop_shader.shader =
 			    compile_shader(photo_crop_vert.pnt, photo_crop_vert.size,
 					   photo_crop_frag.pnt, photo_crop_frag.size);
 			ch1.crop_shader.aspect_w = glGetUniformLocation(ch1.crop_shader.shader, "aspect_w");
 			ch1.crop_shader.aspect_h = glGetUniformLocation(ch1.crop_shader.shader, "aspect_h");
 			ch1.crop_shader.crop = glGetUniformLocation(ch1.crop_shader.shader, "crop");
-                        ch1.crop = (struct crop_rect){0};
+			ch1.crop = (struct crop_rect){0};
 			ch1.sphere_fov_deg = 360;
 
 			ch1.projection_shader.shader =
@@ -336,9 +666,29 @@ int main(void){
 			ch1.projection_shader.viewray = glGetAttribLocation(ch1.projection_shader.shader, "rayvtx");
 			ch1.projection_shader.scaler = glGetUniformLocation(ch1.projection_shader.shader, "scalar");
 			ch1.projection_shader.crop = glGetUniformLocation(ch1.projection_shader.shader, "crop");
-                    }
-                }
+		    }
+		}
 		if (nk_button_label(ctx, "")) {
+		    if (load_channel_video(&ch1)) {
+			ch1.video = true;
+			ch1.enabled = true;
+			ch1.vid_crop_shader.shader =
+			    compile_shader(video_crop_vert.pnt, video_crop_vert.size,
+					   video_crop_frag.pnt, video_crop_frag.size);
+			ch1.vid_crop_shader.aspect_w = glGetUniformLocation(ch1.vid_crop_shader.shader, "aspect_w");
+			ch1.vid_crop_shader.aspect_h = glGetUniformLocation(ch1.vid_crop_shader.shader, "aspect_h");
+			ch1.vid_crop_shader.crop = glGetUniformLocation(ch1.vid_crop_shader.shader, "crop");
+			ch1.crop = (struct crop_rect){0};
+			ch1.sphere_fov_deg = 360;
+
+			ch1.vid_projection_shader.shader =
+			    compile_shader(video_projection_vert.pnt, video_projection_vert.size,
+					   video_projection_frag.pnt, video_projection_frag.size);
+			ch1.vid_projection_shader.pos = glGetAttribLocation(ch1.vid_projection_shader.shader, "pos");
+			ch1.vid_projection_shader.viewray = glGetAttribLocation(ch1.vid_projection_shader.shader, "rayvtx");
+			ch1.vid_projection_shader.scaler = glGetUniformLocation(ch1.vid_projection_shader.shader, "scalar");
+			ch1.vid_projection_shader.crop = glGetUniformLocation(ch1.vid_projection_shader.shader, "crop");
+		    }
 		}
 		if (nk_button_label(ctx, "")) {
 		}
@@ -425,9 +775,9 @@ int main(void){
 	    glm_vec3_rotate_m4(gctx.camera_rotation_matrix, &viewrays[i+2], &viewrays[i+2]);
 	}
 
-        /* Render */
-        /* Channel 1 */
-        if (ch1.enabled && !projection) {
+	/* Render */
+	/* Channel 1 */
+	if (ch1.enabled && !projection && !ch1.video) {
 	    glActiveTexture(GL_TEXTURE0);
 	    glBindTexture(GL_TEXTURE_2D, ch1.tex);
 	    glUseProgram(ch1.crop_shader.shader);
@@ -445,19 +795,19 @@ int main(void){
 		glUniform1f(ch1.crop_shader.aspect_h, 1.0);
 		glUniform1f(ch1.crop_shader.aspect_w,
 			    ((float)postcrop_w / (float)postcrop_h) /
-                            ((float)gctx.window_w / (float)gctx.window_h));
+			    ((float)gctx.window_w / (float)gctx.window_h));
 	    } else {
 		glUniform1f(ch1.crop_shader.aspect_h,
 			    ((float)postcrop_h / (float)postcrop_w) /
-                            ((float)gctx.window_h / (float)gctx.window_w));
+			    ((float)gctx.window_h / (float)gctx.window_w));
 		glUniform1f(ch1.crop_shader.aspect_w, 1.0);
 	    }
 	    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	    glUseProgram(0);
 	    glActiveTexture(GL_TEXTURE0);
 	    glBindTexture(GL_TEXTURE_2D, 0);
-        }
-	if (ch1.enabled && projection) {
+	}
+	if (ch1.enabled && projection && !ch1.video) {
 	    vec4 crop;
 	    crop[0] = (1.0 / ch1.width) * (ch1.width / 2.0 + ch1.crop.left / 2.0 - ch1.crop.right / 2.0);
 	    crop[1] = (1.0 / ch1.height) * (ch1.height / 2.0 + ch1.crop.top / 2.0 - ch1.crop.bot / 2.0);
@@ -484,9 +834,75 @@ int main(void){
 	    glUseProgram(0);
 	    glActiveTexture(GL_TEXTURE0);
 	    glBindTexture(GL_TEXTURE_2D, 0);
+	}
+        if (ch1.enabled && ch1.video) {
+	    fetch_frame(&ch1);
         }
+        if(ch1.enabled && !projection && ch1.video){
+	    glUseProgram(ch1.vid_crop_shader.shader);
+	    glUniform1i(glGetUniformLocation(ch1.vid_crop_shader.shader, "sample_Y"), 0);
+	    glUniform1i(glGetUniformLocation(ch1.vid_crop_shader.shader, "sample_U"), 1);
+	    glUniform1i(glGetUniformLocation(ch1.vid_crop_shader.shader, "sample_V"), 2);
 
-        nk_glfw3_render(&glfw, NK_ANTI_ALIASING_ON, gctx.nk_max_vertex_buffer,
+            vec4 crop;
+	    int postcrop_w = ch1.width - (ch1.crop.left + ch1.crop.right);
+	    int postcrop_h = ch1.height - (ch1.crop.top + ch1.crop.bot);
+	    crop[0] = (1.0 / ch1.width) * ch1.crop.left;
+	    crop[1] = (1.0 / ch1.height) * ch1.crop.top;
+	    crop[2] = (1.0 / ch1.width) * postcrop_w;
+	    crop[3] = (1.0 / ch1.height) * postcrop_h;
+	    glUniform4fv(ch1.vid_crop_shader.crop, 1, &crop[0]);
+	    if (((float)postcrop_h / (float)postcrop_w) >
+		((float)gctx.window_h / (float)gctx.window_w)) {
+		glUniform1f(ch1.vid_crop_shader.aspect_h, 1.0);
+		glUniform1f(ch1.vid_crop_shader.aspect_w,
+			    ((float)postcrop_w / (float)postcrop_h) /
+			    ((float)gctx.window_w / (float)gctx.window_h));
+	    } else {
+		glUniform1f(ch1.vid_crop_shader.aspect_h,
+			    ((float)postcrop_h / (float)postcrop_w) /
+			    ((float)gctx.window_h / (float)gctx.window_w));
+		glUniform1f(ch1.vid_crop_shader.aspect_w, 1.0);
+	    }
+	    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	    glUseProgram(0);
+	    glActiveTexture(GL_TEXTURE0);
+	    glBindTexture(GL_TEXTURE_2D, 0);
+	    glActiveTexture(GL_TEXTURE1);
+	    glBindTexture(GL_TEXTURE_2D, 0);
+	    glActiveTexture(GL_TEXTURE2);
+	    glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	if(ch1.enabled && projection && ch1.video){
+	    vec4 crop;
+	    crop[0] = (1.0 / ch1.width) * (ch1.width / 2.0 + ch1.crop.left / 2.0 - ch1.crop.right / 2.0);
+	    crop[1] = (1.0 / ch1.height) * (ch1.height / 2.0 + ch1.crop.top / 2.0 - ch1.crop.bot / 2.0);
+	    crop[2] = (1.0 / ch1.width) * (ch1.width - ch1.crop.left / 1.0 - ch1.crop.right / 1.0);
+	    crop[3] = (1.0 / ch1.height) * (ch1.height - ch1.crop.top / 1.0 - ch1.crop.bot / 1.0);
+	    glUseProgram(ch1.vid_projection_shader.shader);
+	    glUniform1i(glGetUniformLocation(ch1.vid_projection_shader.shader, "sample_Y"), 0);
+	    glUniform1i(glGetUniformLocation(ch1.vid_projection_shader.shader, "sample_U"), 1);
+	    glUniform1i(glGetUniformLocation(ch1.vid_projection_shader.shader, "sample_V"), 2);
+
+	    glEnableVertexAttribArray(ch1.vid_projection_shader.pos);
+	    glEnableVertexAttribArray(ch1.vid_projection_shader.viewray);
+	    glUniform4fv(ch1.vid_projection_shader.crop, 1, crop);
+	    glBindBuffer(GL_ARRAY_BUFFER, viewrays_vbo);
+	    glBufferData(GL_ARRAY_BUFFER, sizeof(viewrays), viewrays, GL_DYNAMIC_DRAW);
+	    glVertexAttribPointer(ch1.vid_projection_shader.pos, 2, GL_FLOAT, GL_FALSE,
+				  5*sizeof(float), 0);
+	    glVertexAttribPointer(ch1.vid_projection_shader.viewray, 3, GL_FLOAT, GL_FALSE,
+				  5*sizeof(float), (void*)(2*sizeof(float)));
+	    glUniform1f(ch1.vid_projection_shader.scaler, ch1.sphere_fov);
+	    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	    glDisableVertexAttribArray(ch1.vid_projection_shader.pos);
+	    glDisableVertexAttribArray(ch1.vid_projection_shader.viewray);
+	    glBindBuffer(GL_ARRAY_BUFFER, 0);
+	    glUseProgram(0);
+	    glActiveTexture(GL_TEXTURE0);
+	    glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	nk_glfw3_render(&glfw, NK_ANTI_ALIASING_ON, gctx.nk_max_vertex_buffer,
 			gctx.nk_max_element_buffer);
 
 	glfwSwapBuffers(gctx.window);
@@ -495,6 +911,10 @@ int main(void){
 	glFinish();
     }
 
+    avformat_close_input(&ch1.pFormatContext);
+    av_packet_free(&ch1.pPacket);
+    av_frame_free(&ch1.pFrame);
+    avcodec_free_context(&ch1.pCodecContext);
     /* Cleanup */
     NFD_Quit();
     return 0;
