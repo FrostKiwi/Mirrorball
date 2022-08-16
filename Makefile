@@ -1,9 +1,8 @@
 CC=cc
-CFLAGS=-pipe -Ofast -flto=13 -Wall $$(pkg-config --static --cflags glfw3 cglm libavformat libavcodec) -DGLEW_STATIC
+CFLAGS=-pipe -Ofast -s -flto -Wall $$(pkg-config --cflags glfw3 cglm libavformat libavcodec libavutil) -DGLEW_STATIC
 INC=-I inc
-LIBS=-lopengl32 -lole32 -lgdi32 -luuid -lpthread -ldl -lm $$(pkg-config --static --libs glfw3 cglm libavformat libavcodec)
-EXTRA=lib/windows_icon.res lib/windows_version.res lib/windows_libnfd.a #lib/libavcodec.a lib/libavformat.a 
-
+LIBS=-lopengl32 -lole32 -lgdi32 -luuid -lpthread -ldl -lm $$(pkg-config --libs glfw3 cglm libavcodec libavformat libavutil)
+EXTRA=lib/windows_icon.res lib/windows_version.res lib/windows_libnfd.a
 # If resources are present, generate the resource file res.o
 ifneq (,$(shell find res -type f | tr '\n' ' '))
 RES=obj/res.o

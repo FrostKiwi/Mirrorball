@@ -594,6 +594,21 @@ int main(void){
 	else if( glfwGetKey(gctx.window, GLFW_KEY_2) == GLFW_PRESS){
 	    ch1.sphere_fov+= 0.0001 * mult;
 	}
+
+	if( glfwGetKey(gctx.window, GLFW_KEY_UP) == GLFW_PRESS &&
+	    gctx.camera_rotation[0] < M_PI / 2.0)
+	    gctx.camera_rotation[0] += 0.02*mult;
+	else if( glfwGetKey(gctx.window, GLFW_KEY_DOWN) == GLFW_PRESS &&
+		 gctx.camera_rotation[0] > M_PI / -2.0)
+	    gctx.camera_rotation[0] -= 0.02*mult;
+	if( glfwGetKey(gctx.window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	    gctx.camera_rotation[1] += 0.02*mult;
+	else if( glfwGetKey(gctx.window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	    gctx.camera_rotation[1] -= 0.02*mult;
+	if( glfwGetKey(gctx.window, GLFW_KEY_A) == GLFW_PRESS)
+	    gctx.camera_rotation[2] += 0.02*mult;
+	else if( glfwGetKey(gctx.window, GLFW_KEY_S) == GLFW_PRESS)
+	    gctx.camera_rotation[2] -= 0.02*mult;
       
 	/* Handle Gamepad state */
 	if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state)){
@@ -620,7 +635,7 @@ int main(void){
 	/* Build GUI */
 	nk_glfw3_new_frame(&glfw);
 
-	if (nk_begin(ctx, "Frostorama", nk_rect(50, 50, 400, 650),
+	if (nk_begin(ctx, "Frostorama", nk_rect(20, 20, 400, 770),
 		     NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 		     NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
 	    ctx->style.button = buttonstock;
@@ -642,10 +657,10 @@ int main(void){
 		nk_rule_horizontal(ctx, nk_rgb(176, 176, 176), nk_true);
 		nk_style_set_font(ctx, &small->handle);
 		nk_layout_row_dynamic(ctx, 24, 1);
-		nk_label_wrap(ctx, "Mirror ball as a photo, video or via capture card");
+		nk_label_wrap(ctx, "Mirror ball as a photo or video file.");
 		nk_style_set_font(ctx, &icons->handle);
 		ctx->style.button = buttongreen;
-		nk_layout_row_dynamic(ctx, 52, 3);
+		nk_layout_row_dynamic(ctx, 52, 2);
 		if (nk_button_label(ctx, "")) {
 		    if (load_channel_image(&ch1)) {
 			ch1.enabled = true;
@@ -690,8 +705,8 @@ int main(void){
 			ch1.vid_projection_shader.crop = glGetUniformLocation(ch1.vid_projection_shader.shader, "crop");
 		    }
 		}
-		if (nk_button_label(ctx, "")) {
-		}
+		/* if (nk_button_label(ctx, "")) { */
+		/* } */
 
 		/* Cropping */
 		nk_style_set_font(ctx, &big->handle);
@@ -730,22 +745,25 @@ int main(void){
 		nk_rule_horizontal(ctx, nk_rgb(176, 176, 176), nk_true);
 
 		nk_style_set_font(ctx, &small->handle);
+		nk_layout_row_dynamic(ctx, 20, 1);
+		nk_label(ctx, "If the mirror ball was captured not at horizon level,", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "correct it here, or camera control will be strange.", NK_TEXT_ALIGN_LEFT);
 		nk_layout_row_dynamic(ctx, 30, 1);
 		ch1.world_rotation[0] = glm_rad(nk_propertyf(ctx, "Pitch [offset in °]", -180, glm_deg(ch1.world_rotation[0]), 180, 1, 0.1));
 		ch1.world_rotation[1] = glm_rad(nk_propertyf(ctx, "Yaw [offset in °]", -180, glm_deg(ch1.world_rotation[1]), 180, 1, 0.1));
 		ch1.world_rotation[2] = glm_rad(nk_propertyf(ctx, "Roll [offset in °]", -180, glm_deg(ch1.world_rotation[2]), 180, 1, 0.1));
 
-		/* Color correction */
-		nk_style_set_font(ctx, &big->handle);
-		nk_layout_row_dynamic(ctx, 32, 1);
-		nk_label(ctx, "Color correction", NK_TEXT_ALIGN_LEFT);
-		nk_layout_row_dynamic(ctx, 4, 1);
-		nk_rule_horizontal(ctx, nk_rgb(176, 176, 176), nk_true);
+		/* /\* Color correction *\/ */
+		/* nk_style_set_font(ctx, &big->handle); */
+		/* nk_layout_row_dynamic(ctx, 32, 1); */
+		/* nk_label(ctx, "Color correction", NK_TEXT_ALIGN_LEFT); */
+		/* nk_layout_row_dynamic(ctx, 4, 1); */
+		/* nk_rule_horizontal(ctx, nk_rgb(176, 176, 176), nk_true); */
 
-		nk_style_set_font(ctx, &small->handle);
-		nk_layout_row_dynamic(ctx, 30, 2);
-		nk_label(ctx, "Saturation", NK_TEXT_CENTERED);
-		nk_label(ctx, "Gamma", NK_TEXT_CENTERED);
+		/* nk_style_set_font(ctx, &small->handle); */
+		/* nk_layout_row_dynamic(ctx, 30, 2); */
+		/* nk_label(ctx, "Saturation", NK_TEXT_CENTERED); */
+		/* nk_label(ctx, "Gamma", NK_TEXT_CENTERED); */
 		nk_tree_pop(ctx);
 	    }
 	}
