@@ -1,7 +1,9 @@
 CC=cc
-CFLAGS=-pipe -Ofast -s -flto -Wall $$(pkg-config --cflags glfw3 cglm libavformat libavcodec libavutil) -DGLEW_STATIC
 INC=-I inc
-LIBS=-lopengl32 -lole32 -lgdi32 -luuid -lpthread -ldl -lm $$(pkg-config --libs glfw3 cglm libavcodec libavformat libavutil)
+release : CFLAGS=-pipe -static -Ofast -s -flto=8 -Wall -DGLEW_STATIC
+release : LIBS=-lopengl32 -lole32 -lgdi32 -luser32 -luuid -lpthread -ldl -lm -lz -lglfw3 -lcglm -lbcrypt -latomic lib/windows_libavformat_rel.a lib/windows_libavcodec_rel.a lib/windows_libavutil_rel.a -Wl,--subsystem,windows
+debug : CFLAGS=-pipe -static -O0 -g -Wall -DGLEW_STATIC
+debug : LIBS=-lopengl32 -lole32 -lgdi32 -luser32 -luuid -lpthread -ldl -lm -lz -lglfw3 -lcglm -lbcrypt -latomic lib/windows_libavformat_dbg.a lib/windows_libavcodec_dbg.a lib/windows_libavutil_dbg.a
 EXTRA=lib/windows_icon.res lib/windows_version.res lib/windows_libnfd.a
 # If resources are present, generate the resource file res.o
 ifneq (,$(shell find res -type f | tr '\n' ' '))
@@ -9,7 +11,8 @@ RES=obj/res.o
 endif
 
 ### Linking ###
-build: $(patsubst src/%.c,obj/%.o,$(wildcard src/*.c)) $(RES) $(EXTRA)
+release debug: $(patsubst src/%.c,obj/%.o,$(wildcard src/*.c)) $(RES) $(EXTRA)
+	@mkdir -p bin
 	@echo -e " \033[96m-- linking binary --\033[0m"
 	$(CC) -o bin/main $^ $(CFLAGS) $(LIBS)
 
@@ -38,7 +41,7 @@ GIT_MSG=static const char * LAST_COMMIT_MSG = \"$(shell git log -1 --pretty=%B)\
 obj/res.o: $(shell find res -type f | tr '\n' ' ')
 	@mkdir -p obj
 	@echo -e "\033[96m-- Updating resources --\033[0m"
-#	cd first, to prevent ld from generating _res_ prefixes
+#	do a cd first, to prevent ld from generating _res_ prefixes
 	cd res; ld -r -b binary $(shell cd res; find * -type f | tr '\n' ' ') -o ../$@
 	@stat -c "%s" obj/res.o | numfmt --to=iec | xargs -0 printf "\033[92mResource name list\033[0m - total resource binary size: %s"
 	@nm $@ | sed -E '/size$$/d;s/[^ ]* D* //;s/_binary_//;s/_end//;s/_start//' | sed -n 'n;p' | xargs -0 printf "\033[94m%s\033[0m"
