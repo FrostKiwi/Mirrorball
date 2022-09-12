@@ -1,7 +1,7 @@
 # Frostorama
 https://user-images.githubusercontent.com/60887273/184802013-3c3d7848-9189-4c2a-a5ab-f31a1001bd7f.mp4
 
-This is a program to view mirror ball projections and part of a video series about a journey through math to understand it. The program will continously evolve and gain new abilities with each episode's release.
+This is a program to view mirror ball projections and part of a video series ( https://www.youtube.com/watch?v=wZeNap-q7BE ) about a journey through math to understand it. The program will continously evolve and gain new abilities with each episode's release.
 - Arrow Keys or Gamepad left joystick to control the camera.
 - Q/P or Gamepad right joystick to control zoom / field of view.
 ##
