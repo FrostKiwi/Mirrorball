@@ -2003,6 +2003,19 @@ NK_API void nk_window_show(struct nk_context*, const char *name, enum nk_show_st
 /// __cond__    | condition that has to be met to actually commit the visbility state change
 */
 NK_API void nk_window_show_if(struct nk_context*, const char *name, enum nk_show_states, int cond);
+/*/// #### nk_window_show_if
+/// Line for visual seperation. Draws a line with thickness determined by the current row height.
+/// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
+/// void nk_rule_horizontal(struct nk_context *ctx, struct nk_color color, NK_BOOL rounding)
+/// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+///
+/// Parameter       | Description
+/// ----------------|-------------------------------------------------------
+/// __ctx__         | Must point to an previously initialized `nk_context` struct
+/// __color__       | Color of the horizontal line
+/// __rounding__    | Whether or not to make the line round
+*/
+NK_API void nk_rule_horizontal(struct nk_context *ctx, struct nk_color color, nk_bool rounding);
 /* =============================================================================
  *
  *                                  LAYOUT
@@ -20713,7 +20726,15 @@ nk_window_set_focus(struct nk_context *ctx, const char *name)
     ctx->active = win;
 }
 
-
+NK_API void
+nk_rule_horizontal(struct nk_context *ctx, struct nk_color color, nk_bool rounding)
+{
+    struct nk_rect space;
+    enum nk_widget_layout_states state = nk_widget(&space, ctx);
+    struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
+    if (!state) return;
+    nk_fill_rect(canvas, space, rounding && space.h > 1.5f ? space.h / 2.0f : 0, color);
+}
 
 
 /* ===============================================================
