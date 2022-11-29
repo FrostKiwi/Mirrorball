@@ -78,7 +78,7 @@ static const GLchar *proj_vs =
 static const GLchar *proj_fs =
 	"#version 100\n"
 	"#define M_2SQRT2 2.8284271247461900976033774484194\n"
-	"precision mediump float;\n"
+	"precision mediump high;\n"
 	"varying vec3 Ray;\n"
 	"uniform vec4 crop;\n"
 	"uniform float scalar;\n"
@@ -199,12 +199,14 @@ struct
 	float fovmin;
 	float fovmax;
 	bool projection;
+	float interface_mult;
 } gctx = {
 	.fovmin = 10 * GLM_PIf / 180.0f,
 	.fovmax = 140 * GLM_PIf / 180.0f,
 	.fov = 100 * GLM_PIf / 180.0f,
 	.ch1.fov_deg = 360,
-	.projection = true};
+	.projection = false,
+	.interface_mult = 1};
 
 void load_texture(char *file)
 {
@@ -321,20 +323,20 @@ MainLoop(void *loopArg)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	/* GUI */
-	if (nk_begin(ctx, "Frost-O-Rama", nk_rect(20, 20, 400, 770),
+	if (nk_begin(ctx, "Frost-O-Rama", nk_rect(20 * gctx.interface_mult, 20 * gctx.interface_mult, 400 * gctx.interface_mult, 770 * gctx.interface_mult),
 				 NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 					 NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 	{
 		nk_style_set_font(ctx, gctx.std.handle);
-		nk_layout_row_dynamic(ctx, 32, 1);
+		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
 		if (nk_option_label(ctx, "Crop image", !gctx.projection))
 			gctx.projection = false;
 		if (nk_option_label(ctx, "Project image", gctx.projection))
 			gctx.projection = true;
 		nk_style_set_font(ctx, gctx.big.handle);
-		nk_layout_row_dynamic(ctx, 32, 1);
+		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
 		nk_label(ctx, "Input", NK_TEXT_ALIGN_LEFT);
-		nk_layout_row_dynamic(ctx, 4, 1);
+		nk_layout_row_dynamic(ctx, 4 * gctx.interface_mult, 1);
 		nk_rule_horizontal(ctx, nk_rgb(176, 176, 176), nk_true);
 		nk_style_set_font(ctx, gctx.std.handle);
 		if (nk_tree_push(ctx, NK_TREE_TAB, "Sample images", NK_MAXIMIZED))
@@ -347,13 +349,13 @@ MainLoop(void *loopArg)
 		if (nk_tree_push(ctx, NK_TREE_TAB, "Load Image from device", NK_MINIMIZED))
 		{
 			nk_style_set_font(ctx, gctx.std.handle);
-			nk_layout_row_dynamic(ctx, 22, 1);
+			nk_layout_row_dynamic(ctx, 22 * gctx.interface_mult, 1);
 			nk_label(ctx, "Load Mirror ball as a photo.", NK_TEXT_ALIGN_LEFT);
 			nk_label(ctx, "Only JPEG or PNG", NK_TEXT_ALIGN_LEFT);
 			nk_label(ctx, "(iPhones default to shooting .HEIC, please", NK_TEXT_ALIGN_LEFT);
 			nk_label(ctx, "convert or change to JPG in system settings)", NK_TEXT_ALIGN_LEFT);
 			nk_style_set_font(ctx, gctx.icons.handle);
-			nk_layout_row_dynamic(ctx, 64, 1);
+			nk_layout_row_dynamic(ctx, 64 * gctx.interface_mult, 1);
 			ctx->style.button.text_normal = nk_rgb(8, 166, 142);
 			ctx->style.button.text_hover = nk_rgb(8, 166, 142);
 			ctx->style.button.text_active = nk_rgb(8, 166, 142);
@@ -372,13 +374,13 @@ MainLoop(void *loopArg)
 		}
 		/* Cropping */
 		nk_style_set_font(ctx, gctx.big.handle);
-		nk_layout_row_dynamic(ctx, 32, 1);
+		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
 		nk_label(ctx, "Cropping", NK_TEXT_ALIGN_LEFT);
-		nk_layout_row_dynamic(ctx, 4, 1);
+		nk_layout_row_dynamic(ctx, 4 * gctx.interface_mult, 1);
 		nk_rule_horizontal(ctx, nk_rgb(176, 176, 176), nk_true);
 
 		nk_style_set_font(ctx, gctx.std.handle);
-		nk_layout_row_dynamic(ctx, 30, 1);
+		nk_layout_row_dynamic(ctx, 30 * gctx.interface_mult, 1);
 		nk_label(ctx, "Crop the image to the mirror ball's edge", NK_TEXT_ALIGN_LEFT);
 		nk_property_int(ctx, "Top [px]", 0, &gctx.ch1.crop.top, gctx.ch1.height / 2, 1, 1);
 		nk_property_int(ctx, "Bottom [px]", 0, &gctx.ch1.crop.bot, gctx.ch1.height / 2, 1, 1);
@@ -387,13 +389,13 @@ MainLoop(void *loopArg)
 
 		/* Distortion Correction */
 		nk_style_set_font(ctx, gctx.big.handle);
-		nk_layout_row_dynamic(ctx, 32, 1);
+		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
 		nk_label(ctx, "Distortion Correction", NK_TEXT_ALIGN_LEFT);
-		nk_layout_row_dynamic(ctx, 4, 1);
+		nk_layout_row_dynamic(ctx, 4 * gctx.interface_mult, 1);
 		nk_rule_horizontal(ctx, nk_rgb(176, 176, 176), nk_true);
 
 		nk_style_set_font(ctx, gctx.std.handle);
-		nk_layout_row_dynamic(ctx, 30, 1);
+		nk_layout_row_dynamic(ctx, 30 * gctx.interface_mult, 1);
 		nk_label(ctx, "For correcting distortion at the pole-point", NK_TEXT_ALIGN_LEFT);
 
 		nk_property_float(ctx, "Sphere's field of view [in °]", 180, &gctx.ch1.fov_deg, 360, 1, 0.1);
@@ -401,16 +403,16 @@ MainLoop(void *loopArg)
 
 		/* World rotation */
 		nk_style_set_font(ctx, gctx.big.handle);
-		nk_layout_row_dynamic(ctx, 32, 1);
+		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
 		nk_label(ctx, "World Rotation", NK_TEXT_ALIGN_LEFT);
-		nk_layout_row_dynamic(ctx, 4, 1);
+		nk_layout_row_dynamic(ctx, 4 * gctx.interface_mult, 1);
 		nk_rule_horizontal(ctx, nk_rgb(176, 176, 176), nk_true);
 
 		nk_style_set_font(ctx, gctx.std.handle);
-		nk_layout_row_dynamic(ctx, 20, 1);
+		nk_layout_row_dynamic(ctx, 20 * gctx.interface_mult, 1);
 		nk_label(ctx, "If the mirror ball was captured not at horizon level,", NK_TEXT_ALIGN_LEFT);
 		nk_label(ctx, "correct it here, or camera control will be strange.", NK_TEXT_ALIGN_LEFT);
-		nk_layout_row_dynamic(ctx, 30, 1);
+		nk_layout_row_dynamic(ctx, 30 * gctx.interface_mult, 1);
 		gctx.ch1.rotation[0] = glm_rad(nk_propertyf(ctx, "Pitch [offset in °]", -180, glm_deg(gctx.ch1.rotation[0]), 180, 1, 0.1));
 		gctx.ch1.rotation[1] = glm_rad(nk_propertyf(ctx, "Yaw [offset in °]", -180, glm_deg(gctx.ch1.rotation[1]), 180, 1, 0.1));
 		gctx.ch1.rotation[2] = glm_rad(nk_propertyf(ctx, "Roll [offset in °]", -180, glm_deg(gctx.ch1.rotation[2]), 180, 1, 0.1));
@@ -529,7 +531,7 @@ int main(int argc, char *argv[])
 	/* SDL setup */
 	SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "1");
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	win = SDL_CreateWindow("Demo",
+	win = SDL_CreateWindow("Frost-O-Rama",
 						   SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 						   WINDOW_WIDTH, WINDOW_HEIGHT,
 						   SDL_WINDOW_OPENGL |
@@ -546,6 +548,44 @@ int main(int argc, char *argv[])
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
 	ctx = nk_sdl_init(win);
+
+	load_texture("/res/room.jpg");
+	/* Setup Shaders */
+	gctx.crop_shader.shader = compile_shader(&crop_vs, &crop_fs);
+	gctx.projection_shader.shader = compile_shader(&proj_vs, &proj_fs);
+
+	glGenBuffers(1, &gctx.bgvbo);
+	glBindBuffer(GL_ARRAY_BUFFER, gctx.bgvbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(unitquadtex), unitquadtex, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, &gctx.rayvbo);
+
+	gctx.crop_shader.pos = glGetAttribLocation(gctx.crop_shader.shader, "pos");
+	gctx.crop_shader.coord = glGetAttribLocation(gctx.crop_shader.shader, "coord");
+	gctx.crop_shader.aspect_w = glGetUniformLocation(gctx.crop_shader.shader, "aspect_w");
+	gctx.crop_shader.aspect_h = glGetUniformLocation(gctx.crop_shader.shader, "aspect_h");
+	gctx.crop_shader.crop = glGetUniformLocation(gctx.crop_shader.shader, "crop");
+
+	gctx.projection_shader.pos = glGetAttribLocation(gctx.projection_shader.shader, "pos");
+	gctx.projection_shader.viewray = glGetAttribLocation(gctx.projection_shader.shader, "rayvtx");
+	gctx.projection_shader.scaler = glGetUniformLocation(gctx.projection_shader.shader, "scalar");
+	gctx.projection_shader.crop = glGetUniformLocation(gctx.projection_shader.shader, "crop");
+	
+	gctx.interface_mult = 1;
+	{
+		int win_width, win_height;
+		SDL_GetWindowSize(win, &win_width, &win_height);
+		if (win_width > 900 && win_height > 1500)
+		{
+			gctx.interface_mult = 2;
+		}
+	}
+
+	ctx->style.scrollv.rounding_cursor = 12 * gctx.interface_mult;
+	ctx->style.scrollv.rounding = 12 * gctx.interface_mult;
+	ctx->style.property.rounding = 12 * gctx.interface_mult;
+	ctx->style.window.scrollbar_size = nk_vec2(24 * gctx.interface_mult, 24 * gctx.interface_mult);
 	/* Really needs to be scoped the hell out of this file */
 	{
 		/* Fonts */
@@ -588,12 +628,12 @@ int main(int argc, char *argv[])
 		cfg_icons.pixel_snap = true;
 
 		nk_sdl_font_stash_begin(&atlas);
-		std = nk_font_atlas_add_from_file(
-			atlas, "/res/roboto.ttf", 22, &cfg_std);
-		big = nk_font_atlas_add_from_file(
-			atlas, "/res/roboto.ttf", 32, &cfg_big);
-		icons = nk_font_atlas_add_from_file(
-			atlas, "/res/icons.ttf", 46, &cfg_icons);
+			std = nk_font_atlas_add_from_file(
+				atlas, "/res/roboto.ttf", 22 * gctx.interface_mult, &cfg_std);
+			big = nk_font_atlas_add_from_file(
+				atlas, "/res/roboto.ttf", 32 * gctx.interface_mult, &cfg_big);
+			icons = nk_font_atlas_add_from_file(
+				atlas, "/res/icons.ttf", 46 * gctx.interface_mult, &cfg_icons);
 		nk_sdl_font_stash_end();
 
 		gctx.std.handle = &std->handle;
@@ -601,34 +641,6 @@ int main(int argc, char *argv[])
 		gctx.icons.handle = &icons->handle;
 		nk_style_set_font(ctx, gctx.std.handle);
 	}
-
-	ctx->style.scrollv.rounding_cursor = 12;
-	ctx->style.scrollv.rounding = 12;
-	ctx->style.property.rounding = 12;
-	ctx->style.window.scrollbar_size = nk_vec2(24, 24);
-
-	load_texture("/res/room.jpg");
-	/* Setup Shaders */
-	gctx.crop_shader.shader = compile_shader(&crop_vs, &crop_fs);
-	gctx.projection_shader.shader = compile_shader(&proj_vs, &proj_fs);
-
-	glGenBuffers(1, &gctx.bgvbo);
-	glBindBuffer(GL_ARRAY_BUFFER, gctx.bgvbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(unitquadtex), unitquadtex, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glGenBuffers(1, &gctx.rayvbo);
-
-	gctx.crop_shader.pos = glGetAttribLocation(gctx.crop_shader.shader, "pos");
-	gctx.crop_shader.coord = glGetAttribLocation(gctx.crop_shader.shader, "coord");
-	gctx.crop_shader.aspect_w = glGetUniformLocation(gctx.crop_shader.shader, "aspect_w");
-	gctx.crop_shader.aspect_h = glGetUniformLocation(gctx.crop_shader.shader, "aspect_h");
-	gctx.crop_shader.crop = glGetUniformLocation(gctx.crop_shader.shader, "crop");
-
-	gctx.projection_shader.pos = glGetAttribLocation(gctx.projection_shader.shader, "pos");
-	gctx.projection_shader.viewray = glGetAttribLocation(gctx.projection_shader.shader, "rayvtx");
-	gctx.projection_shader.scaler = glGetUniformLocation(gctx.projection_shader.shader, "scalar");
-	gctx.projection_shader.crop = glGetUniformLocation(gctx.projection_shader.shader, "crop");
 
 	emscripten_set_main_loop_arg(MainLoop, (void *)ctx, 0, nk_true);
 
