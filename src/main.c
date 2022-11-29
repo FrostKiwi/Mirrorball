@@ -276,8 +276,7 @@ MainLoop(void *loopArg)
 		if (evt.type == SDL_QUIT)
 			running = nk_false;
 		nk_sdl_handle_event(&evt);
-		/* 		if (!nk_window_is_any_hovered(ctx))
-				{
+		/*
 					switch (evt.type)
 					{
 					case SDL_MOUSEMOTION:
@@ -293,38 +292,74 @@ MainLoop(void *loopArg)
 				} */
 		switch (evt.type)
 		{
+			/* 		case SDL_KEYDOWN:
+					{
+						switch (evt.key.keysym.sym)
+						{
+						case SDLK_q:
+							gctx.fov -= 0.01;
+							break;
+						case SDLK_e:
+							gctx.fov += 0.01;
+							break;
+						case SDLK_UP:
+							gctx.camera_rotation[0] += 0.01;
+							if (gctx.camera_rotation[0] > M_PI / 2.0)
+								gctx.camera_rotation[0] = M_PI / 2.0;
+							if (gctx.camera_rotation[0] < M_PI / -2.0)
+								gctx.camera_rotation[0] = M_PI / -2.0;
+							break;
+						case SDLK_DOWN:
+							gctx.camera_rotation[0] -= 0.01;
+							if (gctx.camera_rotation[0] > M_PI / 2.0)
+								gctx.camera_rotation[0] = M_PI / 2.0;
+							if (gctx.camera_rotation[0] < M_PI / -2.0)
+								gctx.camera_rotation[0] = M_PI / -2.0;
+							break;
+						case SDLK_LEFT:	gctx.camera_rotation[1] -= 0.01; break;
+						case SDLK_RIGHT: gctx.camera_rotation[1] += 0.01; break;
+						}
+					} */
 		case SDL_FINGERDOWN:
-		{
-			gctx.camera_rotation[1] += evt.tfinger.x;
 
-			gctx.camera_rotation[0] -= evt.tfinger.y * 0.002;
-			if (gctx.camera_rotation[0] > M_PI / 2.0)
-				gctx.camera_rotation[0] = M_PI / 2.0;
-			if (gctx.camera_rotation[0] < M_PI / -2.0)
-				gctx.camera_rotation[0] = M_PI / -2.0;
+			if (!nk_window_is_any_hovered(ctx))
+			{
+				gctx.camera_rotation[1] -= evt.tfinger.dx * 0.01;
+
+				gctx.camera_rotation[0] -= evt.tfinger.dy * 0.01;
+				if (gctx.camera_rotation[0] > M_PI / 2.0)
+					gctx.camera_rotation[0] = M_PI / 2.0;
+				if (gctx.camera_rotation[0] < M_PI / -2.0)
+					gctx.camera_rotation[0] = M_PI / -2.0;
+			}
 			break;
 		}
-		}
 	}
-	/*     printf("cam rotaiton %f %f \n", gctx.camera_rotation[1], evt.tfinger.dx); */
 	nk_input_end(ctx);
 
-	/* if (!nk_window_is_any_hovered(ctx))
+	if (ctx->input.keyboard.keys[NK_KEY_LEFT].down && !ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
+		gctx.camera_rotation[1] += 0.05;
+	if (ctx->input.keyboard.keys[NK_KEY_RIGHT].down && !ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
+		gctx.camera_rotation[1] -= 0.05;
+	if (ctx->input.keyboard.keys[NK_KEY_UP].down)
+		gctx.camera_rotation[0] += 0.05;
+	if (ctx->input.keyboard.keys[NK_KEY_DOWN].down)
+		gctx.camera_rotation[0] -= 0.05;
+	if (ctx->input.keyboard.keys[NK_KEY_LEFT].down && ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
+		gctx.fov += 0.05;
+	if (ctx->input.keyboard.keys[NK_KEY_RIGHT].down && ctx->input.keyboard.keys[NK_KEY_SHIFT].down) 
+		gctx.fov -= 0.05;
+
+	if (gctx.camera_rotation[0] > M_PI / 2.0)
+		gctx.camera_rotation[0] = M_PI / 2.0;
+	if (gctx.camera_rotation[0] < M_PI / -2.0)
+		gctx.camera_rotation[0] = M_PI / -2.0;
+
+	if (!nk_window_is_any_hovered(ctx))
 	{
 		gctx.fov -= ctx->input.mouse.scroll_delta.y * 0.1;
-		if (ctx->input.mouse.buttons[NK_BUTTON_LEFT].down)
-		{
-
-			gctx.camera_rotation[0] -= ctx->input.mouse.delta.y * 0.002;
-			if (gctx.camera_rotation[0] > M_PI / 2.0)
-				gctx.camera_rotation[0] = M_PI / 2.0;
-			if (gctx.camera_rotation[0] < M_PI / -2.0)
-				gctx.camera_rotation[0] = M_PI / -2.0;
-
-			gctx.camera_rotation[1] -= ctx->input.mouse.delta.x * 0.002;
-		}
 	}
- */
+
 	/* Rotation input from mouse */
 
 	if (gctx.fov > gctx.fovmax)
@@ -343,7 +378,14 @@ MainLoop(void *loopArg)
 					 NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 	{
 		nk_style_set_font(ctx, gctx.std.handle);
+		nk_layout_row_dynamic(ctx, 18 * gctx.interface_mult, 1);
+		nk_label(ctx, "Arrow keys or Touch-Drag to", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "to move projection camera.", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "Shift + Arrows to Zoom", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "Click-Drag or Touch-Drag settings", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "to adjust the.", NK_TEXT_ALIGN_LEFT);
 		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
+		gctx.fov = glm_rad(nk_propertyf(ctx, "Virtual Camera Zoom [in °]", glm_deg(gctx.fovmin), glm_deg(gctx.fov), glm_deg(gctx.fovmax), 1, 0.5));
 		if (nk_option_label(ctx, "Crop image", !gctx.projection))
 			gctx.projection = false;
 		if (nk_option_label(ctx, "Project image", gctx.projection))
@@ -361,10 +403,10 @@ MainLoop(void *loopArg)
 			ctx->style.button.text_active = nk_rgb(175, 175, 175);
 			nk_tree_pop(ctx);
 		}
-		if (nk_tree_push(ctx, NK_TREE_TAB, "Load Image from device", NK_MINIMIZED))
+		if (nk_tree_push(ctx, NK_TREE_TAB, "Load Image from device", NK_MAXIMIZED))
 		{
 			nk_style_set_font(ctx, gctx.std.handle);
-			nk_layout_row_dynamic(ctx, 22 * gctx.interface_mult, 1);
+			nk_layout_row_dynamic(ctx, 18 * gctx.interface_mult, 1);
 			nk_label(ctx, "Load Mirror ball as a photo.", NK_TEXT_ALIGN_LEFT);
 			nk_label(ctx, "Only JPEG or PNG", NK_TEXT_ALIGN_LEFT);
 			nk_label(ctx, "(iPhones default to shooting .HEIC, please", NK_TEXT_ALIGN_LEFT);
