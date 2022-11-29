@@ -78,7 +78,7 @@ static const GLchar *proj_vs =
 static const GLchar *proj_fs =
 	"#version 100\n"
 	"#define M_2SQRT2 2.8284271247461900976033774484194\n"
-	"precision mediump high;\n"
+	"precision highp float;\n"
 	"varying vec3 Ray;\n"
 	"uniform vec4 crop;\n"
 	"uniform float scalar;\n"
@@ -291,25 +291,40 @@ MainLoop(void *loopArg)
 						  if(evt.type == SDL_MOUSEBUTTONDOWN)
 						  gctx.camera_rotation[1] += evt.tfinger.dx * 0.001;
 				} */
+		switch (evt.type)
+		{
+		case SDL_FINGERDOWN:
+		{
+			gctx.camera_rotation[1] += evt.tfinger.x;
+
+			gctx.camera_rotation[0] -= evt.tfinger.y * 0.002;
+			if (gctx.camera_rotation[0] > M_PI / 2.0)
+				gctx.camera_rotation[0] = M_PI / 2.0;
+			if (gctx.camera_rotation[0] < M_PI / -2.0)
+				gctx.camera_rotation[0] = M_PI / -2.0;
+			break;
+		}
+		}
 	}
 	/*     printf("cam rotaiton %f %f \n", gctx.camera_rotation[1], evt.tfinger.dx); */
 	nk_input_end(ctx);
-	if (!nk_window_is_any_hovered(ctx))
+
+	/* if (!nk_window_is_any_hovered(ctx))
 	{
 		gctx.fov -= ctx->input.mouse.scroll_delta.y * 0.1;
 		if (ctx->input.mouse.buttons[NK_BUTTON_LEFT].down)
 		{
-			/* Pitch */
+
 			gctx.camera_rotation[0] -= ctx->input.mouse.delta.y * 0.002;
 			if (gctx.camera_rotation[0] > M_PI / 2.0)
 				gctx.camera_rotation[0] = M_PI / 2.0;
 			if (gctx.camera_rotation[0] < M_PI / -2.0)
 				gctx.camera_rotation[0] = M_PI / -2.0;
-			/* Yaw  */
+
 			gctx.camera_rotation[1] -= ctx->input.mouse.delta.x * 0.002;
 		}
 	}
-
+ */
 	/* Rotation input from mouse */
 
 	if (gctx.fov > gctx.fovmax)
@@ -323,7 +338,7 @@ MainLoop(void *loopArg)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	/* GUI */
-	if (nk_begin(ctx, "Frost-O-Rama", nk_rect(20 * gctx.interface_mult, 20 * gctx.interface_mult, 400 * gctx.interface_mult, 770 * gctx.interface_mult),
+	if (nk_begin(ctx, "Frost-O-Rama", nk_rect(20 * gctx.interface_mult, 20 * gctx.interface_mult, 400 * gctx.interface_mult, 600 * gctx.interface_mult),
 				 NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 					 NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 	{
@@ -571,16 +586,8 @@ int main(int argc, char *argv[])
 	gctx.projection_shader.viewray = glGetAttribLocation(gctx.projection_shader.shader, "rayvtx");
 	gctx.projection_shader.scaler = glGetUniformLocation(gctx.projection_shader.shader, "scalar");
 	gctx.projection_shader.crop = glGetUniformLocation(gctx.projection_shader.shader, "crop");
-	
-	gctx.interface_mult = 1;
-	{
-		int win_width, win_height;
-		SDL_GetWindowSize(win, &win_width, &win_height);
-		if (win_width > 900 && win_height > 1500)
-		{
-			gctx.interface_mult = 2;
-		}
-	}
+
+	gctx.interface_mult = 1.4;
 
 	ctx->style.scrollv.rounding_cursor = 12 * gctx.interface_mult;
 	ctx->style.scrollv.rounding = 12 * gctx.interface_mult;
@@ -628,12 +635,12 @@ int main(int argc, char *argv[])
 		cfg_icons.pixel_snap = true;
 
 		nk_sdl_font_stash_begin(&atlas);
-			std = nk_font_atlas_add_from_file(
-				atlas, "/res/roboto.ttf", 22 * gctx.interface_mult, &cfg_std);
-			big = nk_font_atlas_add_from_file(
-				atlas, "/res/roboto.ttf", 32 * gctx.interface_mult, &cfg_big);
-			icons = nk_font_atlas_add_from_file(
-				atlas, "/res/icons.ttf", 46 * gctx.interface_mult, &cfg_icons);
+		std = nk_font_atlas_add_from_file(
+			atlas, "/res/roboto.ttf", 22 * gctx.interface_mult, &cfg_std);
+		big = nk_font_atlas_add_from_file(
+			atlas, "/res/roboto.ttf", 32 * gctx.interface_mult, &cfg_big);
+		icons = nk_font_atlas_add_from_file(
+			atlas, "/res/icons.ttf", 46 * gctx.interface_mult, &cfg_icons);
 		nk_sdl_font_stash_end();
 
 		gctx.std.handle = &std->handle;
