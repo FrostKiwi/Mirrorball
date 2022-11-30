@@ -243,6 +243,7 @@ EMSCRIPTEN_KEEPALIVE int load_file(uint8_t *buffer, size_t size)
 				 GL_UNSIGNED_BYTE, gctx.ch1.data);
 	stbi_image_free(gctx.ch1.data);
 	glm_vec3_zero(gctx.camera_rotation);
+	glm_vec3_zero(gctx.ch1.rotation);
 	gctx.ch1.fov_deg = 360;
 	gctx.fov = glm_rad(100);
 	gctx.ch1.crop.bot = gctx.ch1.crop.top = gctx.ch1.crop.left = gctx.ch1.crop.right = 0;
@@ -321,7 +322,11 @@ MainLoop(void *loopArg)
 						}
 					} */
 		case SDL_FINGERMOTION:
-			gctx.camera_rotation[1] += evt.tfinger.dx;
+			gctx.camera_rotation[1] += evt.tfinger.dx * 2.0;
+			gctx.camera_rotation[0] += evt.tfinger.dy * 2.0;
+			break;
+		case SDL_MULTIGESTURE:
+			gctx.fov += evt.mgesture.dDist;
 			break;
 		}
 	}
@@ -337,7 +342,7 @@ MainLoop(void *loopArg)
 		gctx.camera_rotation[0] -= 0.05;
 	if (ctx->input.keyboard.keys[NK_KEY_LEFT].down && ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
 		gctx.fov += 0.05;
-	if (ctx->input.keyboard.keys[NK_KEY_RIGHT].down && ctx->input.keyboard.keys[NK_KEY_SHIFT].down) 
+	if (ctx->input.keyboard.keys[NK_KEY_RIGHT].down && ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
 		gctx.fov -= 0.05;
 
 	if (gctx.camera_rotation[0] > M_PI / 2.0)
@@ -367,19 +372,22 @@ MainLoop(void *loopArg)
 				 NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 					 NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 	{
-		nk_style_set_font(ctx, gctx.std.handle);
 		nk_layout_row_dynamic(ctx, 18 * gctx.interface_mult, 1);
-		nk_label(ctx, "Arrow keys or Touch-Drag to", NK_TEXT_ALIGN_LEFT);
-		nk_label(ctx, "to move projection camera.", NK_TEXT_ALIGN_LEFT);
-		nk_label(ctx, "Shift + Arrows to Zoom", NK_TEXT_ALIGN_LEFT);
-		nk_label(ctx, "Click-Drag or Touch-Drag settings", NK_TEXT_ALIGN_LEFT);
-		nk_label(ctx, "to adjust the.", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "Switch to Projection here", NK_TEXT_ALIGN_LEFT);
+		nk_style_set_font(ctx, gctx.std.handle);
 		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
-		gctx.fov = glm_rad(nk_propertyf(ctx, "Virtual Camera Zoom [in °]", glm_deg(gctx.fovmin), glm_deg(gctx.fov), glm_deg(gctx.fovmax), 1, 0.5));
 		if (nk_option_label(ctx, "Crop image", !gctx.projection))
 			gctx.projection = false;
 		if (nk_option_label(ctx, "Project image", gctx.projection))
 			gctx.projection = true;
+		nk_layout_row_dynamic(ctx, 18 * gctx.interface_mult, 1);
+		nk_label(ctx, "Arrow keys on computer or Touch-Drag on Smartphones", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "to move the projection camera.", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "Shift + Arrows or pinch to zoom", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "Click-Drag or Touch-Drag to settings", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "like cropping and distortion correciton.", NK_TEXT_ALIGN_LEFT);
+		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
+		gctx.fov = glm_rad(nk_propertyf(ctx, "Virtual Camera Zoom [in °]", glm_deg(gctx.fovmin), glm_deg(gctx.fov), glm_deg(gctx.fovmax), 1, 0.5));
 		nk_style_set_font(ctx, gctx.big.handle);
 		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
 		nk_label(ctx, "Input", NK_TEXT_ALIGN_LEFT);
@@ -391,6 +399,60 @@ MainLoop(void *loopArg)
 			ctx->style.button.text_normal = nk_rgb(175, 175, 175);
 			ctx->style.button.text_hover = nk_rgb(175, 175, 175);
 			ctx->style.button.text_active = nk_rgb(175, 175, 175);
+			nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
+			if (nk_button_label(ctx, "Room"))
+			{
+				glm_vec3_zero(gctx.ch1.rotation);
+				glm_vec3_zero(gctx.camera_rotation);
+				load_texture("/res/room.jpg");
+				gctx.camera_rotation[1] = 1.5;
+				gctx.ch1.crop.top = 46;
+				gctx.ch1.crop.bot = 62;
+				gctx.ch1.crop.left = 45;
+				gctx.ch1.crop.right = 63;
+				gctx.ch1.fov_deg = 342;
+			}
+			if (nk_button_label(ctx, "Department Store"))
+			{
+				glm_vec3_zero(gctx.ch1.rotation);
+				glm_vec3_zero(gctx.camera_rotation);
+				load_texture("/res/store.jpg");
+				gctx.camera_rotation[0] = -0.5;
+				gctx.camera_rotation[1] = 1.5;
+				gctx.ch1.crop.top = 97;
+				gctx.ch1.crop.bot = 125;
+				gctx.ch1.crop.left = 102;
+				gctx.ch1.crop.right = 113;
+				gctx.ch1.rotation[0] = glm_rad(-88.3);
+				gctx.ch1.fov_deg = 310.29;
+			}
+			if (nk_button_label(ctx, "Human Mouth"))
+			{
+				glm_vec3_zero(gctx.ch1.rotation);
+				glm_vec3_zero(gctx.camera_rotation);
+				load_texture("/res/mouth.jpg");
+				gctx.camera_rotation[1] = 3;
+				gctx.ch1.crop.top = 567;
+				gctx.ch1.crop.bot = 538;
+				gctx.ch1.crop.left = 555;
+				gctx.ch1.crop.right =596;
+				gctx.ch1.fov_deg = 304;
+				gctx.ch1.rotation[0] = glm_rad(25);
+				gctx.ch1.rotation[2] = glm_rad(1);
+				gctx.fov = glm_rad(125);
+			}
+			if (nk_button_label(ctx, "HUGE Tokyo Ball"))
+			{
+				glm_vec3_zero(gctx.ch1.rotation);
+				glm_vec3_zero(gctx.camera_rotation);
+				load_texture("/res/tokyo.jpg");
+				gctx.camera_rotation[1] = 2;
+				gctx.ch1.crop.top = 32;
+				gctx.ch1.crop.bot = 39;
+				gctx.ch1.crop.left = 63;
+				gctx.ch1.crop.right = 17;
+				gctx.ch1.fov_deg = 306;
+			}
 			nk_tree_pop(ctx);
 		}
 		if (nk_tree_push(ctx, NK_TREE_TAB, "Load Image from device", NK_MAXIMIZED))
@@ -597,6 +659,13 @@ int main(int argc, char *argv[])
 	ctx = nk_sdl_init(win);
 
 	load_texture("/res/room.jpg");
+	gctx.camera_rotation[1] = 1.5;
+	gctx.ch1.crop.top = 46;
+	gctx.ch1.crop.bot = 62;
+	gctx.ch1.crop.left = 45;
+	gctx.ch1.crop.right = 63;
+	gctx.ch1.fov_deg = 342;
+
 	/* Setup Shaders */
 	gctx.crop_shader.shader = compile_shader(&crop_vs, &crop_fs);
 	gctx.projection_shader.shader = compile_shader(&proj_vs, &proj_fs);
