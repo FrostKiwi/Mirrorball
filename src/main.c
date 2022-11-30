@@ -461,6 +461,8 @@ MainLoop(void *loopArg)
 			nk_label(ctx, "Load Mirror ball as a photo, only JPEG or PNG!", NK_TEXT_ALIGN_LEFT);
 			nk_label(ctx, "(iPhones default to shooting .HEIC, please", NK_TEXT_ALIGN_LEFT);
 			nk_label(ctx, "convert or change to JPG in system settings)", NK_TEXT_ALIGN_LEFT);
+			nk_label(ctx, "Doesn't seem to work on iPhones yet :[", NK_TEXT_ALIGN_LEFT);
+			nk_label(ctx, "Android and Computers are fine...", NK_TEXT_ALIGN_LEFT);
 			nk_style_set_font(ctx, gctx.icons.handle);
 			nk_layout_row_dynamic(ctx, 64 * gctx.interface_mult, 1);
 			ctx->style.button.text_normal = nk_rgb(8, 166, 142);
