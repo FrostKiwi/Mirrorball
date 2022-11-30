@@ -385,8 +385,6 @@ MainLoop(void *loopArg)
 		nk_label(ctx, "Smartphones to move the projection camera.", NK_TEXT_ALIGN_LEFT);
 		nk_label(ctx, "Shift + Arrows or pinch to zoom", NK_TEXT_ALIGN_LEFT);
 		nk_label(ctx, "Click-Drag or Touch-Drag over settings", NK_TEXT_ALIGN_LEFT);
-		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
-		gctx.fov = glm_rad(nk_propertyf(ctx, "Virtual Camera Zoom [in °]", glm_deg(gctx.fovmin), glm_deg(gctx.fov), glm_deg(gctx.fovmax), 1, 0.5));
 		nk_style_set_font(ctx, gctx.big.handle);
 		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
 		nk_label(ctx, "Input", NK_TEXT_ALIGN_LEFT);
