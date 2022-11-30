@@ -320,18 +320,8 @@ MainLoop(void *loopArg)
 						case SDLK_RIGHT: gctx.camera_rotation[1] += 0.01; break;
 						}
 					} */
-		case SDL_FINGERDOWN:
-
-			if (!nk_window_is_any_hovered(ctx))
-			{
-				gctx.camera_rotation[1] -= evt.tfinger.dx * 0.01;
-
-				gctx.camera_rotation[0] -= evt.tfinger.dy * 0.01;
-				if (gctx.camera_rotation[0] > M_PI / 2.0)
-					gctx.camera_rotation[0] = M_PI / 2.0;
-				if (gctx.camera_rotation[0] < M_PI / -2.0)
-					gctx.camera_rotation[0] = M_PI / -2.0;
-			}
+		case SDL_FINGERMOTION:
+			gctx.camera_rotation[1] += evt.tfinger.dx;
 			break;
 		}
 	}
