@@ -326,7 +326,7 @@ MainLoop(void *loopArg)
 			gctx.camera_rotation[0] += evt.tfinger.dy * 2.0;
 			break;
 		case SDL_MULTIGESTURE:
-			gctx.fov += evt.mgesture.dDist;
+			gctx.fov -= evt.mgesture.dDist * 4;
 			break;
 		}
 	}
@@ -373,19 +373,18 @@ MainLoop(void *loopArg)
 					 NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 	{
 		nk_layout_row_dynamic(ctx, 18 * gctx.interface_mult, 1);
-		nk_label(ctx, "Switch to Projection here", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "Switch between Setup and Projection here", NK_TEXT_ALIGN_LEFT);
 		nk_style_set_font(ctx, gctx.std.handle);
-		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
+		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 2);
 		if (nk_option_label(ctx, "Crop image", !gctx.projection))
 			gctx.projection = false;
 		if (nk_option_label(ctx, "Project image", gctx.projection))
 			gctx.projection = true;
 		nk_layout_row_dynamic(ctx, 18 * gctx.interface_mult, 1);
-		nk_label(ctx, "Arrow keys on computer or Touch-Drag on Smartphones", NK_TEXT_ALIGN_LEFT);
-		nk_label(ctx, "to move the projection camera.", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "Arrow keys on computer or Touch-Drag on", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "Smartphones to move the projection camera.", NK_TEXT_ALIGN_LEFT);
 		nk_label(ctx, "Shift + Arrows or pinch to zoom", NK_TEXT_ALIGN_LEFT);
-		nk_label(ctx, "Click-Drag or Touch-Drag to settings", NK_TEXT_ALIGN_LEFT);
-		nk_label(ctx, "like cropping and distortion correciton.", NK_TEXT_ALIGN_LEFT);
+		nk_label(ctx, "Click-Drag or Touch-Drag over settings", NK_TEXT_ALIGN_LEFT);
 		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
 		gctx.fov = glm_rad(nk_propertyf(ctx, "Virtual Camera Zoom [in °]", glm_deg(gctx.fovmin), glm_deg(gctx.fov), glm_deg(gctx.fovmax), 1, 0.5));
 		nk_style_set_font(ctx, gctx.big.handle);
@@ -459,8 +458,7 @@ MainLoop(void *loopArg)
 		{
 			nk_style_set_font(ctx, gctx.std.handle);
 			nk_layout_row_dynamic(ctx, 18 * gctx.interface_mult, 1);
-			nk_label(ctx, "Load Mirror ball as a photo.", NK_TEXT_ALIGN_LEFT);
-			nk_label(ctx, "Only JPEG or PNG", NK_TEXT_ALIGN_LEFT);
+			nk_label(ctx, "Load Mirror ball as a photo, only JPEG or PNG!", NK_TEXT_ALIGN_LEFT);
 			nk_label(ctx, "(iPhones default to shooting .HEIC, please", NK_TEXT_ALIGN_LEFT);
 			nk_label(ctx, "convert or change to JPG in system settings)", NK_TEXT_ALIGN_LEFT);
 			nk_style_set_font(ctx, gctx.icons.handle);
