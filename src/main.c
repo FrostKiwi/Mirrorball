@@ -489,10 +489,10 @@ MainLoop(void *loopArg)
 		nk_style_set_font(ctx, gctx.std.handle);
 		nk_layout_row_dynamic(ctx, 30 * gctx.interface_mult, 1);
 		nk_label(ctx, "Crop the image to the mirror ball's edge", NK_TEXT_ALIGN_LEFT);
-		nk_property_int(ctx, "Top [px]", 0, &gctx.ch1.crop.top, gctx.ch1.height / 2, 1, 1);
-		nk_property_int(ctx, "Bottom [px]", 0, &gctx.ch1.crop.bot, gctx.ch1.height / 2, 1, 1);
-		nk_property_int(ctx, "Left [px]", 0, &gctx.ch1.crop.left, gctx.ch1.width / 2, 1, 1);
-		nk_property_int(ctx, "Right [px]", 0, &gctx.ch1.crop.right, gctx.ch1.width / 2, 1, 1);
+		nk_property_int(ctx, "Top [px]", 0, &gctx.ch1.crop.top, gctx.ch1.height / 2, 1, 4);
+		nk_property_int(ctx, "Bottom [px]", 0, &gctx.ch1.crop.bot, gctx.ch1.height / 2, 1, 4);
+		nk_property_int(ctx, "Left [px]", 0, &gctx.ch1.crop.left, gctx.ch1.width / 2, 1, 4);
+		nk_property_int(ctx, "Right [px]", 0, &gctx.ch1.crop.right, gctx.ch1.width / 2, 1, 4);
 
 		/* Distortion Correction */
 		nk_style_set_font(ctx, gctx.big.handle);
@@ -505,7 +505,7 @@ MainLoop(void *loopArg)
 		nk_layout_row_dynamic(ctx, 30 * gctx.interface_mult, 1);
 		nk_label(ctx, "For correcting distortion at the pole-point", NK_TEXT_ALIGN_LEFT);
 
-		nk_property_float(ctx, "Sphere's field of view [in °]", 180, &gctx.ch1.fov_deg, 360, 1, 0.1);
+		nk_property_float(ctx, "Sphere's field of view [in °]", 180, &gctx.ch1.fov_deg, 360, 1, 1);
 		gctx.ch1.fov = 1.0 / sin(glm_rad(gctx.ch1.fov_deg) / 4.0);
 
 		/* World rotation */
@@ -520,9 +520,9 @@ MainLoop(void *loopArg)
 		nk_label(ctx, "If the mirror ball was captured not at horizon level,", NK_TEXT_ALIGN_LEFT);
 		nk_label(ctx, "correct it here, or camera control will be strange.", NK_TEXT_ALIGN_LEFT);
 		nk_layout_row_dynamic(ctx, 30 * gctx.interface_mult, 1);
-		gctx.ch1.rotation[0] = glm_rad(nk_propertyf(ctx, "Pitch [offset in °]", -180, glm_deg(gctx.ch1.rotation[0]), 180, 1, 0.1));
-		gctx.ch1.rotation[1] = glm_rad(nk_propertyf(ctx, "Yaw [offset in °]", -180, glm_deg(gctx.ch1.rotation[1]), 180, 1, 0.1));
-		gctx.ch1.rotation[2] = glm_rad(nk_propertyf(ctx, "Roll [offset in °]", -180, glm_deg(gctx.ch1.rotation[2]), 180, 1, 0.1));
+		gctx.ch1.rotation[0] = glm_rad(nk_propertyf(ctx, "Pitch [offset in °]", -180, glm_deg(gctx.ch1.rotation[0]), 180, 1, 1));
+		gctx.ch1.rotation[1] = glm_rad(nk_propertyf(ctx, "Yaw [offset in °]", -180, glm_deg(gctx.ch1.rotation[1]), 180, 1, 1));
+		gctx.ch1.rotation[2] = glm_rad(nk_propertyf(ctx, "Roll [offset in °]", -180, glm_deg(gctx.ch1.rotation[2]), 180, 1, 1));
 
 		nk_style_set_font(ctx, gctx.std.handle);
 	}
