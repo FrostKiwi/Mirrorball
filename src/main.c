@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdarg.h>
@@ -20,6 +19,7 @@
 #define NK_SDL_GLES2_IMPLEMENTATION
 #include "nuklear.h"
 #include "nuklear_sdl_gles2.h"
+#include "gl_basic.h"
 
 #include "cglm/cglm.h"
 
@@ -38,106 +38,6 @@ float viewrays[] = {
 	1.0, 1.0, 0.0, 0.0, 0.0,
 	1.0, -1.0, 0.0, 0.0, 0.0,
 	-1.0, -1.0, 0.0, 0.0, 0.0};
-
-/* Just pasted in shaders in code for now, pretty ugly :[ */
-static const GLchar *crop_vs =
-	"#version 100\n"
-	"varying vec2 tex;\n"
-	"uniform float aspect_w;\n"
-	"uniform float aspect_h;\n"
-	"uniform vec4 crop;\n"
-	"attribute vec2 pos;\n"
-	"attribute vec2 coord;\n"
-	"void main()\n"
-	"{\n"
-	"    tex = coord * vec2(crop.z, crop.w) + vec2(crop.x, crop.y);\n"
-	"    gl_Position = vec4(pos.x * aspect_w,\n"
-	"		       pos.y * aspect_h, 0.0, 1.0);\n"
-	"}\n";
-
-static const GLchar *crop_fs =
-	"#version 100\n"
-	"precision mediump float;\n"
-	"varying vec2 tex;\n"
-	"uniform sampler2D sample;\n"
-	"void main()\n"
-	"{\n"
-	"    gl_FragColor = texture2D(sample, tex);\n"
-	"}\n";
-
-static const GLchar *proj_vs =
-	"#version 100\n"
-	"attribute vec2 pos;\n"
-	"attribute vec3 rayvtx;\n"
-	"varying vec3 Ray;\n"
-	"void main()\n"
-	"{\n"
-	"    Ray = rayvtx;\n"
-	"    gl_Position = vec4(pos, 1.0, 1.0);\n"
-	"}\n";
-static const GLchar *proj_fs =
-	"#version 100\n"
-	"#define M_2SQRT2 2.8284271247461900976033774484194\n"
-	"precision highp float;\n"
-	"varying vec3 Ray;\n"
-	"uniform vec4 crop;\n"
-	"uniform float scalar;\n"
-	"uniform sampler2D sample_projection;\n"
-	"void main()\n"
-	"{\n"
-	"    vec3 R = normalize(Ray);\n"
-	"    vec2 uv = scalar * R.xy / (M_2SQRT2 * sqrt(R.z + 1.0));\n"
-	"    if(length(uv) >= 0.5) gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n"
-	"    else{\n"
-	"	uv *= vec2(crop.z, crop.w);\n"
-	"	uv.x = crop.x + uv.x;\n"
-	"	uv.y = crop.y - uv.y;\n"
-	"	gl_FragColor = texture2D(sample_projection, uv);\n"
-	"    }\n"
-	"}\n";
-
-GLuint compile_shader(const char **vert_shader_source,
-					  const char **fragment_shader_source)
-{
-	char log[512];
-	GLuint fragment_shader, shader_program, vertex_shader;
-	GLint success;
-	/* Vertex shader */
-	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex_shader, 1, vert_shader_source, 0);
-	glCompileShader(vertex_shader);
-	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertex_shader, 512, NULL, log);
-		printf("Error! Vertex shader compilation failed!\n%s\n", log);
-	}
-	/* Fragment shader */
-	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment_shader, 1, fragment_shader_source, 0);
-	glCompileShader(fragment_shader);
-	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragment_shader, 512, NULL, log);
-		printf("Error! Fragment shader compilation failed!\n%s\n", log);
-	}
-	/* Link shaders */
-	shader_program = glCreateProgram();
-	glAttachShader(shader_program, vertex_shader);
-	glAttachShader(shader_program, fragment_shader);
-	glLinkProgram(shader_program);
-	glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		glGetProgramInfoLog(shader_program, 512, NULL, log);
-		printf("Error! Shader linking failed!\n%s\n", log);
-	}
-	/* Cleanup */
-	glDeleteShader(vertex_shader);
-	glDeleteShader(fragment_shader);
-	return shader_program;
-}
 
 struct font
 {
@@ -401,7 +301,7 @@ MainLoop(void *loopArg)
 			{
 				glm_vec3_zero(gctx.ch1.rotation);
 				glm_vec3_zero(gctx.camera_rotation);
-				load_texture("/res/room.jpg");
+				load_texture("res/img/room.jpg");
 				gctx.camera_rotation[1] = 1.5;
 				gctx.ch1.crop.top = 46;
 				gctx.ch1.crop.bot = 62;
@@ -413,7 +313,7 @@ MainLoop(void *loopArg)
 			{
 				glm_vec3_zero(gctx.ch1.rotation);
 				glm_vec3_zero(gctx.camera_rotation);
-				load_texture("/res/store.jpg");
+				load_texture("res/img/store.jpg");
 				gctx.camera_rotation[0] = -0.5;
 				gctx.camera_rotation[1] = 1.5;
 				gctx.ch1.crop.top = 97;
@@ -427,12 +327,12 @@ MainLoop(void *loopArg)
 			{
 				glm_vec3_zero(gctx.ch1.rotation);
 				glm_vec3_zero(gctx.camera_rotation);
-				load_texture("/res/mouth.jpg");
+				load_texture("res/img/mouth.jpg");
 				gctx.camera_rotation[1] = 3;
 				gctx.ch1.crop.top = 567;
 				gctx.ch1.crop.bot = 538;
 				gctx.ch1.crop.left = 555;
-				gctx.ch1.crop.right =596;
+				gctx.ch1.crop.right = 596;
 				gctx.ch1.fov_deg = 304;
 				gctx.ch1.rotation[0] = glm_rad(25);
 				gctx.ch1.rotation[2] = glm_rad(1);
@@ -442,7 +342,7 @@ MainLoop(void *loopArg)
 			{
 				glm_vec3_zero(gctx.ch1.rotation);
 				glm_vec3_zero(gctx.camera_rotation);
-				load_texture("/res/tokyo.jpg");
+				load_texture("res/img/tokyo.jpg");
 				gctx.camera_rotation[1] = 2;
 				gctx.ch1.crop.top = 32;
 				gctx.ch1.crop.bot = 39;
@@ -656,7 +556,7 @@ int main(int argc, char *argv[])
 
 	ctx = nk_sdl_init(win);
 
-	load_texture("/res/room.jpg");
+	load_texture("res/img/room.jpg");
 	gctx.camera_rotation[1] = 1.5;
 	gctx.ch1.crop.top = 46;
 	gctx.ch1.crop.bot = 62;
@@ -665,8 +565,8 @@ int main(int argc, char *argv[])
 	gctx.ch1.fov_deg = 342;
 
 	/* Setup Shaders */
-	gctx.crop_shader.shader = compile_shader(&crop_vs, &crop_fs);
-	gctx.projection_shader.shader = compile_shader(&proj_vs, &proj_fs);
+	gctx.crop_shader.shader = compile_shader("res/shd/crop.vs", "res/shd/crop.fs");
+	gctx.projection_shader.shader = compile_shader("res/shd/project.vs", "res/shd/project.fs");
 
 	glGenBuffers(1, &gctx.bgvbo);
 	glBindBuffer(GL_ARRAY_BUFFER, gctx.bgvbo);
@@ -735,11 +635,11 @@ int main(int argc, char *argv[])
 
 		nk_sdl_font_stash_begin(&atlas);
 		std = nk_font_atlas_add_from_file(
-			atlas, "/res/roboto.ttf", 22 * gctx.interface_mult, &cfg_std);
+			atlas, "res/font/roboto.ttf", 22 * gctx.interface_mult, &cfg_std);
 		big = nk_font_atlas_add_from_file(
-			atlas, "/res/roboto.ttf", 32 * gctx.interface_mult, &cfg_big);
+			atlas, "res/font/roboto.ttf", 32 * gctx.interface_mult, &cfg_big);
 		icons = nk_font_atlas_add_from_file(
-			atlas, "/res/icons.ttf", 46 * gctx.interface_mult, &cfg_icons);
+			atlas, "res/font/icons.ttf", 46 * gctx.interface_mult, &cfg_icons);
 		nk_sdl_font_stash_end();
 
 		gctx.std.handle = &std->handle;
