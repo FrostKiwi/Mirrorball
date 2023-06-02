@@ -1,10 +1,7 @@
 #include <stdlib.h>
-#include <stdint.h>
-#include <stdarg.h>
 #include <string.h>
 #include <math.h>
 #define M_PI 3.14159265358979323846
-#include <assert.h>
 #include <limits.h>
 #include <time.h>
 #include <stdbool.h>
@@ -15,8 +12,6 @@
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
 #define NK_INCLUDE_FONT_BAKING
-#define NK_IMPLEMENTATION
-#define NK_SDL_GLES2_IMPLEMENTATION
 #include "nuklear.h"
 #include "nuklear_sdl_gles2.h"
 #include "gl_basic.h"
@@ -45,7 +40,7 @@ struct font
 
 struct channel
 {
-    struct image img;
+	struct image img;
 	unsigned char *data;
 	struct
 	{
@@ -62,6 +57,7 @@ struct channel
 
 struct
 {
+    struct nk_context *ctx;
 	struct font std;
 	struct font big;
 	struct font icons;

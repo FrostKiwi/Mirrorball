@@ -1,4 +1,16 @@
-SRC = src/main.c src/gl_basic.c
+SRC = src/main.c src/gl_basic.c src/nuklear.c src/nuklear_sdl_gles2.c
+OBJ_DIR = obj
+CFLAGS = -Wall -O3
+OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
 EMSCRIPTEN_SETTINGS=-s EXPORTED_RUNTIME_METHODS=[ccall] -sALLOW_MEMORY_GROWTH -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["jpg"]' --use-preload-plugins --preload-file res
-web: $(SRC)
-	emcc $(EMSCRIPTEN_SETTINGS) -Iinc $(SRC) -Wall -O0 -o docs/index.html --shell-file src/shell.html
+web: docs/index.html
+
+$(OBJ_DIR)/%.o: src/%.c
+	mkdir -p $(OBJ_DIR)
+	emcc -Iinc $(CFLAGS) -c $< -o $@
+
+docs/index.html: $(OBJ)
+	emcc $(EMSCRIPTEN_SETTINGS) -Iinc $(OBJ) $(CFLAGS) -o docs/index.html --shell-file src/shell.html
+
+clean:
+	rm -f $(OBJ) docs/index.*

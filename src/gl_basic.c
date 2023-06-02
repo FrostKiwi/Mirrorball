@@ -1,4 +1,5 @@
 #include "gl_basic.h"
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -119,5 +120,5 @@ struct image load_texture(char *file, struct image img)
 
 	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
 	SDL_FreeSurface(surface);
-    return img;
+	return img;
 }
