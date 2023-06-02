@@ -1,8 +1,8 @@
-SRC = src/main.c src/gl_basic.c src/nuklear.c src/nuklear_sdl_gles2.c
+SRC = src/main.c src/gl_basic.c src/nuklear.c src/nuklear_sdl_gles2.c src/render_loop.c
 OBJ_DIR = obj
-CFLAGS = -Wall -O3
+CFLAGS = -Wall -O0
 OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
-EMSCRIPTEN_SETTINGS=-s EXPORTED_RUNTIME_METHODS=[ccall] -sALLOW_MEMORY_GROWTH -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["jpg"]' --use-preload-plugins --preload-file res
+EMSCRIPTEN_SETTINGS=-s EXPORTED_RUNTIME_METHODS=[ccall] -s ALLOW_MEMORY_GROWTH -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["jpg"]' --use-preload-plugins --preload-file res
 web: docs/index.html
 
 $(OBJ_DIR)/%.o: src/%.c
