@@ -16,7 +16,7 @@ web: out/index.html
 
 obj/%.o: src/%.c
 	mkdir -p obj
-	emcc -Iinc $(CFLAGS) -c $< -o $@
+	emcc $(EMSCRIPTEN_SETTINGS) -Iinc $(CFLAGS) -c $< -o $@
 
 out/index.html: $(OBJ)
 	emcc $(EMSCRIPTEN_SETTINGS) \
