@@ -86,3 +86,38 @@ GLuint compile_shader(const char *vert_shader_file_path,
 	free(fragment_shader_source);
 	return shader_program;
 }
+
+struct image load_texture(char *file, struct image img)
+{
+	SDL_Surface *surface = IMG_Load(file);
+	if (!surface)
+	{
+		printf("IMG_Load: %s\n", IMG_GetError());
+		// handle error
+	}
+
+	glDeleteTextures(1, &img.tex);
+	glGenTextures(1, &img.tex);
+	glBindTexture(GL_TEXTURE_2D, img.tex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	img.w = surface->w;
+	img.h = surface->h;
+
+	GLenum format;
+	if (surface->format->BytesPerPixel == 4)
+	{
+		format = GL_RGBA;
+	}
+	else
+	{
+		format = GL_RGB;
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+	SDL_FreeSurface(surface);
+    return img;
+}

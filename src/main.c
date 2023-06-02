@@ -24,8 +24,6 @@
 #include "cglm/cglm.h"
 
 #include <emscripten.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 float unitquadtex[] = {
 	-1.0, 1.0, 0.0, 0.0,
@@ -45,9 +43,9 @@ struct font
 	nk_rune *ranges;
 };
 
-struct image
+struct channel
 {
-	int width, height, channels;
+    struct image img;
 	unsigned char *data;
 	struct
 	{
@@ -60,7 +58,6 @@ struct image
 	float fov_deg;
 	float fov;
 	vec3 rotation;
-	GLuint tex;
 };
 
 struct
@@ -69,7 +66,7 @@ struct
 	struct font big;
 	struct font icons;
 
-	struct image ch1;
+	struct channel ch1;
 
 	struct
 	{
@@ -108,45 +105,28 @@ struct
 	.projection = false,
 	.interface_mult = 1};
 
-void load_texture(char *file)
-{
-	gctx.ch1.data = stbi_load(file, &gctx.ch1.width, &gctx.ch1.height, &gctx.ch1.channels, 3);
-	glDeleteTextures(1, &gctx.ch1.tex);
-	glGenTextures(1, &gctx.ch1.tex);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, gctx.ch1.tex);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, gctx.ch1.width, gctx.ch1.height, 0, GL_RGB,
-				 GL_UNSIGNED_BYTE, gctx.ch1.data);
-	stbi_image_free(gctx.ch1.data);
-	gctx.fov = glm_rad(100);
-}
-
 /* TODO: !!! BUFFER NOT FREED !!! */
 EMSCRIPTEN_KEEPALIVE int load_file(uint8_t *buffer, size_t size)
 {
-	gctx.ch1.data = stbi_load_from_memory(buffer, size, &gctx.ch1.width,
-										  &gctx.ch1.height,
-										  &gctx.ch1.channels, 3);
-	glDeleteTextures(1, &gctx.ch1.tex);
-	glGenTextures(1, &gctx.ch1.tex);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, gctx.ch1.tex);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, gctx.ch1.width, gctx.ch1.height, 0, GL_RGB,
-				 GL_UNSIGNED_BYTE, gctx.ch1.data);
-	stbi_image_free(gctx.ch1.data);
-	glm_vec3_zero(gctx.camera_rotation);
-	glm_vec3_zero(gctx.ch1.rotation);
-	gctx.ch1.fov_deg = 360;
-	gctx.fov = glm_rad(100);
-	gctx.ch1.crop.bot = gctx.ch1.crop.top = gctx.ch1.crop.left = gctx.ch1.crop.right = 0;
+	/* 	gctx.ch1.data = stbi_load_from_memory(buffer, size, &gctx.ch1.width,
+											  &gctx.ch1.height,
+											  &gctx.ch1.channels, 3);
+		glDeleteTextures(1, &gctx.ch1.tex);
+		glGenTextures(1, &gctx.ch1.tex);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, gctx.ch1.tex);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, gctx.ch1.width, gctx.ch1.height, 0, GL_RGB,
+					 GL_UNSIGNED_BYTE, gctx.ch1.data);
+		stbi_image_free(gctx.ch1.data);
+		glm_vec3_zero(gctx.camera_rotation);
+		glm_vec3_zero(gctx.ch1.rotation);
+		gctx.ch1.fov_deg = 360;
+		gctx.fov = glm_rad(100);
+		gctx.ch1.crop.bot = gctx.ch1.crop.top = gctx.ch1.crop.left = gctx.ch1.crop.right = 0; */
 	return 1;
 }
 
@@ -301,7 +281,8 @@ MainLoop(void *loopArg)
 			{
 				glm_vec3_zero(gctx.ch1.rotation);
 				glm_vec3_zero(gctx.camera_rotation);
-				load_texture("res/img/room.jpg");
+				gctx.ch1.img = load_texture("res/img/room.jpg", gctx.ch1.img);
+				gctx.fov = glm_rad(100);
 				gctx.camera_rotation[1] = 1.5;
 				gctx.ch1.crop.top = 46;
 				gctx.ch1.crop.bot = 62;
@@ -313,7 +294,8 @@ MainLoop(void *loopArg)
 			{
 				glm_vec3_zero(gctx.ch1.rotation);
 				glm_vec3_zero(gctx.camera_rotation);
-				load_texture("res/img/store.jpg");
+				gctx.ch1.img = load_texture("res/img/store.jpg", gctx.ch1.img);
+				gctx.fov = glm_rad(100);
 				gctx.camera_rotation[0] = -0.5;
 				gctx.camera_rotation[1] = 1.5;
 				gctx.ch1.crop.top = 97;
@@ -327,7 +309,8 @@ MainLoop(void *loopArg)
 			{
 				glm_vec3_zero(gctx.ch1.rotation);
 				glm_vec3_zero(gctx.camera_rotation);
-				load_texture("res/img/mouth.jpg");
+				gctx.ch1.img = load_texture("res/img/mouth.jpg", gctx.ch1.img);
+				gctx.fov = glm_rad(100);
 				gctx.camera_rotation[1] = 3;
 				gctx.ch1.crop.top = 567;
 				gctx.ch1.crop.bot = 538;
@@ -342,7 +325,8 @@ MainLoop(void *loopArg)
 			{
 				glm_vec3_zero(gctx.ch1.rotation);
 				glm_vec3_zero(gctx.camera_rotation);
-				load_texture("res/img/tokyo.jpg");
+				gctx.ch1.img = load_texture("res/img/tokyo.jpg", gctx.ch1.img);
+				gctx.fov = glm_rad(100);
 				gctx.camera_rotation[1] = 2;
 				gctx.ch1.crop.top = 32;
 				gctx.ch1.crop.bot = 39;
@@ -389,10 +373,10 @@ MainLoop(void *loopArg)
 		nk_style_set_font(ctx, gctx.std.handle);
 		nk_layout_row_dynamic(ctx, 30 * gctx.interface_mult, 1);
 		nk_label(ctx, "Crop the image to the mirror ball's edge", NK_TEXT_ALIGN_LEFT);
-		nk_property_int(ctx, "Top [px]", 0, &gctx.ch1.crop.top, gctx.ch1.height / 2, 1, 4);
-		nk_property_int(ctx, "Bottom [px]", 0, &gctx.ch1.crop.bot, gctx.ch1.height / 2, 1, 4);
-		nk_property_int(ctx, "Left [px]", 0, &gctx.ch1.crop.left, gctx.ch1.width / 2, 1, 4);
-		nk_property_int(ctx, "Right [px]", 0, &gctx.ch1.crop.right, gctx.ch1.width / 2, 1, 4);
+		nk_property_int(ctx, "Top [px]", 0, &gctx.ch1.crop.top, gctx.ch1.img.h / 2, 1, 4);
+		nk_property_int(ctx, "Bottom [px]", 0, &gctx.ch1.crop.bot, gctx.ch1.img.h / 2, 1, 4);
+		nk_property_int(ctx, "Left [px]", 0, &gctx.ch1.crop.left, gctx.ch1.img.w / 2, 1, 4);
+		nk_property_int(ctx, "Right [px]", 0, &gctx.ch1.crop.right, gctx.ch1.img.w / 2, 1, 4);
 
 		/* Distortion Correction */
 		nk_style_set_font(ctx, gctx.big.handle);
@@ -457,15 +441,15 @@ MainLoop(void *loopArg)
 	if (!gctx.projection)
 	{
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, gctx.ch1.tex);
+		glBindTexture(GL_TEXTURE_2D, gctx.ch1.img.tex);
 		glUseProgram(gctx.crop_shader.shader);
 		vec4 crop;
-		int postcrop_w = gctx.ch1.width - (gctx.ch1.crop.left + gctx.ch1.crop.right);
-		int postcrop_h = gctx.ch1.height - (gctx.ch1.crop.top + gctx.ch1.crop.bot);
-		crop[0] = (1.0 / gctx.ch1.width) * gctx.ch1.crop.left;
-		crop[1] = (1.0 / gctx.ch1.height) * gctx.ch1.crop.top;
-		crop[2] = (1.0 / gctx.ch1.width) * postcrop_w;
-		crop[3] = (1.0 / gctx.ch1.height) * postcrop_h;
+		int postcrop_w = gctx.ch1.img.w - (gctx.ch1.crop.left + gctx.ch1.crop.right);
+		int postcrop_h = gctx.ch1.img.h - (gctx.ch1.crop.top + gctx.ch1.crop.bot);
+		crop[0] = (1.0 / gctx.ch1.img.w) * gctx.ch1.crop.left;
+		crop[1] = (1.0 / gctx.ch1.img.h) * gctx.ch1.crop.top;
+		crop[2] = (1.0 / gctx.ch1.img.w) * postcrop_w;
+		crop[3] = (1.0 / gctx.ch1.img.h) * postcrop_h;
 		glUniform4fv(gctx.crop_shader.crop, 1, &crop[0]);
 
 		glBindBuffer(GL_ARRAY_BUFFER, gctx.bgvbo);
@@ -496,13 +480,13 @@ MainLoop(void *loopArg)
 	else
 	{
 		vec4 crop;
-		crop[0] = (1.0 / gctx.ch1.width) * (gctx.ch1.width / 2.0 + gctx.ch1.crop.left / 2.0 - gctx.ch1.crop.right / 2.0);
-		crop[1] = (1.0 / gctx.ch1.height) * (gctx.ch1.height / 2.0 + gctx.ch1.crop.top / 2.0 - gctx.ch1.crop.bot / 2.0);
-		crop[2] = (1.0 / gctx.ch1.width) * (gctx.ch1.width - gctx.ch1.crop.left / 1.0 - gctx.ch1.crop.right / 1.0);
-		crop[3] = (1.0 / gctx.ch1.height) * (gctx.ch1.height - gctx.ch1.crop.top / 1.0 - gctx.ch1.crop.bot / 1.0);
+		crop[0] = (1.0 / gctx.ch1.img.w) * (gctx.ch1.img.w / 2.0 + gctx.ch1.crop.left / 2.0 - gctx.ch1.crop.right / 2.0);
+		crop[1] = (1.0 / gctx.ch1.img.h) * (gctx.ch1.img.h / 2.0 + gctx.ch1.crop.top / 2.0 - gctx.ch1.crop.bot / 2.0);
+		crop[2] = (1.0 / gctx.ch1.img.w) * (gctx.ch1.img.w - gctx.ch1.crop.left / 1.0 - gctx.ch1.crop.right / 1.0);
+		crop[3] = (1.0 / gctx.ch1.img.h) * (gctx.ch1.img.h - gctx.ch1.crop.top / 1.0 - gctx.ch1.crop.bot / 1.0);
 		glUseProgram(gctx.projection_shader.shader);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, gctx.ch1.tex);
+		glBindTexture(GL_TEXTURE_2D, gctx.ch1.img.tex);
 		glEnableVertexAttribArray(gctx.projection_shader.pos);
 		glEnableVertexAttribArray(gctx.projection_shader.viewray);
 		glUniform4fv(gctx.projection_shader.crop, 1, crop);
@@ -556,7 +540,8 @@ int main(int argc, char *argv[])
 
 	ctx = nk_sdl_init(win);
 
-	load_texture("res/img/room.jpg");
+	gctx.ch1.img = load_texture("res/img/room.jpg", gctx.ch1.img);
+	gctx.fov = glm_rad(100);
 	gctx.camera_rotation[1] = 1.5;
 	gctx.ch1.crop.top = 46;
 	gctx.ch1.crop.bot = 62;
