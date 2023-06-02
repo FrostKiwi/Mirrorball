@@ -1,5 +1,4 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Compile with emscripten and deploy to GIthub Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -35,8 +34,8 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Setup Emscripten toolchain
         uses: mymindstorm/setup-emsdk@v12
-      - name: Verify
-        run: emcc -v
+      - name: Compile
+        run: emmake make -j8
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
