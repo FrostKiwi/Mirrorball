@@ -1,6 +1,7 @@
 SRC = $(wildcard src/*.c)
 
-CFLAGS = -Wall -O3
+release: CFLAGS = -Wall -O3
+debug: CFLAGS = -v -Wall -O0
 OBJ = $(addprefix obj/, $(notdir $(SRC:.c=.o)))
 
 EMCC_FLAGS= -s USE_SDL=2 \
@@ -14,7 +15,7 @@ EMCC_LINKER_FLAGS= $(EMCC_FLAGS) \
 				   --use-preload-plugins \
 				   --preload-file res
 
-web: out/index.html
+release debug: out/index.html
 
 obj/%.o: src/%.c
 	mkdir -p obj
@@ -26,5 +27,10 @@ out/index.html: $(OBJ)
 		 -o out/index.html \
 		 --shell-file src/shell.html
 
+run:
+	emrun out/index.html
+
 clean:
 	rm -f $(OBJ) out/index.*
+
+.PHONY: clean run
