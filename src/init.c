@@ -54,3 +54,45 @@ void init_fonts(struct global_context *gctx)
     gctx->icons.handle = &icons->handle;
     nk_style_set_font(gctx->ctx, gctx->std.handle);
 }
+
+void init_shaders(struct global_context *gctx)
+{
+    gctx->crop_shader.shader =
+        compile_shader("res/shd/crop.vs", "res/shd/crop.fs");
+    gctx->projection_shader.shader =
+        compile_shader("res/shd/project.vs", "res/shd/project.fs");
+
+    float unitquadtex[] = {
+        -1.0, 1.0, 0.0, 0.0,
+        1.0, 1.0, 1.0, 0.0,
+        1.0, -1.0, 1.0, 1.0,
+        -1.0, -1.0, 0.0, 1.0};
+
+    glGenBuffers(1, &gctx->bgvbo);
+    glBindBuffer(GL_ARRAY_BUFFER, gctx->bgvbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(unitquadtex), unitquadtex,
+                 GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glGenBuffers(1, &gctx->rayvbo);
+
+    gctx->crop_shader.pos =
+        glGetAttribLocation(gctx->crop_shader.shader, "pos");
+    gctx->crop_shader.coord =
+        glGetAttribLocation(gctx->crop_shader.shader, "coord");
+    gctx->crop_shader.aspect_w =
+        glGetUniformLocation(gctx->crop_shader.shader, "aspect_w");
+    gctx->crop_shader.aspect_h =
+        glGetUniformLocation(gctx->crop_shader.shader, "aspect_h");
+    gctx->crop_shader.crop =
+        glGetUniformLocation(gctx->crop_shader.shader, "crop");
+
+    gctx->projection_shader.pos =
+        glGetAttribLocation(gctx->projection_shader.shader, "pos");
+    gctx->projection_shader.viewray =
+        glGetAttribLocation(gctx->projection_shader.shader, "rayvtx");
+    gctx->projection_shader.scaler =
+        glGetUniformLocation(gctx->projection_shader.shader, "scalar");
+    gctx->projection_shader.crop =
+        glGetUniformLocation(gctx->projection_shader.shader, "crop");
+}
