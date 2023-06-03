@@ -1,7 +1,7 @@
 SRC = $(wildcard src/*.c)
 
 release: CFLAGS = -Wall -O3
-debug: CFLAGS = -v -Wall -O0
+debug: CFLAGS = -Wall -O0
 OBJ = $(addprefix obj/, $(notdir $(SRC:.c=.o)))
 
 EMCC_FLAGS= -s USE_SDL=2 \
@@ -17,7 +17,8 @@ EMCC_LINKER_FLAGS= $(EMCC_FLAGS) \
 
 release debug: out/index.html
 
-obj/%.o: src/%.c
+# Include changes to the header files as cause to recompile everything
+obj/%.o: src/%.c $(wildcard inc/*.h)
 	mkdir -p obj
 	emcc $(EMCC_FLAGS) -Iinc $(CFLAGS) -c $< -o $@
 

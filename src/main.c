@@ -1,29 +1,12 @@
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#include <math.h>
-#define M_PI 3.14159265358979323846
-#include <limits.h>
-#include <time.h>
-#include <stdbool.h>
-
-#define NK_INCLUDE_FIXED_TYPES
-#define NK_INCLUDE_STANDARD_IO
-#define NK_INCLUDE_STANDARD_VARARGS
-#define NK_INCLUDE_DEFAULT_ALLOCATOR
-#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
-#define NK_INCLUDE_FONT_BAKING
-#include "nuklear.h"
-#include "nuklear_sdl_gles2.h"
 #include "main.h"
 #include "init.h"
 
 int main(int argc, char *argv[])
 {
 	struct global_context gctx = {
-		.fovmin = 10 * GLM_PIf / 180.0f,
-		.fovmax = 140 * GLM_PIf / 180.0f,
-		.fov = 100 * GLM_PIf / 180.0f,
+		.cam.fovmin = 10 * GLM_PIf / 180.0f,
+		.cam.fovmax = 140 * GLM_PIf / 180.0f,
+		.cam.fov = 100 * GLM_PIf / 180.0f,
 		.ch1.fov_deg = 360,
 		.projection = false,
 		.interface_mult = 1};
@@ -54,8 +37,8 @@ int main(int argc, char *argv[])
 	gctx.ctx = nk_sdl_init(gctx.win);
 
 	gctx.ch1.img = load_texture("res/img/room.jpg", gctx.ch1.img);
-	gctx.fov = glm_rad(100);
-	gctx.camera_rotation[1] = 1.5;
+	gctx.cam.fov = glm_rad(100);
+	gctx.cam.cam_rotation[1] = 1.5;
 	gctx.ch1.crop.top = 46;
 	gctx.ch1.crop.bot = 62;
 	gctx.ch1.crop.left = 45;

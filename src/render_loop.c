@@ -23,7 +23,7 @@ EMSCRIPTEN_KEEPALIVE int load_file(uint8_t *buffer, size_t size)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, gctx.ch1.width, gctx.ch1.height, 0, GL_RGB,
 					 GL_UNSIGNED_BYTE, gctx.ch1.data);
 		stbi_image_free(gctx.ch1.data);
-		glm_vec3_zero(gctx.camera_rotation);
+		glm_vec3_zero(gctx.cam.cam_rotation);
 		glm_vec3_zero(gctx.ch1.rotation);
 		gctx.ch1.fov_deg = 360;
 		gctx.fov = glm_rad(100);
@@ -54,7 +54,7 @@ void MainLoop(void *loopArg)
 							gctx.fov += evt.mgesture.dDist;
 							gctx.fov -= (float)evt.wheel.y;
 						  if(evt.type == SDL_MOUSEBUTTONDOWN)
-						  gctx.camera_rotation[1] += evt.tfinger.dx * 0.001;
+						  gctx.cam.cam_rotation[1] += evt.tfinger.dx * 0.001;
 				} */
 		switch (evt.type)
 		{
@@ -69,63 +69,63 @@ void MainLoop(void *loopArg)
 							gctx.fov += 0.01;
 							break;
 						case SDLK_UP:
-							gctx.camera_rotation[0] += 0.01;
-							if (gctx.camera_rotation[0] > M_PI / 2.0)
-								gctx.camera_rotation[0] = M_PI / 2.0;
-							if (gctx.camera_rotation[0] < M_PI / -2.0)
-								gctx.camera_rotation[0] = M_PI / -2.0;
+							gctx.cam.cam_rotation[0] += 0.01;
+							if (gctx.cam.cam_rotation[0] > M_PI / 2.0)
+								gctx.cam.cam_rotation[0] = M_PI / 2.0;
+							if (gctx.cam.cam_rotation[0] < M_PI / -2.0)
+								gctx.cam.cam_rotation[0] = M_PI / -2.0;
 							break;
 						case SDLK_DOWN:
-							gctx.camera_rotation[0] -= 0.01;
-							if (gctx.camera_rotation[0] > M_PI / 2.0)
-								gctx.camera_rotation[0] = M_PI / 2.0;
-							if (gctx.camera_rotation[0] < M_PI / -2.0)
-								gctx.camera_rotation[0] = M_PI / -2.0;
+							gctx.cam.cam_rotation[0] -= 0.01;
+							if (gctx.cam.cam_rotation[0] > M_PI / 2.0)
+								gctx.cam.cam_rotation[0] = M_PI / 2.0;
+							if (gctx.cam.cam_rotation[0] < M_PI / -2.0)
+								gctx.cam.cam_rotation[0] = M_PI / -2.0;
 							break;
-						case SDLK_LEFT:	gctx.camera_rotation[1] -= 0.01; break;
-						case SDLK_RIGHT: gctx.camera_rotation[1] += 0.01; break;
+						case SDLK_LEFT:	gctx.cam.cam_rotation[1] -= 0.01; break;
+						case SDLK_RIGHT: gctx.cam.cam_rotation[1] += 0.01; break;
 						}
 					} */
 		case SDL_FINGERMOTION:
-			gctx->camera_rotation[1] += evt.tfinger.dx * 2.0;
-			gctx->camera_rotation[0] += evt.tfinger.dy * 2.0;
+			gctx->cam.cam_rotation[1] += evt.tfinger.dx * 2.0;
+			gctx->cam.cam_rotation[0] += evt.tfinger.dy * 2.0;
 			break;
 		case SDL_MULTIGESTURE:
-			gctx->fov -= evt.mgesture.dDist * 4;
+			gctx->cam.fov -= evt.mgesture.dDist * 4;
 			break;
 		}
 	}
 	nk_input_end(ctx);
 
 	if (ctx->input.keyboard.keys[NK_KEY_LEFT].down && !ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
-		gctx->camera_rotation[1] += 0.05;
+		gctx->cam.cam_rotation[1] += 0.05;
 	if (ctx->input.keyboard.keys[NK_KEY_RIGHT].down && !ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
-		gctx->camera_rotation[1] -= 0.05;
+		gctx->cam.cam_rotation[1] -= 0.05;
 	if (ctx->input.keyboard.keys[NK_KEY_UP].down)
-		gctx->camera_rotation[0] += 0.05;
+		gctx->cam.cam_rotation[0] += 0.05;
 	if (ctx->input.keyboard.keys[NK_KEY_DOWN].down)
-		gctx->camera_rotation[0] -= 0.05;
+		gctx->cam.cam_rotation[0] -= 0.05;
 	if (ctx->input.keyboard.keys[NK_KEY_LEFT].down && ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
-		gctx->fov += 0.05;
+		gctx->cam.fov += 0.05;
 	if (ctx->input.keyboard.keys[NK_KEY_RIGHT].down && ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
-		gctx->fov -= 0.05;
+		gctx->cam.fov -= 0.05;
 
-	if (gctx->camera_rotation[0] > M_PI / 2.0)
-		gctx->camera_rotation[0] = M_PI / 2.0;
-	if (gctx->camera_rotation[0] < M_PI / -2.0)
-		gctx->camera_rotation[0] = M_PI / -2.0;
+	if (gctx->cam.cam_rotation[0] > M_PI / 2.0)
+		gctx->cam.cam_rotation[0] = M_PI / 2.0;
+	if (gctx->cam.cam_rotation[0] < M_PI / -2.0)
+		gctx->cam.cam_rotation[0] = M_PI / -2.0;
 
 	if (!nk_window_is_any_hovered(ctx))
 	{
-		gctx->fov -= ctx->input.mouse.scroll_delta.y * 0.1;
+		gctx->cam.fov -= ctx->input.mouse.scroll_delta.y * 0.1;
 	}
 
 	/* Rotation input from mouse */
 
-	if (gctx->fov > gctx->fovmax)
-		gctx->fov = gctx->fovmax;
-	if (gctx->fov < gctx->fovmin)
-		gctx->fov = gctx->fovmin;
+	if (gctx->cam.fov > gctx->cam.fovmax)
+		gctx->cam.fov = gctx->cam.fovmax;
+	if (gctx->cam.fov < gctx->cam.fovmin)
+		gctx->cam.fov = gctx->cam.fovmin;
 
 	int win_width, win_height;
 	SDL_GetWindowSize(gctx->win, &win_width, &win_height);
@@ -165,10 +165,10 @@ void MainLoop(void *loopArg)
 			if (nk_button_label(ctx, "Room"))
 			{
 				glm_vec3_zero(gctx->ch1.rotation);
-				glm_vec3_zero(gctx->camera_rotation);
+				glm_vec3_zero(gctx->cam.cam_rotation);
 				gctx->ch1.img = load_texture("res/img/room.jpg", gctx->ch1.img);
-				gctx->fov = glm_rad(100);
-				gctx->camera_rotation[1] = 1.5;
+				gctx->cam.fov = glm_rad(100);
+				gctx->cam.cam_rotation[1] = 1.5;
 				gctx->ch1.crop.top = 46;
 				gctx->ch1.crop.bot = 62;
 				gctx->ch1.crop.left = 45;
@@ -178,11 +178,11 @@ void MainLoop(void *loopArg)
 			if (nk_button_label(ctx, "Department Store"))
 			{
 				glm_vec3_zero(gctx->ch1.rotation);
-				glm_vec3_zero(gctx->camera_rotation);
+				glm_vec3_zero(gctx->cam.cam_rotation);
 				gctx->ch1.img = load_texture("res/img/store.jpg", gctx->ch1.img);
-				gctx->fov = glm_rad(100);
-				gctx->camera_rotation[0] = -0.5;
-				gctx->camera_rotation[1] = 1.5;
+				gctx->cam.fov = glm_rad(100);
+				gctx->cam.cam_rotation[0] = -0.5;
+				gctx->cam.cam_rotation[1] = 1.5;
 				gctx->ch1.crop.top = 97;
 				gctx->ch1.crop.bot = 125;
 				gctx->ch1.crop.left = 102;
@@ -193,10 +193,10 @@ void MainLoop(void *loopArg)
 			if (nk_button_label(ctx, "Human Mouth"))
 			{
 				glm_vec3_zero(gctx->ch1.rotation);
-				glm_vec3_zero(gctx->camera_rotation);
+				glm_vec3_zero(gctx->cam.cam_rotation);
 				gctx->ch1.img = load_texture("res/img/mouth.jpg", gctx->ch1.img);
-				gctx->fov = glm_rad(100);
-				gctx->camera_rotation[1] = 3;
+				gctx->cam.fov = glm_rad(100);
+				gctx->cam.cam_rotation[1] = 3;
 				gctx->ch1.crop.top = 567;
 				gctx->ch1.crop.bot = 538;
 				gctx->ch1.crop.left = 555;
@@ -204,15 +204,15 @@ void MainLoop(void *loopArg)
 				gctx->ch1.fov_deg = 304;
 				gctx->ch1.rotation[0] = glm_rad(25);
 				gctx->ch1.rotation[2] = glm_rad(1);
-				gctx->fov = glm_rad(125);
+				gctx->cam.fov = glm_rad(125);
 			}
 			if (nk_button_label(ctx, "HUGE Tokyo Ball"))
 			{
 				glm_vec3_zero(gctx->ch1.rotation);
-				glm_vec3_zero(gctx->camera_rotation);
+				glm_vec3_zero(gctx->cam.cam_rotation);
 				gctx->ch1.img = load_texture("res/img/tokyo.jpg", gctx->ch1.img);
-				gctx->fov = glm_rad(100);
-				gctx->camera_rotation[1] = 2;
+				gctx->cam.fov = glm_rad(100);
+				gctx->cam.cam_rotation[1] = 2;
 				gctx->ch1.crop.top = 32;
 				gctx->ch1.crop.bot = 39;
 				gctx->ch1.crop.left = 63;
@@ -302,25 +302,25 @@ void MainLoop(void *loopArg)
 	mat4 basis;
 	mat4 eulerangles;
 	glm_mat4_identity(basis);
-	glm_euler_zyx(gctx->camera_rotation, gctx->camera_rotation_matrix);
+	glm_euler_zyx(gctx->cam.cam_rotation, gctx->cam.cam_rotation_matrix);
 	glm_euler_zyx(gctx->ch1.rotation, eulerangles);
 	glm_mat4_mul(basis, eulerangles, basis);
-	glm_mat4_mul(basis, gctx->camera_rotation_matrix, basis);
-	glm_mat4_copy(basis, gctx->camera_rotation_matrix);
-	glm_mat4_identity(gctx->view_matrix);
-	glm_translate(gctx->view_matrix, (vec3){0.0, 0.0, 0.0});
-	glm_mul_rot(gctx->view_matrix, gctx->camera_rotation_matrix, gctx->view_matrix);
-	glm_inv_tr(gctx->view_matrix);
-	glm_perspective(gctx->fov, (float)win_width / (float)win_height, 0.01f, 100.0f, gctx->projection_matrix);
+	glm_mat4_mul(basis, gctx->cam.cam_rotation_matrix, basis);
+	glm_mat4_copy(basis, gctx->cam.cam_rotation_matrix);
+	glm_mat4_identity(gctx->cam.view_matrix);
+	glm_translate(gctx->cam.view_matrix, (vec3){0.0, 0.0, 0.0});
+	glm_mul_rot(gctx->cam.view_matrix, gctx->cam.cam_rotation_matrix, gctx->cam.view_matrix);
+	glm_inv_tr(gctx->cam.view_matrix);
+	glm_perspective(gctx->cam.fov, (float)win_width / (float)win_height, 0.01f, 100.0f, gctx->cam.projection_matrix);
 
 	/* Update View-Rays */
-	double distance = -0.5 / tan(gctx->fov / 2.0);
+	double distance = -0.5 / tan(gctx->cam.fov / 2.0);
 	for (int i = 0; i < 4 * 5; i += 5)
 	{
 		viewrays[i + 4] = distance;
 		viewrays[i + 2] = viewrays[i] * 0.5 * (float)win_width / (float)win_height;
 		viewrays[i + 3] = viewrays[i + 1] * 0.5;
-		glm_vec3_rotate_m4(gctx->camera_rotation_matrix, &viewrays[i + 2], &viewrays[i + 2]);
+		glm_vec3_rotate_m4(gctx->cam.cam_rotation_matrix, &viewrays[i + 2], &viewrays[i + 2]);
 	}
 
 	/* Drawcalls */

@@ -1,11 +1,11 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "gl_basic.h"
-#include <math.h>
+/* Platform requirements */
 #include <SDL2/SDL.h>
-#include "cglm/cglm.h"
+#include <emscripten.h>
 
+/* External headers */
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -15,8 +15,9 @@
 #include "nuklear.h"
 #include "nuklear_sdl_gles2.h"
 
-#include <emscripten.h>
+#include "cglm/cglm.h"
 
+/* Internal Headers */
 #include "gl_basic.h"
 
 struct font
@@ -70,15 +71,20 @@ struct global_context
 		GLint scaler;
 	} projection_shader;
 
+	/* Camera struct */
+	struct
+	{
+		vec3 cam_rotation;
+		mat4 cam_rotation_matrix;
+		mat4 view_matrix;
+		mat4 projection_matrix;
+		float fov;
+		float fovmin;
+		float fovmax;
+	} cam;
+
 	GLuint bgvbo;
 	GLuint rayvbo;
-	vec3 camera_rotation;
-	mat4 camera_rotation_matrix;
-	mat4 view_matrix;
-	mat4 projection_matrix;
-	float fov;
-	float fovmin;
-	float fovmax;
 	bool projection;
 	float interface_mult;
 };
