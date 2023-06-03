@@ -293,6 +293,7 @@ void MainLoop(void *loopArg)
 		gctx->ch1.rotation[1] = glm_rad(nk_propertyf(ctx, "Yaw [offset in °]", -180, glm_deg(gctx->ch1.rotation[1]), 180, 1, 1));
 		gctx->ch1.rotation[2] = glm_rad(nk_propertyf(ctx, "Roll [offset in °]", -180, glm_deg(gctx->ch1.rotation[2]), 180, 1, 1));
 
+		/* Reset to standard Font */
 		nk_style_set_font(ctx, gctx->std.handle);
 	}
 	nk_end(ctx);

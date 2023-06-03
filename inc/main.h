@@ -1,3 +1,6 @@
+#ifndef MAIN_H
+#define MAIN_H
+
 #include "gl_basic.h"
 #include <math.h>
 #include <SDL2/SDL.h>
@@ -41,7 +44,7 @@ struct channel
 
 struct global_context
 {
-    SDL_Window *win;
+	SDL_Window *win;
 	struct nk_context *ctx;
 	struct font std;
 	struct font big;
@@ -81,3 +84,4 @@ struct global_context
 };
 
 void MainLoop(void *loopArg);
+#endif
