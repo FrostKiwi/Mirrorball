@@ -1,5 +1,7 @@
 #include "main.h"
 
+#define M_2SQRT2 2.8284271247461900976033774484194
+
 float viewrays[] = {
 	-1.0, 1.0, 0.0, 0.0, 0.0,
 	1.0, 1.0, 0.0, 0.0, 0.0,
@@ -336,10 +338,11 @@ void MainLoop(void *loopArg)
 		crop[1] = (1.0 / gctx->ch1.img.h) * gctx->ch1.crop.top;
 		crop[2] = (1.0 / gctx->ch1.img.w) * postcrop_w;
 		crop[3] = (1.0 / gctx->ch1.img.h) * postcrop_h;
+
 		glUniform4fv(gctx->crop_shader.crop, 1, &crop[0]);
 
 		glBindBuffer(GL_ARRAY_BUFFER, gctx->bgvbo);
-		glVertexAttribPointer(gctx->crop_shader.pos, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+		glVertexAttribPointer(gctx->crop_shader.vtx, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
 		glVertexAttribPointer(gctx->crop_shader.coord, 2, GL_FLOAT, GL_FALSE,
 							  4 * sizeof(float), (void *)(2 * sizeof(float)));
 
@@ -358,10 +361,123 @@ void MainLoop(void *loopArg)
 							((float)win_height / (float)win_width));
 			glUniform1f(gctx->crop_shader.aspect_w, 1.0);
 		}
+		glUniform1f(gctx->crop_shader.aspect_h, 1.0);
+		glUniform1f(gctx->crop_shader.aspect_w, 1.0);
+
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 		glUseProgram(0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glUseProgram(gctx->border_shader.shader);
+		glBindBuffer(GL_ARRAY_BUFFER, gctx->border_shader.quadvbo);
+
+		if (((float)postcrop_h / (float)postcrop_w) >
+			((float)win_height / (float)win_width))
+		{
+			glUniform1f(gctx->border_shader.aspect_h, 1.0);
+			glUniform1f(gctx->border_shader.aspect_w,
+						((float)postcrop_w / (float)postcrop_h) /
+							((float)win_width / (float)win_height));
+		}
+		else
+		{
+			glUniform1f(gctx->border_shader.aspect_h,
+						((float)postcrop_h / (float)postcrop_w) /
+							((float)win_height / (float)win_width));
+			glUniform1f(gctx->border_shader.aspect_w, 1.0);
+		}
+
+		glUniform1f(gctx->border_shader.aspect_h, 1.0);
+		glUniform1f(gctx->border_shader.aspect_w, 1.0);
+		glVertexAttribPointer(gctx->border_shader.vtx, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+		glUniform4fv(gctx->border_shader.crop, 1, &crop[0]);
+
+		vec3 ray_topleft;
+		ray_topleft[0] = viewrays[2];
+		ray_topleft[1] = viewrays[3];
+		ray_topleft[2] = viewrays[4];
+		vec3 ray_topright;
+		ray_topright[0] = viewrays[2 + 5];
+		ray_topright[1] = viewrays[3 + 5];
+		ray_topright[2] = viewrays[4 + 5];
+		vec3 ray_botright;
+		ray_botright[0] = viewrays[2 + 10];
+		ray_botright[1] = viewrays[3 + 10];
+		ray_botright[2] = viewrays[4 + 10];
+		vec3 ray_botleft;
+		ray_botleft[0] = viewrays[2 + 15];
+		ray_botleft[1] = viewrays[3 + 15];
+		ray_botleft[2] = viewrays[4 + 15];
+
+		vec3 ray_top;
+		glm_vec3_center(ray_topleft, ray_topright, ray_top);
+		vec3 ray_left;
+		glm_vec3_center(ray_topleft, ray_botleft, ray_left);
+		vec3 ray_right;
+		glm_vec3_center(ray_topright, ray_botright, ray_right);
+		vec3 ray_bot;
+		glm_vec3_center(ray_botleft, ray_botright, ray_bot);
+
+		glm_vec3_normalize(ray_topleft);
+		glm_vec3_normalize(ray_top);
+		glm_vec3_normalize(ray_topright);
+		glm_vec3_normalize(ray_right);
+		glm_vec3_normalize(ray_botright);
+		glm_vec3_normalize(ray_bot);
+		glm_vec3_normalize(ray_botleft);
+		glm_vec3_normalize(ray_left);
+
+		float uv_x;
+		float uv_y;
+		uv_x = ray_topleft[0] / (M_2SQRT2 * sqrt(ray_topleft[2] + 1.0));
+		uv_y = ray_topleft[1] / (M_2SQRT2 * sqrt(ray_topleft[2] + 1.0));
+		uv_x = uv_x * 2.0;
+		uv_y = uv_y * 2.0;
+		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		uv_x = ray_top[0] / (M_2SQRT2 * sqrt(ray_top[2] + 1.0));
+		uv_y = ray_top[1] / (M_2SQRT2 * sqrt(ray_top[2] + 1.0));
+		uv_x = uv_x * 2.0;
+		uv_y = uv_y * 2.0;
+		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		uv_x = ray_topright[0] / (M_2SQRT2 * sqrt(ray_topright[2] + 1.0));
+		uv_y = ray_topright[1] / (M_2SQRT2 * sqrt(ray_topright[2] + 1.0));
+		uv_x = uv_x * 2.0;
+		uv_y = uv_y * 2.0;
+		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		uv_x = ray_right[0] / (M_2SQRT2 * sqrt(ray_right[2] + 1.0));
+		uv_y = ray_right[1] / (M_2SQRT2 * sqrt(ray_right[2] + 1.0));
+		uv_x = uv_x * 2.0;
+		uv_y = uv_y * 2.0;
+		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		uv_x = ray_botright[0] / (M_2SQRT2 * sqrt(ray_botright[2] + 1.0));
+		uv_y = ray_botright[1] / (M_2SQRT2 * sqrt(ray_botright[2] + 1.0));
+		uv_x = uv_x * 2.0;
+		uv_y = uv_y * 2.0;
+		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		uv_x = ray_bot[0] / (M_2SQRT2 * sqrt(ray_bot[2] + 1.0));
+		uv_y = ray_bot[1] / (M_2SQRT2 * sqrt(ray_bot[2] + 1.0));
+		uv_x = uv_x * 2.0;
+		uv_y = uv_y * 2.0;
+		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		uv_x = ray_botleft[0] / (M_2SQRT2 * sqrt(ray_botleft[2] + 1.0));
+		uv_y = ray_botleft[1] / (M_2SQRT2 * sqrt(ray_botleft[2] + 1.0));
+		uv_x = uv_x * 2.0;
+		uv_y = uv_y * 2.0;
+		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		uv_x = ray_left[0] / (M_2SQRT2 * sqrt(ray_left[2] + 1.0));
+		uv_y = ray_left[1] / (M_2SQRT2 * sqrt(ray_left[2] + 1.0));
+		uv_x = uv_x * 2.0;
+		uv_y = uv_y * 2.0;
+		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	}
 	else
 	{

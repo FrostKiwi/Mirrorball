@@ -56,7 +56,7 @@ struct global_context
 	struct
 	{
 		GLuint shader;
-		GLint pos;
+		GLint vtx;
 		GLint coord;
 		GLint aspect_w;
 		GLint aspect_h;
@@ -70,6 +70,17 @@ struct global_context
 		GLint crop;
 		GLint scaler;
 	} projection_shader;
+	struct
+	{
+		GLuint shader;
+		GLuint quadvbo;
+		GLint vtx;
+		GLint aspect_w;
+		GLint aspect_h;
+		GLint crop;
+		GLint scale;
+		GLint transform;
+	} border_shader;
 
 	/* Camera struct */
 	struct
