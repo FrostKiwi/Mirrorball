@@ -34,6 +34,32 @@ EMSCRIPTEN_KEEPALIVE int load_file(uint8_t *buffer, size_t size)
 	return 1;
 }
 
+/* Interpolates and projects the broder points for a nice little vizualization
+   to explain the projection mapping */
+void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
+							   GLint uniform_col, vec3 color_a, vec3 color_b)
+{
+	const float m_2SQRT2 = 2.8284271247461900976033774484194;
+	vec3 ray;
+	vec2 uv_proj;
+	vec3 color;
+	for (int x = 0; x < subdiv; ++x)
+	{
+		float mult = (1.0 / subdiv) * x;
+		glm_vec3_lerp(a, b, mult, ray);
+		glm_vec3_lerp(color_a, color_b, mult, color);
+		glm_vec3_normalize(ray);
+		float divider = M_2SQRT2 * sqrt(ray[2] + 1.0);
+		uv_proj[0] = ray[0] / divider;
+		uv_proj[1] = ray[1] / divider;
+		glm_vec2_scale(uv_proj, 2, uv_proj);
+		glUniform2fv(uniform_pos, 1, uv_proj);
+		glUniform2f(uniform_pos, uv_proj[0], uv_proj[1]);
+		glUniform3fv(uniform_col, 1, color);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	}
+}
+
 void MainLoop(void *loopArg)
 {
 	struct global_context *gctx = (struct global_context *)loopArg;
@@ -394,30 +420,22 @@ void MainLoop(void *loopArg)
 		glUniform4fv(gctx->border_shader.crop, 1, &crop[0]);
 
 		vec3 ray_topleft;
-		ray_topleft[0] = viewrays[2];
-		ray_topleft[1] = viewrays[3];
-		ray_topleft[2] = viewrays[4];
+		glm_vec3_copy(&viewrays[2], ray_topleft);
 		vec3 ray_topright;
-		ray_topright[0] = viewrays[2 + 5];
-		ray_topright[1] = viewrays[3 + 5];
-		ray_topright[2] = viewrays[4 + 5];
+		glm_vec3_copy(&viewrays[2 + 5], ray_topright);
 		vec3 ray_botright;
-		ray_botright[0] = viewrays[2 + 10];
-		ray_botright[1] = viewrays[3 + 10];
-		ray_botright[2] = viewrays[4 + 10];
+		glm_vec3_copy(&viewrays[2 + 10], ray_botright);
 		vec3 ray_botleft;
-		ray_botleft[0] = viewrays[2 + 15];
-		ray_botleft[1] = viewrays[3 + 15];
-		ray_botleft[2] = viewrays[4 + 15];
+		glm_vec3_copy(&viewrays[2 + 15], ray_botleft);
 
 		vec3 ray_top;
-		glm_vec3_center(ray_topleft, ray_topright, ray_top);
+		glm_vec3_lerp(ray_topleft, ray_topright, 0.5, ray_top);
 		vec3 ray_left;
-		glm_vec3_center(ray_topleft, ray_botleft, ray_left);
+		glm_vec3_lerp(ray_topleft, ray_botleft, 0.5, ray_left);
 		vec3 ray_right;
-		glm_vec3_center(ray_topright, ray_botright, ray_right);
+		glm_vec3_lerp(ray_topright, ray_botright, 0.5, ray_right);
 		vec3 ray_bot;
-		glm_vec3_center(ray_botleft, ray_botright, ray_bot);
+		glm_vec3_lerp(ray_botleft, ray_botright, 0.5, ray_bot);
 
 		glm_vec3_normalize(ray_topleft);
 		glm_vec3_normalize(ray_top);
@@ -428,56 +446,38 @@ void MainLoop(void *loopArg)
 		glm_vec3_normalize(ray_botleft);
 		glm_vec3_normalize(ray_left);
 
-		float uv_x;
-		float uv_y;
-		uv_x = ray_topleft[0] / (M_2SQRT2 * sqrt(ray_topleft[2] + 1.0));
-		uv_y = ray_topleft[1] / (M_2SQRT2 * sqrt(ray_topleft[2] + 1.0));
-		uv_x = uv_x * 2.0;
-		uv_y = uv_y * 2.0;
-		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-		uv_x = ray_top[0] / (M_2SQRT2 * sqrt(ray_top[2] + 1.0));
-		uv_y = ray_top[1] / (M_2SQRT2 * sqrt(ray_top[2] + 1.0));
-		uv_x = uv_x * 2.0;
-		uv_y = uv_y * 2.0;
-		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-		uv_x = ray_topright[0] / (M_2SQRT2 * sqrt(ray_topright[2] + 1.0));
-		uv_y = ray_topright[1] / (M_2SQRT2 * sqrt(ray_topright[2] + 1.0));
-		uv_x = uv_x * 2.0;
-		uv_y = uv_y * 2.0;
-		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-		uv_x = ray_right[0] / (M_2SQRT2 * sqrt(ray_right[2] + 1.0));
-		uv_y = ray_right[1] / (M_2SQRT2 * sqrt(ray_right[2] + 1.0));
-		uv_x = uv_x * 2.0;
-		uv_y = uv_y * 2.0;
-		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-		uv_x = ray_botright[0] / (M_2SQRT2 * sqrt(ray_botright[2] + 1.0));
-		uv_y = ray_botright[1] / (M_2SQRT2 * sqrt(ray_botright[2] + 1.0));
-		uv_x = uv_x * 2.0;
-		uv_y = uv_y * 2.0;
-		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-		uv_x = ray_bot[0] / (M_2SQRT2 * sqrt(ray_bot[2] + 1.0));
-		uv_y = ray_bot[1] / (M_2SQRT2 * sqrt(ray_bot[2] + 1.0));
-		uv_x = uv_x * 2.0;
-		uv_y = uv_y * 2.0;
-		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-		uv_x = ray_botleft[0] / (M_2SQRT2 * sqrt(ray_botleft[2] + 1.0));
-		uv_y = ray_botleft[1] / (M_2SQRT2 * sqrt(ray_botleft[2] + 1.0));
-		uv_x = uv_x * 2.0;
-		uv_y = uv_y * 2.0;
-		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-		uv_x = ray_left[0] / (M_2SQRT2 * sqrt(ray_left[2] + 1.0));
-		uv_y = ray_left[1] / (M_2SQRT2 * sqrt(ray_left[2] + 1.0));
-		uv_x = uv_x * 2.0;
-		uv_y = uv_y * 2.0;
-		glUniform2f(gctx->border_shader.transform, uv_x, uv_y);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		vec2 uv;
+
+		vec3 color_topleft = {1.0f, 0.0f, 1.0f};
+		vec3 color_topright = {1.0f, 1.0f, 0.0f};
+		vec3 color_botleft = {0.0f, 1.0f, 1.0f};
+		vec3 color_botright = {1.0f, 1.0f, 0.0f};
+
+		const int subdiv = 100;
+		interpolate_border_points(gctx->border_shader.transform,
+								  ray_topleft, ray_topright, subdiv,
+								  gctx->border_shader.color,
+								  color_topleft, color_topright);
+		interpolate_border_points(gctx->border_shader.transform,
+								  ray_topright, ray_botright, subdiv,
+								  gctx->border_shader.color,
+								  color_topright, color_botright);
+		interpolate_border_points(gctx->border_shader.transform,
+								  ray_botright, ray_botleft, subdiv,
+								  gctx->border_shader.color,
+								  color_botright, color_botleft);
+		interpolate_border_points(gctx->border_shader.transform,
+								  ray_botleft, ray_topleft, subdiv,
+								  gctx->border_shader.color,
+								  color_botleft, color_topleft);
+		interpolate_border_points(gctx->border_shader.transform,
+								  ray_botleft, ray_topright, subdiv,
+								  gctx->border_shader.color,
+								  color_botleft, color_topright);
+		interpolate_border_points(gctx->border_shader.transform,
+								  ray_topleft, ray_botright, subdiv,
+								  gctx->border_shader.color,
+								  color_topleft, color_botright);
 	}
 	else
 	{

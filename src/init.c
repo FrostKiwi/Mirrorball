@@ -102,6 +102,8 @@ void init_shaders(struct global_context *gctx)
 		glGetUniformLocation(gctx->border_shader.shader, "scale"); */
 	gctx->border_shader.transform =
 		glGetUniformLocation(gctx->border_shader.shader, "transform");
+	gctx->border_shader.color =
+		glGetUniformLocation(gctx->border_shader.shader, "color");
 
 	gctx->crop_shader.vtx =
 		glGetAttribLocation(gctx->crop_shader.shader, "vtx");

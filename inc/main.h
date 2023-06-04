@@ -80,6 +80,7 @@ struct global_context
 		GLint crop;
 		GLint scale;
 		GLint transform;
+		GLint color;
 	} border_shader;
 
 	/* Camera struct */
