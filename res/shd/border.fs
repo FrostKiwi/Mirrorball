@@ -5,5 +5,8 @@ varying vec2 vtx_fs;
 
 void main()
 {
-	gl_FragColor = vec4(color, 1);
+	if (length(vtx_fs) < 1.0)
+		gl_FragColor = vec4(color, 1);
+	else
+		discard;
 }

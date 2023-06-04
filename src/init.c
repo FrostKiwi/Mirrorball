@@ -71,10 +71,10 @@ void init_shaders(struct global_context *gctx)
 		-1.0, -1.0, 0.0, 1.0};
 
 	float unitquad_small[] = {
-		-0.01, 0.01,
-		0.01, 0.01,
-		0.01, -0.01,
-		-0.01, -0.01};
+		-1.0, 1.0,
+		1.0, 1.0,
+		1.0, -1.0,
+		-1.0, -1.0};
 
 	glGenBuffers(1, &gctx->bgvbo);
 	glBindBuffer(GL_ARRAY_BUFFER, gctx->bgvbo);
@@ -98,8 +98,8 @@ void init_shaders(struct global_context *gctx)
 		glGetUniformLocation(gctx->border_shader.shader, "aspect_h");
 	gctx->border_shader.crop =
 		glGetUniformLocation(gctx->border_shader.shader, "crop");
-	/* gctx->border_shader.scale =
-		glGetUniformLocation(gctx->border_shader.shader, "scale"); */
+	gctx->border_shader.scale =
+		glGetUniformLocation(gctx->border_shader.shader, "scale");
 	gctx->border_shader.transform =
 		glGetUniformLocation(gctx->border_shader.shader, "transform");
 	gctx->border_shader.color =

@@ -149,7 +149,6 @@ void MainLoop(void *loopArg)
 	}
 
 	/* Rotation input from mouse */
-
 	if (gctx->cam.fov > gctx->cam.fovmax)
 		gctx->cam.fov = gctx->cam.fovmax;
 	if (gctx->cam.fov < gctx->cam.fovmin)
@@ -416,6 +415,7 @@ void MainLoop(void *loopArg)
 
 		glUniform1f(gctx->border_shader.aspect_h, 1.0);
 		glUniform1f(gctx->border_shader.aspect_w, 1.0);
+		glUniform1f(gctx->border_shader.scale, 0.01);
 		glVertexAttribPointer(gctx->border_shader.vtx, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 		glUniform4fv(gctx->border_shader.crop, 1, &crop[0]);
 
@@ -437,15 +437,6 @@ void MainLoop(void *loopArg)
 		vec3 ray_bot;
 		glm_vec3_lerp(ray_botleft, ray_botright, 0.5, ray_bot);
 
-		glm_vec3_normalize(ray_topleft);
-		glm_vec3_normalize(ray_top);
-		glm_vec3_normalize(ray_topright);
-		glm_vec3_normalize(ray_right);
-		glm_vec3_normalize(ray_botright);
-		glm_vec3_normalize(ray_bot);
-		glm_vec3_normalize(ray_botleft);
-		glm_vec3_normalize(ray_left);
-
 		vec2 uv;
 
 		vec3 color_topleft = {1.0f, 0.0f, 1.0f};
@@ -453,7 +444,7 @@ void MainLoop(void *loopArg)
 		vec3 color_botleft = {0.0f, 1.0f, 1.0f};
 		vec3 color_botright = {1.0f, 1.0f, 0.0f};
 
-		const int subdiv = 100;
+		const int subdiv = 32;
 		interpolate_border_points(gctx->border_shader.transform,
 								  ray_topleft, ray_topright, subdiv,
 								  gctx->border_shader.color,

@@ -28,6 +28,10 @@ int main(int argc, char *argv[])
 								   SDL_WINDOW_ALLOW_HIGHDPI */
 	glContext = SDL_GL_CreateContext(gctx.win);
 
+	if(SDL_GL_ExtensionSupported("ANGLE_instanced_arrays")){
+		puts("Hooray");
+	}
+
 	/* OpenGL setup */
 	glClearColor(0, 0, 0, 1);
 	/* Prevents headaches when loading NPOT textures */
