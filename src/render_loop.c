@@ -1,7 +1,5 @@
 #include "main.h"
 
-#define M_2SQRT2 2.8284271247461900976033774484194
-
 float viewrays[] = {
 	-1.0, 1.0, 0.0, 0.0, 0.0,
 	1.0, 1.0, 0.0, 0.0, 0.0,
@@ -40,6 +38,10 @@ void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
 							   GLint uniform_col, vec3 color_a, vec3 color_b)
 {
 	const float m_2SQRT2 = 2.8284271247461900976033774484194;
+	if (subdiv % 2 == 1)
+	{
+		subdiv++;
+	}
 	vec3 ray;
 	vec2 uv_proj;
 	vec3 color;
@@ -49,7 +51,7 @@ void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
 		glm_vec3_lerp(a, b, mult, ray);
 		glm_vec3_lerp(color_a, color_b, mult, color);
 		glm_vec3_normalize(ray);
-		float divider = M_2SQRT2 * sqrt(ray[2] + 1.0);
+		float divider = m_2SQRT2 * sqrt(ray[2] + 1.0);
 		uv_proj[0] = ray[0] / divider;
 		uv_proj[1] = ray[1] / divider;
 		glm_vec2_scale(uv_proj, 2, uv_proj);
@@ -156,6 +158,7 @@ void MainLoop(void *loopArg)
 
 	int win_width, win_height;
 	SDL_GetWindowSize(gctx->win, &win_width, &win_height);
+	float aspect = (float)win_width / (float)win_height;
 	glViewport(0, 0, win_width, win_height);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -386,8 +389,6 @@ void MainLoop(void *loopArg)
 							((float)win_height / (float)win_width));
 			glUniform1f(gctx->crop_shader.aspect_w, 1.0);
 		}
-		glUniform1f(gctx->crop_shader.aspect_h, 1.0);
-		glUniform1f(gctx->crop_shader.aspect_w, 1.0);
 
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 		glUseProgram(0);
@@ -413,8 +414,6 @@ void MainLoop(void *loopArg)
 			glUniform1f(gctx->border_shader.aspect_w, 1.0);
 		}
 
-		glUniform1f(gctx->border_shader.aspect_h, 1.0);
-		glUniform1f(gctx->border_shader.aspect_w, 1.0);
 		glUniform1f(gctx->border_shader.scale, 0.01);
 		glVertexAttribPointer(gctx->border_shader.vtx, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 		glUniform4fv(gctx->border_shader.crop, 1, &crop[0]);
@@ -437,16 +436,15 @@ void MainLoop(void *loopArg)
 		vec3 ray_bot;
 		glm_vec3_lerp(ray_botleft, ray_botright, 0.5, ray_bot);
 
-		vec2 uv;
-
 		vec3 color_topleft = {1.0f, 0.0f, 1.0f};
 		vec3 color_topright = {1.0f, 1.0f, 0.0f};
 		vec3 color_botleft = {0.0f, 1.0f, 1.0f};
 		vec3 color_botright = {1.0f, 1.0f, 0.0f};
 
-		const int subdiv = 32;
+		/* Should use instanced rendering */
+		const int subdiv = 16;
 		interpolate_border_points(gctx->border_shader.transform,
-								  ray_topleft, ray_topright, subdiv,
+								  ray_topleft, ray_topright, subdiv * aspect,
 								  gctx->border_shader.color,
 								  color_topleft, color_topright);
 		interpolate_border_points(gctx->border_shader.transform,
@@ -454,7 +452,7 @@ void MainLoop(void *loopArg)
 								  gctx->border_shader.color,
 								  color_topright, color_botright);
 		interpolate_border_points(gctx->border_shader.transform,
-								  ray_botright, ray_botleft, subdiv,
+								  ray_botright, ray_botleft, subdiv * aspect,
 								  gctx->border_shader.color,
 								  color_botright, color_botleft);
 		interpolate_border_points(gctx->border_shader.transform,
@@ -462,11 +460,11 @@ void MainLoop(void *loopArg)
 								  gctx->border_shader.color,
 								  color_botleft, color_topleft);
 		interpolate_border_points(gctx->border_shader.transform,
-								  ray_botleft, ray_topright, subdiv,
+								  ray_botleft, ray_topright, subdiv * aspect * GLM_SQRT2,
 								  gctx->border_shader.color,
 								  color_botleft, color_topright);
 		interpolate_border_points(gctx->border_shader.transform,
-								  ray_topleft, ray_botright, subdiv,
+								  ray_topleft, ray_botright, subdiv * aspect * GLM_SQRT2,
 								  gctx->border_shader.color,
 								  color_topleft, color_botright);
 	}
