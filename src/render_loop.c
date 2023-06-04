@@ -2,7 +2,7 @@
 #include "input.h"
 #include "main.h"
 
-float viewrays[] = {
+static float viewrays[] = {
 	-1.0, 1.0, 0.0, 0.0, 0.0,
 	1.0, 1.0, 0.0, 0.0, 0.0,
 	1.0, -1.0, 0.0, 0.0, 0.0,
