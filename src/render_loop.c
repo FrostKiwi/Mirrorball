@@ -35,7 +35,8 @@ EMSCRIPTEN_KEEPALIVE int load_file(uint8_t *buffer, size_t size)
 /* Interpolates and projects the broder points for a nice little vizualization
    to explain the projection mapping */
 void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
-							   GLint uniform_col, vec3 color_a, vec3 color_b)
+							   GLint uniform_col, vec3 color_a, vec3 color_b,
+							   float view_scaler)
 {
 	const float m_2SQRT2 = 2.8284271247461900976033774484194;
 	if (subdiv % 2 == 1)
@@ -52,8 +53,8 @@ void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
 		glm_vec3_lerp(color_a, color_b, mult, color);
 		glm_vec3_normalize(ray);
 		float divider = m_2SQRT2 * sqrt(ray[2] + 1.0);
-		uv_proj[0] = ray[0] / divider;
-		uv_proj[1] = ray[1] / divider;
+		uv_proj[0] = ray[0] * view_scaler / divider;
+		uv_proj[1] = ray[1] * view_scaler / divider;
 		glm_vec2_scale(uv_proj, 2, uv_proj);
 		glUniform2fv(uniform_pos, 1, uv_proj);
 		glUniform2f(uniform_pos, uv_proj[0], uv_proj[1]);
@@ -446,27 +447,27 @@ void MainLoop(void *loopArg)
 		interpolate_border_points(gctx->border_shader.transform,
 								  ray_topleft, ray_topright, subdiv * aspect,
 								  gctx->border_shader.color,
-								  color_topleft, color_topright);
+								  color_topleft, color_topright, gctx->ch1.fov);
 		interpolate_border_points(gctx->border_shader.transform,
 								  ray_topright, ray_botright, subdiv,
 								  gctx->border_shader.color,
-								  color_topright, color_botright);
+								  color_topright, color_botright, gctx->ch1.fov);
 		interpolate_border_points(gctx->border_shader.transform,
 								  ray_botright, ray_botleft, subdiv * aspect,
 								  gctx->border_shader.color,
-								  color_botright, color_botleft);
+								  color_botright, color_botleft, gctx->ch1.fov);
 		interpolate_border_points(gctx->border_shader.transform,
 								  ray_botleft, ray_topleft, subdiv,
 								  gctx->border_shader.color,
-								  color_botleft, color_topleft);
+								  color_botleft, color_topleft, gctx->ch1.fov);
 		interpolate_border_points(gctx->border_shader.transform,
 								  ray_botleft, ray_topright, subdiv * aspect * GLM_SQRT2,
 								  gctx->border_shader.color,
-								  color_botleft, color_topright);
+								  color_botleft, color_topright, gctx->ch1.fov);
 		interpolate_border_points(gctx->border_shader.transform,
 								  ray_topleft, ray_botright, subdiv * aspect * GLM_SQRT2,
 								  gctx->border_shader.color,
-								  color_topleft, color_botright);
+								  color_topleft, color_botright, gctx->ch1.fov);
 	}
 	else
 	{
