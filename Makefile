@@ -1,6 +1,6 @@
 SRC = $(wildcard src/*.c)
 
-release: CFLAGS = -Wall -O3
+release: CFLAGS = -Wall -O3 -flto # O3 + LTO
 debug: CFLAGS = -Wall -O0
 OBJ = $(addprefix obj/, $(notdir $(SRC:.c=.o)))
 
@@ -13,7 +13,8 @@ EMCC_LINKER_FLAGS= $(EMCC_FLAGS) \
 				   -s EXPORTED_RUNTIME_METHODS=[ccall] \
 				   -s ALLOW_MEMORY_GROWTH \
 				   --use-preload-plugins \
-				   --preload-file res
+				   --preload-file res \
+				   -Wl,-u,fileno
 
 release debug: $(OBJ)
 	emcc $(EMCC_LINKER_FLAGS) \
