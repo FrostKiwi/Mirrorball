@@ -39,6 +39,7 @@ release debug: out/index.html $(OBJ)
 
 # Linking Stage + Output to WASM.
 out/index.html: $(OBJ)
+	mkdir -p out
 	emcc $(EMCC_LINKER_FLAGS) \
 		 -Iinc $(OBJ) $(CFLAGS) \
 		 -o out/index.html \
