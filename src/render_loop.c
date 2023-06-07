@@ -8,32 +8,6 @@ static float viewrays[] = {
 	1.0, -1.0, 0.0, 0.0, 0.0,
 	-1.0, -1.0, 0.0, 0.0, 0.0};
 
-/* TODO: !!! BUFFER NOT FREED !!! */
-EMSCRIPTEN_KEEPALIVE int load_file(uint8_t *buffer, size_t size)
-{
-	/* 	gctx.ch1.data = stbi_load_from_memory(buffer, size, &gctx.ch1.width,
-											  &gctx.ch1.height,
-											  &gctx.ch1.channels, 3);
-		glDeleteTextures(1, &gctx.ch1.tex);
-		glGenTextures(1, &gctx.ch1.tex);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, gctx.ch1.tex);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, gctx.ch1.width, gctx.ch1.height, 0, GL_RGB,
-					 GL_UNSIGNED_BYTE, gctx.ch1.data);
-		stbi_image_free(gctx.ch1.data);
-		glm_vec3_zero(gctx.cam.cam_rotation);
-		glm_vec3_zero(gctx.ch1.rotation);
-		gctx.ch1.fov_deg = 360;
-		gctx.fov = glm_rad(100);
-		gctx.ch1.crop.bot = gctx.ch1.crop.top = gctx.ch1.crop.left = gctx.ch1.crop.right = 0; */
-	puts("Please make it till here");
-	return 1;
-}
-
 /* Interpolates and projects the border points for a nice little vizualization
    to explain the projection mapping */
 void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
@@ -141,7 +115,7 @@ void MainLoop(void *loopArg)
 			glUniform1f(gctx->crop_shader.aspect_w, 1.0);
 		}
 
-		glUniform1f(gctx->crop_shader.mask_toggle, gctx->mask_toggle ? 1.0 : 0.0 );
+		glUniform1f(gctx->crop_shader.mask_toggle, gctx->mask_toggle ? 1.0 : 0.0);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 		glUseProgram(0);
 		glActiveTexture(GL_TEXTURE0);

@@ -1,17 +1,20 @@
 #include "main.h"
 #include "init.h"
 
+/* Make struct global, to make the symbol accessible across all translation
+   units, which are called by the EMscripten java script. */
+struct global_context gctx = {
+	.cam.fovmin = 10 * GLM_PIf / 180.0f,
+	.cam.fovmax = 140 * GLM_PIf / 180.0f,
+	.cam.fov = 100 * GLM_PIf / 180.0f,
+	.ch1.fov_deg = 360,
+	.projection = false,
+	.interface_mult = 1,
+	.mask_toggle = false,
+	.vizualize = false};
+
 int main(int argc, char *argv[])
 {
-	struct global_context gctx = {
-		.cam.fovmin = 10 * GLM_PIf / 180.0f,
-		.cam.fovmax = 140 * GLM_PIf / 180.0f,
-		.cam.fov = 100 * GLM_PIf / 180.0f,
-		.ch1.fov_deg = 360,
-		.projection = false,
-		.interface_mult = 1,
-        .mask_toggle = false,
-        .vizualize = false};
 	/* GUI */
 	SDL_GLContext glContext;
 
