@@ -9,7 +9,9 @@ int main(int argc, char *argv[])
 		.cam.fov = 100 * GLM_PIf / 180.0f,
 		.ch1.fov_deg = 360,
 		.projection = false,
-		.interface_mult = 1};
+		.interface_mult = 1,
+        .mask_toggle = false,
+        .vizualize = false};
 	/* GUI */
 	SDL_GLContext glContext;
 

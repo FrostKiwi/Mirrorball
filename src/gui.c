@@ -20,6 +20,9 @@ void gui(struct global_context *gctx)
 			gctx->projection = false;
 		if (nk_option_label(ctx, "Project image", gctx->projection))
 			gctx->projection = true;
+        nk_layout_row_dynamic(ctx, 24 * gctx->interface_mult, 1);
+        nk_checkbox_label(ctx, "Toggle crop mask", &gctx->mask_toggle);
+        nk_checkbox_label(ctx, "Toggle distortion visualization", &gctx->vizualize);
 		nk_layout_row_dynamic(ctx, 18 * gctx->interface_mult, 1);
 		nk_label(ctx, "Arrow keys on computer or Touch-Drag on", NK_TEXT_ALIGN_LEFT);
 		nk_label(ctx, "Smartphones to move the projection camera.", NK_TEXT_ALIGN_LEFT);

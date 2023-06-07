@@ -53,6 +53,9 @@ struct global_context
 
 	struct channel ch1;
 
+    nk_bool mask_toggle;
+    nk_bool vizualize;
+
 	struct
 	{
 		GLuint shader;
@@ -61,6 +64,7 @@ struct global_context
 		GLint aspect_w;
 		GLint aspect_h;
 		GLint crop;
+		GLint mask_toggle;
 	} crop_shader;
 	struct
 	{

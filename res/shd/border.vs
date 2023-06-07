@@ -9,8 +9,8 @@ uniform vec2 transform;
 
 void main()
 {
-    vtx_fs = vtx;
-    vec2 vtx_transform = vtx * scale;
+	vtx_fs = vtx;
+	vec2 vtx_transform = vtx * scale;
 	vtx_transform = vtx_transform + transform;
-    gl_Position = vec4(vtx_transform.x * aspect_w, vtx_transform.y * aspect_h, 0.0, 1.0);
+	gl_Position = vec4(vtx_transform.x * aspect_w, vtx_transform.y * aspect_h, 0.0, 1.0);
 }

@@ -115,6 +115,8 @@ void init_shaders(struct global_context *gctx)
 		glGetUniformLocation(gctx->crop_shader.shader, "aspect_h");
 	gctx->crop_shader.crop =
 		glGetUniformLocation(gctx->crop_shader.shader, "crop");
+	gctx->crop_shader.mask_toggle =
+		glGetUniformLocation(gctx->crop_shader.shader, "mask_toggle");
 
 	gctx->projection_shader.pos =
 		glGetAttribLocation(gctx->projection_shader.shader, "pos");

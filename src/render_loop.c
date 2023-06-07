@@ -141,74 +141,78 @@ void MainLoop(void *loopArg)
 			glUniform1f(gctx->crop_shader.aspect_w, 1.0);
 		}
 
+		glUniform1f(gctx->crop_shader.mask_toggle, gctx->mask_toggle ? 1.0 : 0.0 );
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 		glUseProgram(0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		glUseProgram(gctx->border_shader.shader);
-		glBindBuffer(GL_ARRAY_BUFFER, gctx->border_shader.quadvbo);
-
-		if (((float)postcrop_h / (float)postcrop_w) >
-			((float)win_height / (float)win_width))
+		if (gctx->vizualize)
 		{
-			glUniform1f(gctx->border_shader.aspect_h, 1.0);
-			glUniform1f(gctx->border_shader.aspect_w,
-						((float)postcrop_w / (float)postcrop_h) /
-							((float)win_width / (float)win_height));
+			glUseProgram(gctx->border_shader.shader);
+			glBindBuffer(GL_ARRAY_BUFFER, gctx->border_shader.quadvbo);
+
+			if (((float)postcrop_h / (float)postcrop_w) >
+				((float)win_height / (float)win_width))
+			{
+				glUniform1f(gctx->border_shader.aspect_h, 1.0);
+				glUniform1f(gctx->border_shader.aspect_w,
+							((float)postcrop_w / (float)postcrop_h) /
+								((float)win_width / (float)win_height));
+			}
+			else
+			{
+				glUniform1f(gctx->border_shader.aspect_h,
+							((float)postcrop_h / (float)postcrop_w) /
+								((float)win_height / (float)win_width));
+				glUniform1f(gctx->border_shader.aspect_w, 1.0);
+			}
+
+			glUniform1f(gctx->border_shader.scale, 0.01);
+			glVertexAttribPointer(gctx->border_shader.vtx, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+			glUniform4fv(gctx->border_shader.crop, 1, &crop[0]);
+
+			vec3 ray_topleft;
+			glm_vec3_copy(&viewrays[2], ray_topleft);
+			vec3 ray_topright;
+			glm_vec3_copy(&viewrays[2 + 5], ray_topright);
+			vec3 ray_botright;
+			glm_vec3_copy(&viewrays[2 + 10], ray_botright);
+			vec3 ray_botleft;
+			glm_vec3_copy(&viewrays[2 + 15], ray_botleft);
+
+			vec3 color_topleft = {1.0f, 0.0f, 1.0f};
+			vec3 color_topright = {1.0f, 1.0f, 0.0f};
+			vec3 color_botleft = {0.0f, 1.0f, 1.0f};
+			vec3 color_botright = {1.0f, 1.0f, 0.0f};
+
+			/* Should use instanced rendering */
+			const int subdiv = 16;
+			interpolate_border_points(gctx->border_shader.transform,
+									  ray_topleft, ray_topright, subdiv * aspect,
+									  gctx->border_shader.color,
+									  color_topleft, color_topright, gctx->ch1.fov);
+			interpolate_border_points(gctx->border_shader.transform,
+									  ray_topright, ray_botright, subdiv,
+									  gctx->border_shader.color,
+									  color_topright, color_botright, gctx->ch1.fov);
+			interpolate_border_points(gctx->border_shader.transform,
+									  ray_botright, ray_botleft, subdiv * aspect,
+									  gctx->border_shader.color,
+									  color_botright, color_botleft, gctx->ch1.fov);
+			interpolate_border_points(gctx->border_shader.transform,
+									  ray_botleft, ray_topleft, subdiv,
+									  gctx->border_shader.color,
+									  color_botleft, color_topleft, gctx->ch1.fov);
+			interpolate_border_points(gctx->border_shader.transform,
+									  ray_botleft, ray_topright, subdiv * aspect * GLM_SQRT2,
+									  gctx->border_shader.color,
+									  color_botleft, color_topright, gctx->ch1.fov);
+			interpolate_border_points(gctx->border_shader.transform,
+									  ray_topleft, ray_botright, subdiv * aspect * GLM_SQRT2,
+									  gctx->border_shader.color,
+									  color_topleft, color_botright, gctx->ch1.fov);
 		}
-		else
-		{
-			glUniform1f(gctx->border_shader.aspect_h,
-						((float)postcrop_h / (float)postcrop_w) /
-							((float)win_height / (float)win_width));
-			glUniform1f(gctx->border_shader.aspect_w, 1.0);
-		}
-
-		glUniform1f(gctx->border_shader.scale, 0.01);
-		glVertexAttribPointer(gctx->border_shader.vtx, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-		glUniform4fv(gctx->border_shader.crop, 1, &crop[0]);
-
-		vec3 ray_topleft;
-		glm_vec3_copy(&viewrays[2], ray_topleft);
-		vec3 ray_topright;
-		glm_vec3_copy(&viewrays[2 + 5], ray_topright);
-		vec3 ray_botright;
-		glm_vec3_copy(&viewrays[2 + 10], ray_botright);
-		vec3 ray_botleft;
-		glm_vec3_copy(&viewrays[2 + 15], ray_botleft);
-
-		vec3 color_topleft = {1.0f, 0.0f, 1.0f};
-		vec3 color_topright = {1.0f, 1.0f, 0.0f};
-		vec3 color_botleft = {0.0f, 1.0f, 1.0f};
-		vec3 color_botright = {1.0f, 1.0f, 0.0f};
-
-		/* Should use instanced rendering */
-		const int subdiv = 16;
-		interpolate_border_points(gctx->border_shader.transform,
-								  ray_topleft, ray_topright, subdiv * aspect,
-								  gctx->border_shader.color,
-								  color_topleft, color_topright, gctx->ch1.fov);
-		interpolate_border_points(gctx->border_shader.transform,
-								  ray_topright, ray_botright, subdiv,
-								  gctx->border_shader.color,
-								  color_topright, color_botright, gctx->ch1.fov);
-		interpolate_border_points(gctx->border_shader.transform,
-								  ray_botright, ray_botleft, subdiv * aspect,
-								  gctx->border_shader.color,
-								  color_botright, color_botleft, gctx->ch1.fov);
-		interpolate_border_points(gctx->border_shader.transform,
-								  ray_botleft, ray_topleft, subdiv,
-								  gctx->border_shader.color,
-								  color_botleft, color_topleft, gctx->ch1.fov);
-		interpolate_border_points(gctx->border_shader.transform,
-								  ray_botleft, ray_topright, subdiv * aspect * GLM_SQRT2,
-								  gctx->border_shader.color,
-								  color_botleft, color_topright, gctx->ch1.fov);
-		interpolate_border_points(gctx->border_shader.transform,
-								  ray_topleft, ray_botright, subdiv * aspect * GLM_SQRT2,
-								  gctx->border_shader.color,
-								  color_topleft, color_botright, gctx->ch1.fov);
 	}
 	else
 	{
