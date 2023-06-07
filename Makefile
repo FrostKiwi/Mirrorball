@@ -17,7 +17,7 @@ CAUSE_FOR_RECOMPILE = $(wildcard inc/*.h) \
 
 EMCC_FLAGS= -s USE_SDL=2 \
 			-s USE_SDL_IMAGE=2 \
-			-s SDL2_IMAGE_FORMATS='["jpg", "png"]'
+			-s SDL2_IMAGE_FORMATS='["jpg", "png", "heic"]'
 
 EMCC_LINKER_FLAGS = $(EMCC_FLAGS) \
 					-s EXPORTED_FUNCTIONS='$(PROTECT)' \
