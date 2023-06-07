@@ -3,7 +3,7 @@
 
 extern struct global_context gctx;
 
-int load_file(uint8_t *buffer, size_t size)
+int load_photo(uint8_t *buffer, size_t size)
 {
 	SDL_Surface *surface;
 	SDL_RWops *rw;

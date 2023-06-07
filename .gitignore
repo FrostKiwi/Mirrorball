@@ -5,4 +5,4 @@ lbs
 obj
 bin
 inc/res.h
-out/index*
+out/*
