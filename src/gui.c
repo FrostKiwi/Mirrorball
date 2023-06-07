@@ -103,11 +103,8 @@ void gui(struct global_context *gctx)
 		{
 			nk_style_set_font(ctx, gctx->std.handle);
 			nk_layout_row_dynamic(ctx, 18 * gctx->interface_mult, 1);
-			nk_label(ctx, "Load Mirror ball as a photo, only JPEG or PNG!", NK_TEXT_ALIGN_LEFT);
-			nk_label(ctx, "(iPhones default to shooting .HEIC, please", NK_TEXT_ALIGN_LEFT);
-			nk_label(ctx, "convert or change to JPG in system settings)", NK_TEXT_ALIGN_LEFT);
-			nk_label(ctx, "Doesn't seem to work on iPhones yet :[", NK_TEXT_ALIGN_LEFT);
-			nk_label(ctx, "Android and Computers are fine...", NK_TEXT_ALIGN_LEFT);
+			nk_label(ctx, "Load Mirror ball as a photo.", NK_TEXT_ALIGN_LEFT);
+			nk_label(ctx, "Or take a photo directly a smartphone.", NK_TEXT_ALIGN_LEFT);
 			nk_style_set_font(ctx, gctx->icons.handle);
 			nk_layout_row_dynamic(ctx, 64 * gctx->interface_mult, 1);
 			ctx->style.button.text_normal = nk_rgb(8, 166, 142);
@@ -120,7 +117,7 @@ void gui(struct global_context *gctx)
 					var file_selector = document.createElement('input');
 					file_selector.setAttribute('type', 'file');
 					file_selector.setAttribute('onchange', 'open_file(event)');
-					file_selector.setAttribute('accept', '.png,.jpeg'); // optional - limit accepted file types
+					file_selector.setAttribute('accept', '.png,.jpeg,.heic'); // optional - limit accepted file types
 					file_selector.click(););
 			}
 
