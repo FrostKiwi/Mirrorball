@@ -1,8 +1,5 @@
-.ccls
-.ccls-cache
 .vscode
 lbs
 obj
 bin
-inc/res.h
-out/*
+out
