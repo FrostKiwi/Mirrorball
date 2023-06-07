@@ -72,7 +72,7 @@ void MainLoop(void *loopArg)
 	input(gctx);
 
 	int win_width, win_height;
-	SDL_GetWindowSize(gctx->win, &win_width, &win_height);
+	SDL_GL_GetDrawableSize(gctx->win, &win_width, &win_height);
 	float aspect = (float)win_width / (float)win_height;
 	glViewport(0, 0, win_width, win_height);
 	glClear(GL_COLOR_BUFFER_BIT);

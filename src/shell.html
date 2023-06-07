@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="icon" href="favicon.svg">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Frost-O-Rama</title>
     <style>
         * {
@@ -47,7 +47,6 @@
     <div id="status">Downloading...</div>
     <progress value="0" max="100" id="progress" hidden=1></progress>
     <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
-    <!-- <textarea class="emscripten" id="output" rows="8"></textarea> -->
     <script type='text/javascript'>
         var open_file = function (e) {
             const file_reader = new FileReader();
@@ -74,11 +73,6 @@
                 if (element) element.value = ''; // clear browser cache
                 return function (text) {
                     if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-                    // These replacements are necessary if you render to raw HTML
-                    //text = text.replace(/&/g, "&amp;");
-                    //text = text.replace(/</g, "&lt;");
-                    //text = text.replace(/>/g, "&gt;");
-                    //text = text.replace('\n', '<br>', 'g');
                     console.log(text);
                     if (element) {
                         element.value += text + "\n";
@@ -95,7 +89,7 @@
 
                     viewportmeta = document.querySelector('meta[name="viewport"]');
                 }
-                /* viewportmeta.setAttribute('content', "initial-scale=0.5, minimum-scale=0.5, maximum-scale=0.5"); */
+                /* viewportmeta.setAttribute('content', "initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"); */
 
                 var canvas = document.getElementById('canvas');
 

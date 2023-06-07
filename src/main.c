@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	SDL_GLContext glContext;
 
 	/* SDL setup */
-	SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "1");
+	SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	/* Window size doesn't really matter here, since the HTML canvas determines
@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
 								800, 600,
 								SDL_WINDOW_OPENGL |
 									SDL_WINDOW_SHOWN |
-									SDL_WINDOW_RESIZABLE); /* |
-								   SDL_WINDOW_ALLOW_HIGHDPI */
+									SDL_WINDOW_RESIZABLE |
+									SDL_WINDOW_ALLOW_HIGHDPI);
 	glContext = SDL_GL_CreateContext(gctx.win);
 
 	/* OpenGL setup */
