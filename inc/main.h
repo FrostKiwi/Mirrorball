@@ -81,7 +81,6 @@ struct global_context
 		GLint vtx;
 		GLint aspect_w;
 		GLint aspect_h;
-		GLint crop;
 		GLint scale;
 		GLint transform;
 		GLint color;

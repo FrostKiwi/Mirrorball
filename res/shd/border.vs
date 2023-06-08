@@ -1,7 +1,6 @@
 #version 100
 attribute vec2 vtx;
 varying vec2 vtx_fs;
-uniform vec4 crop;
 uniform float aspect_w;
 uniform float aspect_h;
 uniform float scale;

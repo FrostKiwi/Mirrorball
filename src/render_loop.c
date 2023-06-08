@@ -78,6 +78,22 @@ void MainLoop(void *loopArg)
 		glm_vec3_rotate_m4(gctx->cam.cam_rotation_matrix, &viewrays[i + 2], &viewrays[i + 2]);
 	}
 
+    /* Border shader preperation */
+	vec3 ray_topleft;
+	glm_vec3_copy(&viewrays[2], ray_topleft);
+	vec3 ray_topright;
+	glm_vec3_copy(&viewrays[2 + 5], ray_topright);
+	vec3 ray_botright;
+	glm_vec3_copy(&viewrays[2 + 10], ray_botright);
+	vec3 ray_botleft;
+	glm_vec3_copy(&viewrays[2 + 15], ray_botleft);
+
+	vec3 color_topleft = {1.0f, 0.0f, 1.0f};
+	vec3 color_topright = {1.0f, 1.0f, 0.0f};
+	vec3 color_botleft = {0.0f, 1.0f, 1.0f};
+	vec3 color_botright = {1.0f, 1.0f, 0.0f};
+	const int subdiv = 16;
+
 	/* Drawcalls */
 	if (!gctx->projection)
 	{
@@ -144,24 +160,8 @@ void MainLoop(void *loopArg)
 
 			glUniform1f(gctx->border_shader.scale, 0.01);
 			glVertexAttribPointer(gctx->border_shader.vtx, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-			glUniform4fv(gctx->border_shader.crop, 1, &crop[0]);
-
-			vec3 ray_topleft;
-			glm_vec3_copy(&viewrays[2], ray_topleft);
-			vec3 ray_topright;
-			glm_vec3_copy(&viewrays[2 + 5], ray_topright);
-			vec3 ray_botright;
-			glm_vec3_copy(&viewrays[2 + 10], ray_botright);
-			vec3 ray_botleft;
-			glm_vec3_copy(&viewrays[2 + 15], ray_botleft);
-
-			vec3 color_topleft = {1.0f, 0.0f, 1.0f};
-			vec3 color_topright = {1.0f, 1.0f, 0.0f};
-			vec3 color_botleft = {0.0f, 1.0f, 1.0f};
-			vec3 color_botright = {1.0f, 1.0f, 0.0f};
 
 			/* Should use instanced rendering */
-			const int subdiv = 16;
 			interpolate_border_points(gctx->border_shader.transform,
 									  ray_topleft, ray_topright, subdiv * aspect,
 									  gctx->border_shader.color,
