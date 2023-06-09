@@ -3,7 +3,7 @@
 #include "main.h"
 
 void draw_project();
-void draw_border(int subdiv);
+void draw_border(bool project_points, int subdiv);
 void draw_crop();
 
 void render_loop(void *loopArg)
@@ -53,7 +53,7 @@ void render_loop(void *loopArg)
 		if (gctx.vizualize)
 		{
 			/* Draw the screen border distortion vizulization */
-			draw_border(16);
+			draw_border(true, 16);
 		}
 	}
 	else
@@ -64,7 +64,7 @@ void render_loop(void *loopArg)
 		if (gctx.vizualize)
 		{
 			/* Draw the screen border distortion vizulization */
-			draw_border(16);
+			draw_border(false, 16);
 		}
 	}
 
