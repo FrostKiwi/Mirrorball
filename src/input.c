@@ -77,10 +77,10 @@ void input()
 	if (ctx->input.keyboard.keys[NK_KEY_RIGHT].down && ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
 		gctx.cam.fov -= 0.05;
 
-	if (gctx.cam.cam_rotation[0] > M_PI / 2.0)
-		gctx.cam.cam_rotation[0] = M_PI / 2.0;
-	if (gctx.cam.cam_rotation[0] < M_PI / -2.0)
-		gctx.cam.cam_rotation[0] = M_PI / -2.0;
+	if (gctx->cam.cam_rotation[0] > GLM_PI / 2.0)
+		gctx->cam.cam_rotation[0] = GLM_PI / 2.0;
+	if (gctx->cam.cam_rotation[0] < GLM_PI / -2.0)
+		gctx->cam.cam_rotation[0] = GLM_PI / -2.0;
 
 	if (!nk_window_is_any_hovered(ctx))
 	{

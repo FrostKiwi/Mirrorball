@@ -14,11 +14,8 @@ void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
 							   GLint uniform_col, vec3 color_a, vec3 color_b,
 							   float view_scaler)
 {
-	const float m_2SQRT2 = 2.8284271247461900976033774484194;
 	if (subdiv % 2 == 1)
-	{
 		subdiv++;
-	}
 	vec3 ray;
 	vec2 uv_proj;
 	vec3 color;
@@ -28,9 +25,9 @@ void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
 		glm_vec3_lerp(a, b, mult, ray);
 		glm_vec3_lerp(color_a, color_b, mult, color);
 		glm_vec3_normalize(ray);
-		float divider = m_2SQRT2 * sqrt(ray[2] + 1.0);
-		uv_proj[0] = ray[0] * view_scaler / divider;
-		uv_proj[1] = ray[1] * view_scaler / divider;
+		float divider = 2.f * GLM_SQRT2f * sqrtf(ray[2] + 1.0);
+		glm_vec2_scale(ray, view_scaler, uv_proj);
+		glm_vec2_divs(uv_proj, divider, uv_proj);
 		glm_vec2_scale(uv_proj, 2, uv_proj);
 		glUniform2fv(uniform_pos, 1, uv_proj);
 		glUniform2f(uniform_pos, uv_proj[0], uv_proj[1]);
@@ -76,7 +73,7 @@ void MainLoop(void *loopArg)
 		glm_vec3_rotate_m4(gctx.cam.cam_rotation_matrix, &viewrays[i + 2], &viewrays[i + 2]);
 	}
 
-    /* Border shader preperation */
+	/* Border shader preperation */
 	vec3 ray_topleft;
 	glm_vec3_copy(&viewrays[2], ray_topleft);
 	vec3 ray_topright;
