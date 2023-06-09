@@ -104,5 +104,7 @@ struct global_context
 	float interface_mult;
 };
 
+extern struct global_context gctx;
+
 void MainLoop(void *loopArg);
 #endif
