@@ -54,6 +54,7 @@ obj/%.o: src/%.c $(CAUSE_FOR_RECOMPILE)
 	@echo -e "\033[96m-- Compiling: $< --\033[0m"
 	@mkdir -p obj
 	emcc $(EMCC_FLAGS) -Iinc $(CFLAGS) -c $< -o $@
+	
 run:
 	emrun out/index.html
 

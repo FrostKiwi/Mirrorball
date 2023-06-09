@@ -5,10 +5,15 @@
    units, which are called by the EMscripten java script. */
 struct global_context gctx = {
 	.cam.fovmin = 10.f * GLM_PIf / 180.0f,
-	.cam.fovmax = 180.f * GLM_PIf / 180.0f,
+	.cam.fovmax = 140.f * GLM_PIf / 180.0f,
 	.cam.fov = 100.f * GLM_PIf / 180.0f,
 	.ch1.fov_deg = 360,
-	.interface_mult = 1};
+	.interface_mult = 1,
+	.ch1.viewrays = {
+		-1.0, 1.0, 0.0, 0.0, 0.0,
+		1.0, 1.0, 0.0, 0.0, 0.0,
+		1.0, -1.0, 0.0, 0.0, 0.0,
+		-1.0, -1.0, 0.0, 0.0, 0.0}};
 
 int main(int argc, char *argv[])
 {
