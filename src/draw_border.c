@@ -9,7 +9,7 @@
 #define COLOR_BOTRIGHT \
 	(vec3) { 1.0f, 1.0f, 0.0f }
 /* Point size in percent compared height of the screen */	
-#define POINT_SIZE 0.01
+#define POINT_SIZE 0.02
 
 /* Interpolates and projects the border points for a nice little vizualization
    to explain the projection mapping */
@@ -104,11 +104,11 @@ void draw_border(bool project_points, int subdiv)
 		glUniform1f(gctx.border_shader.aspect_w, 1.0);
 	}
 
-	glUniform1f(gctx.border_shader.scale, POINT_SIZE);
 	glVertexAttribPointer(gctx.border_shader.vtx, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 
 	if (project_points)
 	{
+		glUniform1f(gctx.border_shader.scale, POINT_SIZE * 0.8);
 		vec3 ray_topleft;
 		glm_vec3_copy(&gctx.ch1.viewrays[2], ray_topleft);
 		vec3 ray_topright;
@@ -140,6 +140,7 @@ void draw_border(bool project_points, int subdiv)
 	}
 	else
 	{
+		glUniform1f(gctx.border_shader.scale, POINT_SIZE);
 		vec2 topleft = {-1, 1};
 		vec2 topright = {1, 1};
 		vec2 botright = {1, -1};
