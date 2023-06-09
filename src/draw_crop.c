@@ -41,7 +41,7 @@ void draw_crop()
 		glUniform1f(gctx.crop_shader.aspect_w, 1.0);
 	}
 
-	glUniform1f(gctx.crop_shader.mask_toggle, gctx.mask_toggle ? 1.0 : 0.0);
+	glUniform1i(gctx.crop_shader.mask_toggle, gctx.mask_toggle);
 	/* Draw fullscreen quad */
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	glDisableVertexAttribArray(gctx.crop_shader.vtx);
