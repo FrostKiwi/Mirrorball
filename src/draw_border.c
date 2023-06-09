@@ -1,10 +1,18 @@
 #include "main.h"
 
+#define COLOR_TOPLEFT \
+	(vec3) { 1.0f, 0.0f, 1.0f }
+#define COLOR_TOPRIGHT \
+	(vec3) { 1.0f, 1.0f, 0.0f }
+#define COLOR_BOTLEFT \
+	(vec3) { 0.0f, 1.0f, 1.0f }
+#define COLOR_BOTRIGHT \
+	(vec3) { 1.0f, 1.0f, 0.0f }
+
 /* Interpolates and projects the border points for a nice little vizualization
    to explain the projection mapping */
-void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
-							   GLint uniform_col, vec3 color_a, vec3 color_b,
-							   float view_scaler)
+void interpolate_border_points(vec3 a, vec3 b, int subdiv,
+							   vec3 color_a, vec3 color_b)
 {
 	if (subdiv % 2 == 1)
 		subdiv++;
@@ -18,17 +26,18 @@ void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
 		glm_vec3_lerp(color_a, color_b, mult, color);
 		glm_vec3_normalize(ray);
 		float divider = 2.f * GLM_SQRT2f * sqrtf(ray[2] + 1.0);
-		glm_vec2_scale(ray, view_scaler, uv_proj);
+		glm_vec2_scale(ray, gctx.ch1.fov, uv_proj);
 		glm_vec2_divs(uv_proj, divider, uv_proj);
 		glm_vec2_scale(uv_proj, 2, uv_proj);
-		glUniform2fv(uniform_pos, 1, uv_proj);
-		glUniform2f(uniform_pos, uv_proj[0], uv_proj[1]);
-		glUniform3fv(uniform_col, 1, color);
+		glUniform2fv(gctx.border_shader.transform, 1, uv_proj);
+		glUniform2f(gctx.border_shader.transform, uv_proj[0], uv_proj[1]);
+		glUniform3fv(gctx.border_shader.color, 1, color);
+		/* Draw small quad */
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	}
 }
 
-void draw_border()
+void draw_border(int subdiv)
 {
 	int win_width, win_height;
 	SDL_GL_GetDrawableSize(gctx.win, &win_width, &win_height);
@@ -51,12 +60,6 @@ void draw_border()
 	glm_vec3_copy(&gctx.ch1.viewrays[2 + 10], ray_botright);
 	vec3 ray_botleft;
 	glm_vec3_copy(&gctx.ch1.viewrays[2 + 15], ray_botleft);
-
-	vec3 color_topleft = {1.0f, 0.0f, 1.0f};
-	vec3 color_topright = {1.0f, 1.0f, 0.0f};
-	vec3 color_botleft = {0.0f, 1.0f, 1.0f};
-	vec3 color_botright = {1.0f, 1.0f, 0.0f};
-	const int subdiv = 16;
 
 	glUseProgram(gctx.border_shader.shader);
 	glBindBuffer(GL_ARRAY_BUFFER, gctx.border_shader.quadvbo);
@@ -83,34 +86,22 @@ void draw_border()
 
 	/* Should use instanced rendering */
 	/* Top */
-	interpolate_border_points(gctx.border_shader.transform,
-							  ray_topleft, ray_topright, subdiv * aspect,
-							  gctx.border_shader.color,
-							  color_topleft, color_topright, gctx.ch1.fov);
+	interpolate_border_points(ray_topleft, ray_topright, subdiv * aspect,
+							  COLOR_TOPLEFT, COLOR_TOPRIGHT);
 	/* Right */
-	interpolate_border_points(gctx.border_shader.transform,
-							  ray_topright, ray_botright, subdiv,
-							  gctx.border_shader.color,
-							  color_topright, color_botright, gctx.ch1.fov);
+	interpolate_border_points(ray_topright, ray_botright, subdiv,
+							  COLOR_TOPRIGHT, COLOR_BOTRIGHT);
 	/* Bottom */
-	interpolate_border_points(gctx.border_shader.transform,
-							  ray_botright, ray_botleft, subdiv * aspect,
-							  gctx.border_shader.color,
-							  color_botright, color_botleft, gctx.ch1.fov);
+	interpolate_border_points(ray_botright, ray_botleft, subdiv * aspect,
+							  COLOR_BOTRIGHT, COLOR_BOTLEFT);
 	/* Left */
-	interpolate_border_points(gctx.border_shader.transform,
-							  ray_botleft, ray_topleft, subdiv,
-							  gctx.border_shader.color,
-							  color_botleft, color_topleft, gctx.ch1.fov);
+	interpolate_border_points(ray_botleft, ray_topleft, subdiv,
+							  COLOR_BOTLEFT, COLOR_TOPLEFT);
 	/* Diagonal, Bottom-left -> Top-right */
-	interpolate_border_points(gctx.border_shader.transform,
-							  ray_botleft, ray_topright, subdiv * aspect * GLM_SQRT2,
-							  gctx.border_shader.color,
-							  color_botleft, color_topright, gctx.ch1.fov);
+	interpolate_border_points(ray_botleft, ray_topright, subdiv * aspect * GLM_SQRT2,
+							  COLOR_BOTLEFT, COLOR_TOPRIGHT);
 	/* Diagonal, Top-left -> Bottom-right */
-	interpolate_border_points(gctx.border_shader.transform,
-							  ray_topleft, ray_botright, subdiv * aspect * GLM_SQRT2,
-							  gctx.border_shader.color,
-							  color_topleft, color_botright, gctx.ch1.fov);
+	interpolate_border_points(ray_topleft, ray_botright, subdiv * aspect * GLM_SQRT2,
+							  COLOR_TOPLEFT, COLOR_BOTRIGHT);
 	glDisableVertexAttribArray(gctx.border_shader.vtx);
 }

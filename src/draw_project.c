@@ -24,6 +24,7 @@ void draw_project()
 	glVertexAttribPointer(gctx.projection_shader.viewray, 3, GL_FLOAT, GL_FALSE,
 						  5 * sizeof(float), (void *)(2 * sizeof(float)));
 	glUniform1f(gctx.projection_shader.scaler, gctx.ch1.fov);
+	/* Draw fullscreen quad */
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	glDisableVertexAttribArray(gctx.projection_shader.pos);
 	glDisableVertexAttribArray(gctx.projection_shader.viewray);
