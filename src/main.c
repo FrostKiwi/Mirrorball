@@ -4,9 +4,9 @@
 /* Make struct global, to make the symbol accessible across all translation
    units, which are called by the EMscripten java script. */
 struct global_context gctx = {
-	.cam.fovmin = 10 * GLM_PIf / 180.0f,
-	.cam.fovmax = 140 * GLM_PIf / 180.0f,
-	.cam.fov = 100 * GLM_PIf / 180.0f,
+	.cam.fovmin = 10.f * GLM_PIf / 180.0f,
+	.cam.fovmax = 180.f * GLM_PIf / 180.0f,
+	.cam.fov = 100.f * GLM_PIf / 180.0f,
 	.ch1.fov_deg = 360,
 	.interface_mult = 1};
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 	init_fonts();
 	init_shaders();
 
-	emscripten_set_main_loop_arg(MainLoop, NULL, 0, nk_true);
+	emscripten_set_main_loop_arg(render_loop, NULL, 0, nk_true);
 
 	nk_sdl_shutdown();
 	SDL_GL_DeleteContext(glContext);

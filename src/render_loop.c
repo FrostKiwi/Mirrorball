@@ -36,7 +36,7 @@ void interpolate_border_points(GLint uniform_pos, vec3 a, vec3 b, int subdiv,
 	}
 }
 
-void MainLoop(void *loopArg)
+void render_loop(void *loopArg)
 {
 	input();
 

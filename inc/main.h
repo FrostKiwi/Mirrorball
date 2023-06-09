@@ -106,5 +106,5 @@ struct global_context
 
 extern struct global_context gctx;
 
-void MainLoop(void *loopArg);
+void render_loop(void *loopArg);
 #endif
