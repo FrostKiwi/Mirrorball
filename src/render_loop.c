@@ -30,18 +30,23 @@ void render_loop(void *loopArg)
 	glm_mat4_copy(basis, gctx.cam.cam_rotation_matrix);
 	glm_mat4_identity(gctx.cam.view_matrix);
 	glm_translate(gctx.cam.view_matrix, (vec3){0.0, 0.0, 0.0});
-	glm_mul_rot(gctx.cam.view_matrix, gctx.cam.cam_rotation_matrix, gctx.cam.view_matrix);
+	glm_mul_rot(gctx.cam.view_matrix, gctx.cam.cam_rotation_matrix,
+				gctx.cam.view_matrix);
 	glm_inv_tr(gctx.cam.view_matrix);
-	glm_perspective(gctx.cam.fov, (float)win_width / (float)win_height, 0.01f, 100.0f, gctx.cam.projection_matrix);
+	glm_perspective(gctx.cam.fov, (float)win_width / (float)win_height,
+					0.01f, 100.0f, gctx.cam.projection_matrix);
 
 	/* Update View-Rays */
 	double distance = -0.5 / tan(gctx.cam.fov / 2.0);
 	for (int i = 0; i < 4 * 5; i += 5)
 	{
 		gctx.ch1.viewrays[i + 4] = distance;
-		gctx.ch1.viewrays[i + 2] = gctx.ch1.viewrays[i] * 0.5 * (float)win_width / (float)win_height;
+		gctx.ch1.viewrays[i + 2] =
+			gctx.ch1.viewrays[i] * 0.5 * (float)win_width / (float)win_height;
 		gctx.ch1.viewrays[i + 3] = gctx.ch1.viewrays[i + 1] * 0.5;
-		glm_vec3_rotate_m4(gctx.cam.cam_rotation_matrix, &gctx.ch1.viewrays[i + 2], &gctx.ch1.viewrays[i + 2]);
+		glm_vec3_rotate_m4(gctx.cam.cam_rotation_matrix,
+						   &gctx.ch1.viewrays[i + 2],
+						   &gctx.ch1.viewrays[i + 2]);
 	}
 
 	/* Drawcalls */
@@ -60,7 +65,7 @@ void render_loop(void *loopArg)
 	{
 		/* Draw the projection shader */
 		draw_project();
-		
+
 		if (gctx.vizualize)
 		{
 			/* Draw the screen border distortion vizulization */

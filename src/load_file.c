@@ -41,14 +41,18 @@ int load_photo(uint8_t *buffer, size_t size)
 		format = GL_RGB;
 	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format,
+				 GL_UNSIGNED_BYTE, surface->pixels);
 	SDL_FreeSurface(surface);
 
 	glm_vec3_zero(gctx.cam.cam_rotation);
 	glm_vec3_zero(gctx.ch1.rotation);
 	gctx.ch1.fov_deg = 360;
 	gctx.cam.fov = glm_rad(100);
-	gctx.ch1.crop.bot = gctx.ch1.crop.top = gctx.ch1.crop.left = gctx.ch1.crop.right = 0;
+	gctx.ch1.crop.bot = 0;
+	gctx.ch1.crop.top = 0;
+	gctx.ch1.crop.left = 0;
+	gctx.ch1.crop.right = 0;
 
 	return 1;
 }

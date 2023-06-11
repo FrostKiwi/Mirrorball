@@ -8,13 +8,13 @@
 	(vec3) { 0.0f, 1.0f, 1.0f }
 #define COLOR_BOTRIGHT \
 	(vec3) { 1.0f, 1.0f, 0.0f }
-/* Point size in percent compared height of the screen */	
+/* Point size in percent compared height of the screen */
 #define POINT_SIZE 0.02
 
 /* Interpolates and projects the border points for a nice little vizualization
    to explain the projection mapping */
-void interpolate_border_points(vec3 a, vec3 b, int subdiv,
-							   vec3 color_a, vec3 color_b)
+void interp_border_pts(vec3 a, vec3 b, int subdiv,
+					   vec3 color_a, vec3 color_b)
 {
 	if (subdiv % 2 == 1)
 		subdiv++;
@@ -40,8 +40,8 @@ void interpolate_border_points(vec3 a, vec3 b, int subdiv,
 
 /* Interpolates and projects the border points for a nice little vizualization
    to explain the projection mapping */
-void interpolate_border_points_simple(vec2 a, vec2 b, int subdiv,
-									  vec3 color_a, vec3 color_b, float aspect)
+void interp_border_pts_simple(vec2 a, vec2 b, int subdiv,
+							  vec3 color_a, vec3 color_b, float aspect)
 {
 	if (subdiv % 2 == 1)
 		subdiv++;
@@ -85,8 +85,10 @@ void draw_border(bool project_points, int subdiv)
 	glBindBuffer(GL_ARRAY_BUFFER, gctx.border_shader.quadvbo);
 	glEnableVertexAttribArray(gctx.border_shader.vtx);
 
-	int postcrop_w = gctx.ch1.img.w - (gctx.ch1.crop.left + gctx.ch1.crop.right);
-	int postcrop_h = gctx.ch1.img.h - (gctx.ch1.crop.top + gctx.ch1.crop.bot);
+	int postcrop_w =
+		gctx.ch1.img.w - (gctx.ch1.crop.left + gctx.ch1.crop.right);
+	int postcrop_h =
+		gctx.ch1.img.h - (gctx.ch1.crop.top + gctx.ch1.crop.bot);
 
 	if (((float)postcrop_h / (float)postcrop_w) >
 		((float)win_height / (float)win_width))
@@ -104,7 +106,8 @@ void draw_border(bool project_points, int subdiv)
 		glUniform1f(gctx.border_shader.aspect_w, 1.0);
 	}
 
-	glVertexAttribPointer(gctx.border_shader.vtx, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+	glVertexAttribPointer(gctx.border_shader.vtx, 2, GL_FLOAT, GL_FALSE,
+						  2 * sizeof(float), 0);
 
 	if (project_points)
 	{
@@ -120,23 +123,25 @@ void draw_border(bool project_points, int subdiv)
 
 		/* Should use instanced rendering */
 		/* Top */
-		interpolate_border_points(ray_topleft, ray_topright, subdiv * aspect,
-								  COLOR_TOPLEFT, COLOR_TOPRIGHT);
+		interp_border_pts(ray_topleft, ray_topright, subdiv * aspect,
+						  COLOR_TOPLEFT, COLOR_TOPRIGHT);
 		/* Right */
-		interpolate_border_points(ray_topright, ray_botright, subdiv,
-								  COLOR_TOPRIGHT, COLOR_BOTRIGHT);
+		interp_border_pts(ray_topright, ray_botright, subdiv,
+						  COLOR_TOPRIGHT, COLOR_BOTRIGHT);
 		/* Bottom */
-		interpolate_border_points(ray_botright, ray_botleft, subdiv * aspect,
-								  COLOR_BOTRIGHT, COLOR_BOTLEFT);
+		interp_border_pts(ray_botright, ray_botleft, subdiv * aspect,
+						  COLOR_BOTRIGHT, COLOR_BOTLEFT);
 		/* Left */
-		interpolate_border_points(ray_botleft, ray_topleft, subdiv,
-								  COLOR_BOTLEFT, COLOR_TOPLEFT);
+		interp_border_pts(ray_botleft, ray_topleft, subdiv,
+						  COLOR_BOTLEFT, COLOR_TOPLEFT);
 		/* Diagonal, Bottom-left -> Top-right */
-		interpolate_border_points(ray_botleft, ray_topright, subdiv * aspect * GLM_SQRT2,
-								  COLOR_BOTLEFT, COLOR_TOPRIGHT);
+		interp_border_pts(ray_botleft, ray_topright,
+						  subdiv * aspect * GLM_SQRT2,
+						  COLOR_BOTLEFT, COLOR_TOPRIGHT);
 		/* Diagonal, Top-left -> Bottom-right */
-		interpolate_border_points(ray_topleft, ray_botright, subdiv * aspect * GLM_SQRT2,
-								  COLOR_TOPLEFT, COLOR_BOTRIGHT);
+		interp_border_pts(ray_topleft, ray_botright,
+						  subdiv * aspect * GLM_SQRT2,
+						  COLOR_TOPLEFT, COLOR_BOTRIGHT);
 	}
 	else
 	{
@@ -147,23 +152,23 @@ void draw_border(bool project_points, int subdiv)
 		vec2 botleft = {-1, -1};
 
 		/* Top */
-		interpolate_border_points_simple(topleft, topright, subdiv * aspect,
-										 COLOR_TOPLEFT, COLOR_TOPRIGHT, aspect);
+		interp_border_pts_simple(topleft, topright, subdiv * aspect,
+								 COLOR_TOPLEFT, COLOR_TOPRIGHT, aspect);
 		/* Right */
-		interpolate_border_points_simple(topright, botright, subdiv,
-										 COLOR_TOPRIGHT, COLOR_BOTRIGHT, aspect);
+		interp_border_pts_simple(topright, botright, subdiv,
+								 COLOR_TOPRIGHT, COLOR_BOTRIGHT, aspect);
 		/* Bottom */
-		interpolate_border_points_simple(botright, botleft, subdiv * aspect,
-										 COLOR_BOTRIGHT, COLOR_BOTLEFT, aspect);
+		interp_border_pts_simple(botright, botleft, subdiv * aspect,
+								 COLOR_BOTRIGHT, COLOR_BOTLEFT, aspect);
 		/* Left */
-		interpolate_border_points_simple(botleft, topleft, subdiv,
-										 COLOR_BOTLEFT, COLOR_TOPLEFT, aspect);
+		interp_border_pts_simple(botleft, topleft, subdiv,
+								 COLOR_BOTLEFT, COLOR_TOPLEFT, aspect);
 		/* Diagonal, Bottom-left -> Top-right */
-		interpolate_border_points_simple(botleft, topright, subdiv * aspect * GLM_SQRT2,
-										 COLOR_BOTLEFT, COLOR_TOPRIGHT, aspect);
+		interp_border_pts_simple(botleft, topright, subdiv * aspect * GLM_SQRT2,
+								 COLOR_BOTLEFT, COLOR_TOPRIGHT, aspect);
 		/* Diagonal, Top-left -> Bottom-right */
-		interpolate_border_points_simple(topleft, botright, subdiv * aspect * GLM_SQRT2,
-										 COLOR_TOPLEFT, COLOR_BOTRIGHT, aspect);
+		interp_border_pts_simple(topleft, botright, subdiv * aspect * GLM_SQRT2,
+								 COLOR_TOPLEFT, COLOR_BOTRIGHT, aspect);
 	}
 
 	glDisableVertexAttribArray(gctx.border_shader.vtx);

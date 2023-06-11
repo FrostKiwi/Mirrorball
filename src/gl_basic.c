@@ -35,15 +35,15 @@ char *load_shader_source(const char *shader_file_path)
 	}
 }
 
-GLuint compile_shader(const char *vert_shader_file_path,
-					  const char *fragment_shader_file_path)
+GLuint compile_shader(const char *vert_shader_path,
+					  const char *fragment_shader_path)
 {
 	char log[512];
 	GLuint fragment_shader, shader_program, vertex_shader;
 	GLint success;
 
-	char *vertex_shader_source = load_shader_source(vert_shader_file_path);
-	char *fragment_shader_source = load_shader_source(fragment_shader_file_path);
+	char *vertex_shader_source = load_shader_source(vert_shader_path);
+	char *fragment_shader_source = load_shader_source(fragment_shader_path);
 
 	/* Vertex shader */
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -118,7 +118,8 @@ struct image load_texture(char *file, struct image img)
 		format = GL_RGB;
 	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format,
+				 GL_UNSIGNED_BYTE, surface->pixels);
 	SDL_FreeSurface(surface);
 	return img;
 }
@@ -126,10 +127,14 @@ struct image load_texture(char *file, struct image img)
 void print_glinfo()
 {
 	int max_tex;
-	printf("OpenGL Version:\t%s\n", (char *)glGetString(GL_VERSION));
-	printf("Vendor:\t\t%s\n", (char *)glGetString(GL_VENDOR));
-	printf("Renderer:\t%s\n", (char *)glGetString(GL_RENDERER));
-	printf("GLSL Version:\t%s\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
+	printf("OpenGL Version:\t%s\n",
+		   (char *)glGetString(GL_VERSION));
+	printf("Vendor:\t\t%s\n",
+		   (char *)glGetString(GL_VENDOR));
+	printf("Renderer:\t%s\n",
+		   (char *)glGetString(GL_RENDERER));
+	printf("GLSL Version:\t%s\n",
+		   (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_tex);
 	printf("Max tex-size:\t2D: %d px²\n", max_tex);
 }

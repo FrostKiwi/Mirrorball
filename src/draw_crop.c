@@ -9,8 +9,10 @@ void draw_crop()
 	glBindTexture(GL_TEXTURE_2D, gctx.ch1.img.tex);
 	glUseProgram(gctx.crop_shader.shader);
 	vec4 crop;
-	int postcrop_w = gctx.ch1.img.w - (gctx.ch1.crop.left + gctx.ch1.crop.right);
-	int postcrop_h = gctx.ch1.img.h - (gctx.ch1.crop.top + gctx.ch1.crop.bot);
+	int postcrop_w =
+		gctx.ch1.img.w - (gctx.ch1.crop.left + gctx.ch1.crop.right);
+	int postcrop_h =
+		gctx.ch1.img.h - (gctx.ch1.crop.top + gctx.ch1.crop.bot);
 	crop[0] = (1.0 / gctx.ch1.img.w) * gctx.ch1.crop.left;
 	crop[1] = (1.0 / gctx.ch1.img.h) * gctx.ch1.crop.top;
 	crop[2] = (1.0 / gctx.ch1.img.w) * postcrop_w;
@@ -21,7 +23,8 @@ void draw_crop()
 	glBindBuffer(GL_ARRAY_BUFFER, gctx.bgvbo);
 	glEnableVertexAttribArray(gctx.crop_shader.vtx);
 	glEnableVertexAttribArray(gctx.crop_shader.coord);
-	glVertexAttribPointer(gctx.crop_shader.vtx, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+	glVertexAttribPointer(gctx.crop_shader.vtx, 2, GL_FLOAT, GL_FALSE,
+						  4 * sizeof(float), 0);
 	glVertexAttribPointer(gctx.crop_shader.coord, 2, GL_FLOAT, GL_FALSE,
 						  4 * sizeof(float), (void *)(2 * sizeof(float)));
 

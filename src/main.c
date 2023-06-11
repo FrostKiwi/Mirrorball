@@ -57,7 +57,8 @@ int main(int argc, char *argv[])
 	gctx.ctx->style.scrollv.rounding_cursor = 12 * gctx.interface_mult;
 	gctx.ctx->style.scrollv.rounding = 12 * gctx.interface_mult;
 	gctx.ctx->style.property.rounding = 12 * gctx.interface_mult;
-	gctx.ctx->style.window.scrollbar_size = nk_vec2(24 * gctx.interface_mult, 24 * gctx.interface_mult);
+	gctx.ctx->style.window.scrollbar_size = nk_vec2(24 * gctx.interface_mult,
+													24 * gctx.interface_mult);
 	init_fonts();
 	init_shaders();
 

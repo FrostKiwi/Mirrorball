@@ -18,7 +18,8 @@ void draw_project()
 	glEnableVertexAttribArray(gctx.projection_shader.viewray);
 	glUniform4fv(gctx.projection_shader.crop, 1, crop);
 	glBindBuffer(GL_ARRAY_BUFFER, gctx.rayvbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(gctx.ch1.viewrays), gctx.ch1.viewrays, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(gctx.ch1.viewrays), gctx.ch1.viewrays,
+				 GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(gctx.projection_shader.pos, 2, GL_FLOAT, GL_FALSE,
 						  5 * sizeof(float), 0);
 	glVertexAttribPointer(gctx.projection_shader.viewray, 3, GL_FLOAT, GL_FALSE,
