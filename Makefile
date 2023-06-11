@@ -18,6 +18,7 @@ CAUSE_FOR_RECOMPILE = $(wildcard inc/*.h) \
 					  $(wildcard res/img/*) \
 					  $(wildcard res/font/*) \
 					  $(wildcard src/web/*) \
+					  $(wildcard src/web/js/*) \
 					  Makefile
 
 # These emscripten flags need to be present during compilation, because this
@@ -46,7 +47,7 @@ out/index.html: $(OBJ)
 		 -Iinc $(OBJ) $(CFLAGS) \
 		 -o out/index.html \
 		 --shell-file src/web/shell.html
-	cp src/web/* out
+	cp -r src/web/* out
 
 # Compile every C file in parallel.
 # Changes to the headers, Makefile or shaders as cause to recompile everything
