@@ -1,6 +1,7 @@
 #include "main.h"
 #include <SDL2/SDL_image.h>
 
+/* TODO: Don't regenerate the texture! Just update it. */
 int process_webcam(uint8_t *buffer, int width, int height)
 {
 	glDeleteTextures(1, &gctx.ch1.img.tex);

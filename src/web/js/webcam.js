@@ -22,6 +22,7 @@ var open_webcam = function () {
 					canvas.height = video.videoHeight;
 					const context = canvas.getContext('2d');
 
+					/* TODO: DONT MALLOC EVERY FRAME ! */
 					function processFrame() {
 						context.drawImage(video, 0, 0, canvas.width, canvas.height);
 						const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
