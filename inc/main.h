@@ -41,6 +41,8 @@ struct channel
 	float fov_deg;
 	float fov;
 	vec3 rotation;
+
+	float viewrays[20];
 };
 
 struct global_context
@@ -53,8 +55,8 @@ struct global_context
 
 	struct channel ch1;
 
-    nk_bool mask_toggle;
-    nk_bool vizualize;
+	nk_bool mask_toggle;
+	nk_bool vizualize;
 
 	struct
 	{
@@ -104,5 +106,7 @@ struct global_context
 	float interface_mult;
 };
 
-void MainLoop(void *loopArg);
+extern struct global_context gctx;
+
+void render_loop(void *loopArg);
 #endif

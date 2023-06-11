@@ -1,6 +1,6 @@
 #include "init.h"
 
-void init_fonts(struct global_context *gctx)
+void init_fonts()
 {
 	/* Fonts */
 	struct nk_font *std, *big, *icons;
@@ -24,15 +24,15 @@ void init_fonts(struct global_context *gctx)
 		0xF054, 0xF054, /*  */
 		0};
 
-	gctx->std.ranges = malloc(sizeof(ranges_std));
-	gctx->icons.ranges = malloc(sizeof(ranges_icons));
-	memcpy(gctx->std.ranges, ranges_std, sizeof(ranges_std));
-	memcpy(gctx->icons.ranges, ranges_icons, sizeof(ranges_icons));
+	gctx.std.ranges = malloc(sizeof(ranges_std));
+	gctx.icons.ranges = malloc(sizeof(ranges_icons));
+	memcpy(gctx.std.ranges, ranges_std, sizeof(ranges_std));
+	memcpy(gctx.icons.ranges, ranges_icons, sizeof(ranges_icons));
 
-	cfg_std.range = gctx->std.ranges;
+	cfg_std.range = gctx.std.ranges;
 	/* Big text size and small size use the same glyph ranges */
-	cfg_big.range = gctx->std.ranges;
-	cfg_icons.range = gctx->icons.ranges;
+	cfg_big.range = gctx.std.ranges;
+	cfg_icons.range = gctx.icons.ranges;
 	cfg_std.oversample_h = cfg_std.oversample_v = 1;
 	cfg_big.oversample_h = cfg_icons.oversample_v = 1;
 	cfg_icons.oversample_h = cfg_icons.oversample_v = 1;
@@ -42,26 +42,26 @@ void init_fonts(struct global_context *gctx)
 
 	nk_sdl_font_stash_begin(&atlas);
 	std = nk_font_atlas_add_from_file(
-		atlas, "res/font/roboto.ttf", 22 * gctx->interface_mult, &cfg_std);
+		atlas, "res/font/roboto.ttf", 22 * gctx.interface_mult, &cfg_std);
 	big = nk_font_atlas_add_from_file(
-		atlas, "res/font/roboto.ttf", 32 * gctx->interface_mult, &cfg_big);
+		atlas, "res/font/roboto.ttf", 32 * gctx.interface_mult, &cfg_big);
 	icons = nk_font_atlas_add_from_file(
-		atlas, "res/font/icons.ttf", 46 * gctx->interface_mult, &cfg_icons);
+		atlas, "res/font/icons.ttf", 46 * gctx.interface_mult, &cfg_icons);
 	nk_sdl_font_stash_end();
 
-	gctx->std.handle = &std->handle;
-	gctx->big.handle = &big->handle;
-	gctx->icons.handle = &icons->handle;
-	nk_style_set_font(gctx->ctx, gctx->std.handle);
+	gctx.std.handle = &std->handle;
+	gctx.big.handle = &big->handle;
+	gctx.icons.handle = &icons->handle;
+	nk_style_set_font(gctx.ctx, gctx.std.handle);
 }
 
-void init_shaders(struct global_context *gctx)
+void init_shaders()
 {
-	gctx->crop_shader.shader =
+	gctx.crop_shader.shader =
 		compile_shader("res/shd/crop.vs", "res/shd/crop.fs");
-	gctx->projection_shader.shader =
+	gctx.projection_shader.shader =
 		compile_shader("res/shd/project.vs", "res/shd/project.fs");
-	gctx->border_shader.shader =
+	gctx.border_shader.shader =
 		compile_shader("res/shd/border.vs", "res/shd/border.fs");
 
 	float unitquadtex[] = {
@@ -76,52 +76,52 @@ void init_shaders(struct global_context *gctx)
 		1.0, -1.0,
 		-1.0, -1.0};
 
-	glGenBuffers(1, &gctx->bgvbo);
-	glBindBuffer(GL_ARRAY_BUFFER, gctx->bgvbo);
+	glGenBuffers(1, &gctx.bgvbo);
+	glBindBuffer(GL_ARRAY_BUFFER, gctx.bgvbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(unitquadtex), unitquadtex,
 				 GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glGenBuffers(1, &gctx->border_shader.quadvbo);
-	glBindBuffer(GL_ARRAY_BUFFER, gctx->border_shader.quadvbo);
+	glGenBuffers(1, &gctx.border_shader.quadvbo);
+	glBindBuffer(GL_ARRAY_BUFFER, gctx.border_shader.quadvbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(unitquad_small), unitquad_small,
 				 GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glGenBuffers(1, &gctx->rayvbo);
+	glGenBuffers(1, &gctx.rayvbo);
 
-	gctx->border_shader.vtx =
-		glGetAttribLocation(gctx->border_shader.shader, "vtx");
-	gctx->border_shader.aspect_w =
-		glGetUniformLocation(gctx->border_shader.shader, "aspect_w");
-	gctx->border_shader.aspect_h =
-		glGetUniformLocation(gctx->border_shader.shader, "aspect_h");
-	gctx->border_shader.scale =
-		glGetUniformLocation(gctx->border_shader.shader, "scale");
-	gctx->border_shader.transform =
-		glGetUniformLocation(gctx->border_shader.shader, "transform");
-	gctx->border_shader.color =
-		glGetUniformLocation(gctx->border_shader.shader, "color");
+	gctx.border_shader.vtx =
+		glGetAttribLocation(gctx.border_shader.shader, "vtx");
+	gctx.border_shader.aspect_w =
+		glGetUniformLocation(gctx.border_shader.shader, "aspect_w");
+	gctx.border_shader.aspect_h =
+		glGetUniformLocation(gctx.border_shader.shader, "aspect_h");
+	gctx.border_shader.scale =
+		glGetUniformLocation(gctx.border_shader.shader, "scale");
+	gctx.border_shader.transform =
+		glGetUniformLocation(gctx.border_shader.shader, "transform");
+	gctx.border_shader.color =
+		glGetUniformLocation(gctx.border_shader.shader, "color");
 
-	gctx->crop_shader.vtx =
-		glGetAttribLocation(gctx->crop_shader.shader, "vtx");
-	gctx->crop_shader.coord =
-		glGetAttribLocation(gctx->crop_shader.shader, "coord");
-	gctx->crop_shader.aspect_w =
-		glGetUniformLocation(gctx->crop_shader.shader, "aspect_w");
-	gctx->crop_shader.aspect_h =
-		glGetUniformLocation(gctx->crop_shader.shader, "aspect_h");
-	gctx->crop_shader.crop =
-		glGetUniformLocation(gctx->crop_shader.shader, "crop");
-	gctx->crop_shader.mask_toggle =
-		glGetUniformLocation(gctx->crop_shader.shader, "mask_toggle");
+	gctx.crop_shader.vtx =
+		glGetAttribLocation(gctx.crop_shader.shader, "vtx");
+	gctx.crop_shader.coord =
+		glGetAttribLocation(gctx.crop_shader.shader, "coord");
+	gctx.crop_shader.aspect_w =
+		glGetUniformLocation(gctx.crop_shader.shader, "aspect_w");
+	gctx.crop_shader.aspect_h =
+		glGetUniformLocation(gctx.crop_shader.shader, "aspect_h");
+	gctx.crop_shader.crop =
+		glGetUniformLocation(gctx.crop_shader.shader, "crop");
+	gctx.crop_shader.mask_toggle =
+		glGetUniformLocation(gctx.crop_shader.shader, "mask_toggle");
 
-	gctx->projection_shader.pos =
-		glGetAttribLocation(gctx->projection_shader.shader, "pos");
-	gctx->projection_shader.viewray =
-		glGetAttribLocation(gctx->projection_shader.shader, "rayvtx");
-	gctx->projection_shader.scaler =
-		glGetUniformLocation(gctx->projection_shader.shader, "scalar");
-	gctx->projection_shader.crop =
-		glGetUniformLocation(gctx->projection_shader.shader, "crop");
+	gctx.projection_shader.pos =
+		glGetAttribLocation(gctx.projection_shader.shader, "pos");
+	gctx.projection_shader.viewray =
+		glGetAttribLocation(gctx.projection_shader.shader, "rayvtx");
+	gctx.projection_shader.scaler =
+		glGetUniformLocation(gctx.projection_shader.shader, "scalar");
+	gctx.projection_shader.crop =
+		glGetUniformLocation(gctx.projection_shader.shader, "crop");
 }

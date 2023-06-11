@@ -4,14 +4,16 @@
 /* Make struct global, to make the symbol accessible across all translation
    units, which are called by the EMscripten java script. */
 struct global_context gctx = {
-	.cam.fovmin = 10 * GLM_PIf / 180.0f,
-	.cam.fovmax = 140 * GLM_PIf / 180.0f,
-	.cam.fov = 100 * GLM_PIf / 180.0f,
+	.cam.fovmin = 10.f * GLM_PIf / 180.0f,
+	.cam.fovmax = 140.f * GLM_PIf / 180.0f,
+	.cam.fov = 100.f * GLM_PIf / 180.0f,
 	.ch1.fov_deg = 360,
-	.projection = false,
 	.interface_mult = 1,
-	.mask_toggle = false,
-	.vizualize = false};
+	.ch1.viewrays = {
+		-1.0, 1.0, 0.0, 0.0, 0.0,
+		1.0, 1.0, 0.0, 0.0, 0.0,
+		1.0, -1.0, 0.0, 0.0, 0.0,
+		-1.0, -1.0, 0.0, 0.0, 0.0}};
 
 int main(int argc, char *argv[])
 {
@@ -54,10 +56,10 @@ int main(int argc, char *argv[])
 	gctx.ctx->style.scrollv.rounding = 12 * gctx.interface_mult;
 	gctx.ctx->style.property.rounding = 12 * gctx.interface_mult;
 	gctx.ctx->style.window.scrollbar_size = nk_vec2(24 * gctx.interface_mult, 24 * gctx.interface_mult);
-	init_fonts(&gctx);
-	init_shaders(&gctx);
+	init_fonts();
+	init_shaders();
 
-	emscripten_set_main_loop_arg(MainLoop, (void *)&gctx, 0, nk_true);
+	emscripten_set_main_loop_arg(render_loop, NULL, 0, nk_true);
 
 	nk_sdl_shutdown();
 	SDL_GL_DeleteContext(glContext);

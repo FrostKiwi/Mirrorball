@@ -39,7 +39,9 @@ release debug: out/index.html $(OBJ)
 
 # Linking Stage + Output to WASM.
 out/index.html: $(OBJ)
-	mkdir -p out
+	@echo
+	@echo -e "\033[96m-- Linking stage --\033[0m"
+	@mkdir -p out
 	emcc $(EMCC_LINKER_FLAGS) \
 		 -Iinc $(OBJ) $(CFLAGS) \
 		 -o out/index.html \
@@ -49,9 +51,10 @@ out/index.html: $(OBJ)
 # Compile every C file in parallel.
 # Changes to the headers, Makefile or shaders as cause to recompile everything
 obj/%.o: src/%.c $(CAUSE_FOR_RECOMPILE)
-	mkdir -p obj
+	@echo -e "\033[96m-- Compiling: $< --\033[0m"
+	@mkdir -p obj
 	emcc $(EMCC_FLAGS) -Iinc $(CFLAGS) -c $< -o $@
-
+	
 run:
 	emrun out/index.html
 

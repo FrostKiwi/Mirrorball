@@ -1,8 +1,6 @@
 #include "main.h"
 #include <SDL2/SDL_image.h>
 
-extern struct global_context gctx;
-
 int load_photo(uint8_t *buffer, size_t size)
 {
 	SDL_Surface *surface;
