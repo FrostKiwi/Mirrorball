@@ -111,10 +111,10 @@ void gui()
 			nk_style_set_font(ctx, gctx.std.handle);
 			nk_layout_row_dynamic(ctx, 18 * gctx.interface_mult, 1);
 			nk_label(ctx, "Load Mirror ball as a photo.", NK_TEXT_ALIGN_LEFT);
-			nk_label(ctx, "Or take a photo directly a smartphone.",
+			nk_label(ctx, "Or connect a live webcam feed.",
 					 NK_TEXT_ALIGN_LEFT);
 			nk_style_set_font(ctx, gctx.icons.handle);
-			nk_layout_row_dynamic(ctx, 64 * gctx.interface_mult, 1);
+			nk_layout_row_dynamic(ctx, 64 * gctx.interface_mult, 2);
 			ctx->style.button.text_normal = nk_rgb(8, 166, 142);
 			ctx->style.button.text_hover = nk_rgb(8, 166, 142);
 			ctx->style.button.text_active = nk_rgb(8, 166, 142);
@@ -128,6 +128,12 @@ void gui()
 					file_selector.setAttribute('accept',
 											   '.jpg,.jpeg,.png,.heic');
 					file_selector.click(););
+			}
+			if (nk_button_label(ctx, ""))
+			{
+				/* NON BLOCKING! */
+				EM_ASM(
+					open_webcam(););
 			}
 
 			nk_tree_pop(ctx);

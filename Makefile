@@ -7,7 +7,7 @@ OBJ = $(addprefix obj/, $(notdir $(SRC:.c=.o)))
 # for C code to be alled from Javascript, even when the functions in question
 # are not called in the C code itself. Other options is EMSCRIPTEN_KEEPALIVE,
 # but that doesn't for for things not defined in the C source like malloc.
-PROTECT = ["_load_photo", "_main", "_malloc", "_free"]
+PROTECT = ["_process_webcam", "_load_photo", "_main", "_malloc", "_free"]
 
 # List resource directories manually, instead of a recursive find to prevent
 # dumb edge cases, because Linux and Windows find are called the same but work
