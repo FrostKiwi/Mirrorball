@@ -117,7 +117,7 @@ void gui(struct global_context *gctx)
 					var file_selector = document.createElement('input');
 					file_selector.setAttribute('type', 'file');
 					file_selector.setAttribute('onchange', 'open_file(event)');
-					file_selector.setAttribute('accept', '.png,.jpeg,.heic'); // optional - limit accepted file types
+					file_selector.setAttribute('accept', '.jpg,.jpeg,.png,.heic');
 					file_selector.click(););
 			}
 
