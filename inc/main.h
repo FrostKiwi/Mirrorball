@@ -15,6 +15,7 @@
 #include "nuklear.h"
 #include "nuklear_sdl_gles2.h"
 
+#define CGLM_OMIT_NS_FROM_STRUCT_API
 #include "cglm/cglm.h"
 
 /* Internal Headers */

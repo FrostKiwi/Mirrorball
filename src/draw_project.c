@@ -4,13 +4,21 @@ void draw_project()
 {
 	vec4 crop;
 	crop[0] = (1.0 / gctx.ch1.img.w) *
-			  (gctx.ch1.img.w / 2.0 + gctx.ch1.crop.left / 2.0 - gctx.ch1.crop.right / 2.0);
+			  (gctx.ch1.img.w / 2.0 +
+			   gctx.ch1.crop.left / 2.0 -
+			   gctx.ch1.crop.right / 2.0);
 	crop[1] = (1.0 / gctx.ch1.img.h) *
-			  (gctx.ch1.img.h / 2.0 + gctx.ch1.crop.top / 2.0 - gctx.ch1.crop.bot / 2.0);
+			  (gctx.ch1.img.h / 2.0 +
+			   gctx.ch1.crop.top / 2.0 -
+			   gctx.ch1.crop.bot / 2.0);
 	crop[2] = (1.0 / gctx.ch1.img.w) *
-			  (gctx.ch1.img.w - gctx.ch1.crop.left / 1.0 - gctx.ch1.crop.right / 1.0);
+			  (gctx.ch1.img.w -
+			   gctx.ch1.crop.left / 1.0 -
+			   gctx.ch1.crop.right / 1.0);
 	crop[3] = (1.0 / gctx.ch1.img.h) *
-			  (gctx.ch1.img.h - gctx.ch1.crop.top / 1.0 - gctx.ch1.crop.bot / 1.0);
+			  (gctx.ch1.img.h -
+			   gctx.ch1.crop.top / 1.0 -
+			   gctx.ch1.crop.bot / 1.0);
 	glUseProgram(gctx.projection_shader.shader);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, gctx.ch1.img.tex);
