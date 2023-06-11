@@ -60,6 +60,6 @@ run:
 	emrun out/index.html
 
 clean:
-	rm -f $(OBJ) out/index.*
+	rm -rf $(OBJ) out/*
 
 .PHONY: clean run
