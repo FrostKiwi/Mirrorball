@@ -30,17 +30,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
+
       - name: Setup Emscripten toolchain
         uses: mymindstorm/setup-emsdk@v12
+
+      - name: CPU Core Count
+        uses: SimenB/github-actions-cpu-cores@v1.1.0
+        id: cpu-cores
+
       - name: Compile
-        run: emmake make -j8
+        run: emmake make -j ${{ steps.cpu-cores.outputs.count }}
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
-          path: 'out'
+          path: "out"
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
