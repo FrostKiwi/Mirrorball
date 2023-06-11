@@ -122,3 +122,14 @@ struct image load_texture(char *file, struct image img)
 	SDL_FreeSurface(surface);
 	return img;
 }
+
+void print_glinfo()
+{
+	int max_tex;
+	printf("OpenGL Version:\t%s\n", (char *)glGetString(GL_VERSION));
+	printf("Vendor:\t\t%s\n", (char *)glGetString(GL_VENDOR));
+	printf("Renderer:\t%s\n", (char *)glGetString(GL_RENDERER));
+	printf("GLSL Version:\t%s\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_tex);
+	printf("Max tex-size:\t2D: %d px²\n", max_tex);
+}

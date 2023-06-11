@@ -2,6 +2,7 @@
 attribute vec2 pos;
 attribute vec3 rayvtx;
 varying vec3 Ray;
+
 void main()
 {
 	Ray = rayvtx;

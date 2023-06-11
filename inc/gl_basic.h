@@ -13,5 +13,6 @@ GLuint compile_shader(const char *vert_shader_file_path,
 					  const char *fragment_shader_file_path);
 
 struct image load_texture(char *file, struct image img);
+void print_glinfo();
 
 #endif
