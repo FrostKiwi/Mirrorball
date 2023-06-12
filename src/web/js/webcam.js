@@ -20,22 +20,42 @@ var open_webcam = function () {
 					const canvas = document.createElement('canvas');
 					canvas.width = video.videoWidth;
 					canvas.height = video.videoHeight;
-					const context = canvas.getContext('2d');
+					const context = canvas.getContext('2d',
+						{
+							willReadFrequently: true
+						});
 
-					/* TODO: DONT MALLOC EVERY FRAME ! */
+					context.drawImage(video, 0, 0, canvas.width, canvas.height);
+					let imageData =
+						context.getImageData(0, 0, canvas.width, canvas.height);
+					const dataPtr = Module._malloc(imageData.data.length);
+					const dataOnHeap =
+						new Uint8Array(
+							Module.HEAPU8.buffer,
+							dataPtr,
+							imageData.data.length);
+
+					dataOnHeap.set(imageData.data);
+					Module.ccall(
+						'setup_webcam',
+						'number',
+						['number', 'number', 'number', 'number'],
+						[
+							dataOnHeap.byteOffset,
+							imageData.data.length,
+							canvas.width,
+							canvas.height
+						]
+					);
+
 					function processFrame() {
-						context.drawImage(video, 0, 0, canvas.width, canvas.height);
-						const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-						const dataPtr = Module._malloc(imageData.data.length);
-						const dataOnHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, imageData.data.length);
+						context.drawImage(video, 0, 0,
+							canvas.width, canvas.height);
+						imageData =
+							context.getImageData(0, 0,
+								canvas.width, canvas.height);
 						dataOnHeap.set(imageData.data);
-						Module.ccall(
-							'process_webcam',
-							'number',
-							['number', 'number', 'number'],
-							[dataOnHeap.byteOffset, canvas.width, canvas.height]
-						);
-						Module._free(dataPtr);
+						Module.ccall('process_webcam');
 
 						requestAnimationFrame(processFrame);
 					}

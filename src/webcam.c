@@ -1,8 +1,9 @@
 #include "main.h"
 #include <SDL2/SDL_image.h>
 
-/* TODO: Don't regenerate the texture! Just update it. */
-int process_webcam(uint8_t *buffer, int width, int height)
+Uint32 wrap_around;
+
+void setup_webcam(uint8_t *buffer, size_t buffer_size, int width, int height)
 {
 	glDeleteTextures(1, &gctx.ch1.img.tex);
 	glGenTextures(1, &gctx.ch1.img.tex);
@@ -14,9 +15,35 @@ int process_webcam(uint8_t *buffer, int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	gctx.ch1.img.w = width;
 	gctx.ch1.img.h = height;
+	gctx.ch1.img.buf = buffer;
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
-				 GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	switch (width * height / buffer_size)
+	{
+	case 3:
+		gctx.ch1.img.channels = GL_RGB;
+		break;
+	case 4:
+		gctx.ch1.img.channels = GL_RGBA;
+		break;
+	default:
+		gctx.ch1.img.channels = GL_RGBA;
+		puts("Buffer size and image dimensions don't match. Something's wrong");
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, gctx.ch1.img.channels, width, height, 0,
+				 gctx.ch1.img.channels, GL_UNSIGNED_BYTE, buffer);
+}
+
+/* TODO: Don't regenerate the texture! Just update it. */
+int process_webcam()
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, gctx.ch1.img.tex);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, gctx.ch1.img.w, gctx.ch1.img.h,
+					gctx.ch1.img.channels, GL_UNSIGNED_BYTE, gctx.ch1.img.buf);
+
+	printf("%f Hz\n", 1000.0 / (double)(SDL_GetTicks() - wrap_around));
+	wrap_around = SDL_GetTicks();
 
 	return 1;
 }

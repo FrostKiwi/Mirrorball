@@ -6,7 +6,9 @@
 struct image
 {
 	int w, h;
+	uint8_t *buf;
 	GLuint tex;
+	GLint channels;
 };
 
 GLuint compile_shader(const char *vert_shader_file_path,
