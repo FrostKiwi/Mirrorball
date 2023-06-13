@@ -128,6 +128,11 @@ void gui()
 				/* NON BLOCKING! */
 				EM_ASM(open_webcam(););
 			}
+			if (nk_button_label(ctx, ""))
+			{
+				/* NON BLOCKING! */
+				EM_ASM(open_video(););
+			}
 
 			nk_tree_pop(ctx);
 		}

@@ -1,4 +1,4 @@
-open_video = function (url) {
+open_videofile = function (url) {
 	const video = document.createElement('video');
 	video.src = url;
 	video.autoplay = true;

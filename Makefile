@@ -38,7 +38,9 @@ EMCC_FLAGS= -s USE_SDL=2 \
 # Pull javascript through the emscripten optimizer pipeline
 JS_FILES= --extern-pre-js=src/web/js/shell.js \
 		  --pre-js=src/web/js/userfile.js \
-		  --pre-js=src/web/js/webcam.js
+		  --pre-js=src/web/js/webcam.js \
+		  --pre-js=src/web/js/video.js \
+		  --pre-js=src/web/js/videofile.js
 
 # -Wl,-u,fileno is a workaround for an outstanding issue with LTO and emscripten
 # LTO is mega awesome, but the interaction with javascript causes it to
