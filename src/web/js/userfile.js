@@ -1,4 +1,13 @@
-var open_file = function (e) {
+open_file = function () {
+	var file_selector = document.createElement('input');
+	file_selector.addEventListener('change', handle_file);
+	file_selector.setAttribute('type', 'file');
+	file_selector.setAttribute('accept',
+		'.jpg,.jpeg,.png,.heic');
+	file_selector.click();
+}
+
+handle_file = function (e) {
 	const file_reader = new FileReader();
 	file_reader.onload = (event) => {
 		const uint8Arr = new Uint8Array(event.target.result);

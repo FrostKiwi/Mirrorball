@@ -15,15 +15,30 @@ debug: CFLAGS = -Wall -O0
 PROTECT = ["_process_webcam", "_setup_webcam", "_load_photo", "_main", "_malloc", "_free"]
 
 # If any of these files change, recompile everything
-# Consider the Makefile and any file in src/web, res or inc
-CAUSE_FOR_RECOMPILE = $(find src/web res inc -type f) Makefile
+# Consider the Makefile and headers
+CAUSE_FOR_RECOMPILE = $(wildcard inc/*.h) \
+					  $(wildcard inc/nuklear/*.h)
+
+# If any of these files change, just relink
+# Consider src/web and resources
+CAUSE_FOR_RELINKING = $(wildcard src/web/*) \
+					  $(wildcard src/web/js/*) \
+					  $(wildcard res/*) \
+					  $(wildcard res/img/*) \
+					  $(wildcard res/shd/*) \
+					  $(wildcard res/font/*)
 
 # These emscripten flags need to be present during compilation, because this
 # triggers the package manager to download everything that's needed like SDL and
 # the associated dependencies.
 EMCC_FLAGS= -s USE_SDL=2 \
 			-s USE_SDL_IMAGE=2 \
-			-s SDL2_IMAGE_FORMATS='["jpg", "png", "heic"]'
+			-s SDL2_IMAGE_FORMATS='["jpg", "png", "heic"]' \
+
+# Pull javascript through the emscripten optimizer pipeline
+JS_FILES= --extern-pre-js=src/web/js/shell.js \
+		  --pre-js=src/web/js/userfile.js \
+		  --pre-js=src/web/js/webcam.js
 
 # -Wl,-u,fileno is a workaround for an outstanding issue with LTO and emscripten
 # LTO is mega awesome, but the interaction with javascript causes it to
@@ -32,6 +47,7 @@ EMCC_LINKER_FLAGS = $(EMCC_FLAGS) \
 					-s EXPORTED_FUNCTIONS='$(PROTECT)' \
 					-s EXPORTED_RUNTIME_METHODS=[ccall] \
 					-s ALLOW_MEMORY_GROWTH \
+					$(JS_FILES) \
 					--use-preload-plugins \
 					--preload-file res \
 					-Wl,-u,fileno
@@ -45,10 +61,10 @@ OBJ = $(patsubst src/%.c, obj/%.o, $(SRC))
 # are needed
 INC = -Iinc -Iinc/nuklear
 
-release debug: out/index.html $(OBJ)
+release debug: out/index.html
 
 # Linking Stage + Output to WASM.
-out/index.html: $(OBJ)
+out/index.html: $(OBJ) $(CAUSE_FOR_RELINKING)
 	@echo
 	@echo -e "\033[96m-- Linking stage --\033[0m"
 	@mkdir -p out
@@ -56,7 +72,7 @@ out/index.html: $(OBJ)
 		 $(OBJ) $(CFLAGS) \
 		 -o out/index.html \
 		 --shell-file src/web/shell.html
-	cp -r src/web/* out
+	cp src/web/favicon.svg src/web/shell.css out/
 
 # Compile every C file in parallel.
 # Changes to the headers, Makefile or shaders as cause to recompile everything
@@ -69,6 +85,6 @@ run:
 	emrun out/index.html
 
 clean:
-	rm -rf obj out
+	rm -rf obj/* out/*
 
 .PHONY: clean run

@@ -121,19 +121,12 @@ void gui()
 			if (nk_button_label(ctx, ""))
 			{
 				/* NON BLOCKING! */
-				EM_ASM(
-					var file_selector = document.createElement('input');
-					file_selector.setAttribute('type', 'file');
-					file_selector.setAttribute('onchange', 'open_file(event)');
-					file_selector.setAttribute('accept',
-											   '.jpg,.jpeg,.png,.heic');
-					file_selector.click(););
+				EM_ASM(open_file(););
 			}
 			if (nk_button_label(ctx, ""))
 			{
 				/* NON BLOCKING! */
-				EM_ASM(
-					open_webcam(););
+				EM_ASM(open_webcam(););
 			}
 
 			nk_tree_pop(ctx);
