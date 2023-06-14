@@ -5,7 +5,7 @@
 #         \_/  |_|\__,_|\__,_| |___/ |_|  |_|\__,_|_|\_\___|_| |_|_|\___|      #
 
 # ========= Settings ========= #
-release: CFLAGS = -Wall -O3 -flto # O3 + LTO
+release: CFLAGS = -Wall -O3 -msimd128 -flto # O3 + LTO + SIMD
 debug: CFLAGS = -Wall -O0
 
 # Functions to be prevented from being deleted as dead code. This is to allow
