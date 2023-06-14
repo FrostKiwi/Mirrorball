@@ -12,7 +12,12 @@ debug: CFLAGS = -Wall -O0
 # for C code to be alled from Javascript, even when the functions in question
 # are not called in the C code itself. Other options is EMSCRIPTEN_KEEPALIVE,
 # but that doesn't for for things not defined in the C source like malloc.
-PROTECT = ["_process_webcam", "_setup_webcam", "_load_photo", "_main", "_malloc", "_free"]
+PROTECT = ["_process_webcam", \
+		   "_setup_webcam", \
+		   "_load_photo", \
+		   "_main", \
+		   "_malloc", \
+		   "_free"]
 
 # If any of these files change, recompile everything
 # Consider the Makefile and headers
