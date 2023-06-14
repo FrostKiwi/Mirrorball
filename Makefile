@@ -17,7 +17,8 @@ PROTECT = ["_process_webcam", "_setup_webcam", "_load_photo", "_main", "_malloc"
 # If any of these files change, recompile everything
 # Consider the Makefile and headers
 CAUSE_FOR_RECOMPILE = $(wildcard inc/*.h) \
-					  $(wildcard inc/nuklear/*.h)
+					  $(wildcard inc/nuklear/*.h) \
+					  Makefile
 
 # If any of these files change, just relink
 # Consider src/web and resources
