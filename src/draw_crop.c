@@ -8,17 +8,17 @@ void draw_crop()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, gctx.ch1.img.tex);
 	glUseProgram(gctx.crop_shader.shader);
-	vec4 crop;
+	vec4s crop;
 	int postcrop_w =
 		gctx.ch1.img.w - (gctx.ch1.crop.left + gctx.ch1.crop.right);
 	int postcrop_h =
 		gctx.ch1.img.h - (gctx.ch1.crop.top + gctx.ch1.crop.bot);
-	crop[0] = (1.0 / gctx.ch1.img.w) * gctx.ch1.crop.left;
-	crop[1] = (1.0 / gctx.ch1.img.h) * gctx.ch1.crop.top;
-	crop[2] = (1.0 / gctx.ch1.img.w) * postcrop_w;
-	crop[3] = (1.0 / gctx.ch1.img.h) * postcrop_h;
+	crop.x = (1.0 / gctx.ch1.img.w) * gctx.ch1.crop.left;
+	crop.y = (1.0 / gctx.ch1.img.h) * gctx.ch1.crop.top;
+	crop.z = (1.0 / gctx.ch1.img.w) * postcrop_w;
+	crop.w = (1.0 / gctx.ch1.img.h) * postcrop_h;
 
-	glUniform4fv(gctx.crop_shader.crop, 1, &crop[0]);
+	glUniform4fv(gctx.crop_shader.crop, 1, crop.raw);
 
 	glBindBuffer(GL_ARRAY_BUFFER, gctx.bgvbo);
 	glEnableVertexAttribArray(gctx.crop_shader.vtx);

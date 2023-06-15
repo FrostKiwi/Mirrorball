@@ -5,8 +5,10 @@
 #         \_/  |_|\__,_|\__,_| |___/ |_|  |_|\__,_|_|\_\___|_| |_|_|\___|      #
 
 # ========= Settings ========= #
-release: CFLAGS = -Wall -O3 -msimd128 -flto # O3 + LTO + SIMD
-debug: CFLAGS = -Wall -O0
+WARN=-Wall -Wno-missing-braces -Wmissing-field-initializers
+
+release: CFLAGS = $(WARN) -std=gnu11 -O3 -msimd128 -flto # O3 + LTO + SIMD
+debug: CFLAGS = $(WARN) -std=gnu11 -O0
 
 # Functions to be prevented from being deleted as dead code. This is to allow
 # for C code to be alled from Javascript, even when the functions in question

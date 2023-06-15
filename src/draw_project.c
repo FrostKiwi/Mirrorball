@@ -2,20 +2,20 @@
 
 void draw_project()
 {
-	vec4 crop;
-	crop[0] = (1.0 / gctx.ch1.img.w) *
+	vec4s crop;
+	crop.x = (1.0 / gctx.ch1.img.w) *
 			  (gctx.ch1.img.w / 2.0 +
 			   gctx.ch1.crop.left / 2.0 -
 			   gctx.ch1.crop.right / 2.0);
-	crop[1] = (1.0 / gctx.ch1.img.h) *
+	crop.y = (1.0 / gctx.ch1.img.h) *
 			  (gctx.ch1.img.h / 2.0 +
 			   gctx.ch1.crop.top / 2.0 -
 			   gctx.ch1.crop.bot / 2.0);
-	crop[2] = (1.0 / gctx.ch1.img.w) *
+	crop.z = (1.0 / gctx.ch1.img.w) *
 			  (gctx.ch1.img.w -
 			   gctx.ch1.crop.left / 1.0 -
 			   gctx.ch1.crop.right / 1.0);
-	crop[3] = (1.0 / gctx.ch1.img.h) *
+	crop.w = (1.0 / gctx.ch1.img.h) *
 			  (gctx.ch1.img.h -
 			   gctx.ch1.crop.top / 1.0 -
 			   gctx.ch1.crop.bot / 1.0);
@@ -24,7 +24,7 @@ void draw_project()
 	glBindTexture(GL_TEXTURE_2D, gctx.ch1.img.tex);
 	glEnableVertexAttribArray(gctx.projection_shader.pos);
 	glEnableVertexAttribArray(gctx.projection_shader.viewray);
-	glUniform4fv(gctx.projection_shader.crop, 1, crop);
+	glUniform4fv(gctx.projection_shader.crop, 1, crop.raw);
 	glBindBuffer(GL_ARRAY_BUFFER, gctx.rayvbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(gctx.ch1.viewrays), gctx.ch1.viewrays,
 				 GL_DYNAMIC_DRAW);
