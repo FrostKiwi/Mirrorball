@@ -29,8 +29,6 @@ void render_loop(void *loopArg)
 	basis = mat4_mul(basis, gctx.cam.cam_rotation_matrix);
 	gctx.cam.cam_rotation_matrix = mat4_copy(basis);
 	gctx.cam.view_matrix = mat4_identity();
-	gctx.cam.view_matrix =
-		glms_translate(gctx.cam.view_matrix, (vec3s){0.0, 0.0, 0.0});
 	glm_mul_rot(gctx.cam.view_matrix.raw, gctx.cam.cam_rotation_matrix.raw,
 				gctx.cam.view_matrix.raw);
 	glm_inv_tr(gctx.cam.view_matrix.raw);
