@@ -45,8 +45,8 @@ int load_photo(uint8_t *buffer, size_t size)
 				 GL_UNSIGNED_BYTE, surface->pixels);
 	SDL_FreeSurface(surface);
 
-	glm_vec3_zero(gctx.cam.cam_rotation);
-	glm_vec3_zero(gctx.ch1.rotation);
+	gctx.cam.cam_rotation = vec3_zero();
+	gctx.ch1.rotation = vec3_zero();
 	gctx.ch1.fov_deg = 360;
 	gctx.cam.fov = glm_rad(100);
 	gctx.ch1.crop.bot = 0;

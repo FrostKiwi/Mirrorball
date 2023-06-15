@@ -20,21 +20,23 @@ void render_loop(void *loopArg)
 	gui();
 
 	/* Update Camera */
-	mat4 basis;
-	mat4 eulerangles;
-	glm_mat4_identity(basis);
-	glm_euler_zyx(gctx.cam.cam_rotation, gctx.cam.cam_rotation_matrix);
-	glm_euler_zyx(gctx.ch1.rotation, eulerangles);
-	glm_mat4_mul(basis, eulerangles, basis);
-	glm_mat4_mul(basis, gctx.cam.cam_rotation_matrix, basis);
-	glm_mat4_copy(basis, gctx.cam.cam_rotation_matrix);
-	glm_mat4_identity(gctx.cam.view_matrix);
-	glm_translate(gctx.cam.view_matrix, (vec3){0.0, 0.0, 0.0});
-	glm_mul_rot(gctx.cam.view_matrix, gctx.cam.cam_rotation_matrix,
-				gctx.cam.view_matrix);
-	glm_inv_tr(gctx.cam.view_matrix);
-	glm_perspective(gctx.cam.fov, (float)win_width / (float)win_height,
-					0.01f, 100.0f, gctx.cam.projection_matrix);
+	mat4s basis;
+	mat4s eulerangles;
+	basis = mat4_identity();
+	gctx.cam.cam_rotation_matrix = glms_euler_zyx(gctx.cam.cam_rotation);
+	eulerangles = glms_euler_zyx(gctx.ch1.rotation);
+	basis = mat4_mul(basis, eulerangles);
+	basis = mat4_mul(basis, gctx.cam.cam_rotation_matrix);
+	gctx.cam.cam_rotation_matrix = mat4_copy(basis);
+	gctx.cam.view_matrix = mat4_identity();
+	gctx.cam.view_matrix =
+		glms_translate(gctx.cam.view_matrix, (vec3s){0.0, 0.0, 0.0});
+	glm_mul_rot(gctx.cam.view_matrix.raw, gctx.cam.cam_rotation_matrix.raw,
+				gctx.cam.view_matrix.raw);
+	glm_inv_tr(gctx.cam.view_matrix.raw);
+	gctx.cam.projection_matrix =
+		glms_perspective(gctx.cam.fov, (float)win_width / (float)win_height,
+						 0.01f, 100.0);
 
 	/* Update View-Rays */
 	double distance = -0.5 / tan(gctx.cam.fov / 2.0);
@@ -44,7 +46,7 @@ void render_loop(void *loopArg)
 		gctx.ch1.viewrays[i + 2] =
 			gctx.ch1.viewrays[i] * 0.5 * (float)win_width / (float)win_height;
 		gctx.ch1.viewrays[i + 3] = gctx.ch1.viewrays[i + 1] * 0.5;
-		glm_vec3_rotate_m4(gctx.cam.cam_rotation_matrix,
+		glm_vec3_rotate_m4(gctx.cam.cam_rotation_matrix.raw,
 						   &gctx.ch1.viewrays[i + 2],
 						   &gctx.ch1.viewrays[i + 2]);
 	}

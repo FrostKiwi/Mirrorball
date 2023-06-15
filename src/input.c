@@ -57,8 +57,8 @@ void input()
 			}
 		} */
 		case SDL_FINGERMOTION:
-			gctx.cam.cam_rotation[1] += evt.tfinger.dx * 2.0;
-			gctx.cam.cam_rotation[0] += evt.tfinger.dy * 2.0;
+			gctx.cam.cam_rotation.y += evt.tfinger.dx * 2.0;
+			gctx.cam.cam_rotation.x += evt.tfinger.dy * 2.0;
 			break;
 		case SDL_MULTIGESTURE:
 			gctx.cam.fov -= evt.mgesture.dDist * 4;
@@ -69,14 +69,14 @@ void input()
 
 	if (ctx->input.keyboard.keys[NK_KEY_LEFT].down &&
 		!ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
-		gctx.cam.cam_rotation[1] += 0.05;
+		gctx.cam.cam_rotation.y += 0.05;
 	if (ctx->input.keyboard.keys[NK_KEY_RIGHT].down &&
 		!ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
-		gctx.cam.cam_rotation[1] -= 0.05;
+		gctx.cam.cam_rotation.y -= 0.05;
 	if (ctx->input.keyboard.keys[NK_KEY_UP].down)
-		gctx.cam.cam_rotation[0] += 0.05;
+		gctx.cam.cam_rotation.x += 0.05;
 	if (ctx->input.keyboard.keys[NK_KEY_DOWN].down)
-		gctx.cam.cam_rotation[0] -= 0.05;
+		gctx.cam.cam_rotation.x -= 0.05;
 	if (ctx->input.keyboard.keys[NK_KEY_LEFT].down &&
 		ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
 		gctx.cam.fov += 0.05;
@@ -84,10 +84,10 @@ void input()
 		ctx->input.keyboard.keys[NK_KEY_SHIFT].down)
 		gctx.cam.fov -= 0.05;
 
-	if (gctx.cam.cam_rotation[0] > GLM_PI / 2.0)
-		gctx.cam.cam_rotation[0] = GLM_PI / 2.0;
-	if (gctx.cam.cam_rotation[0] < GLM_PI / -2.0)
-		gctx.cam.cam_rotation[0] = GLM_PI / -2.0;
+	if (gctx.cam.cam_rotation.x > GLM_PI / 2.0)
+		gctx.cam.cam_rotation.x = GLM_PI / 2.0;
+	if (gctx.cam.cam_rotation.x < GLM_PI / -2.0)
+		gctx.cam.cam_rotation.x = GLM_PI / -2.0;
 
 	if (!nk_window_is_any_hovered(ctx))
 	{

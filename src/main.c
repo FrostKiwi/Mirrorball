@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
 	gctx.ch1.img = load_texture("res/img/room.jpg", gctx.ch1.img);
 	gctx.cam.fov = glm_rad(100);
-	gctx.cam.cam_rotation[1] = 1.5;
+	gctx.cam.cam_rotation.y = 1.5;
 	gctx.ch1.crop.top = 46;
 	gctx.ch1.crop.bot = 62;
 	gctx.ch1.crop.left = 45;

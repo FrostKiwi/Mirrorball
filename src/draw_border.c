@@ -24,13 +24,13 @@ void interp_border_pts(vec3s a, vec3s b, int subdiv,
 	for (int x = 0; x < subdiv; ++x)
 	{
 		float mult = (1.0 / subdiv) * x;
-		ray = glms_vec3_lerp(a, b, mult);
-		color = glms_vec3_lerp(color_a, color_b, mult);
-		ray = glms_vec3_normalize(ray);
+		ray = vec3_lerp(a, b, mult);
+		color = vec3_lerp(color_a, color_b, mult);
+		ray = vec3_normalize(ray);
 		float divider = 2.f * GLM_SQRT2f * sqrtf(ray.z + 1.0);
-		uv_proj = glms_vec2_scale((vec2s){ray.x, ray.y}, gctx.ch1.fov);
-		uv_proj = glms_vec2_divs(uv_proj, divider);
-		uv_proj = glms_vec2_scale(uv_proj, 2);
+		uv_proj = vec2_scale((vec2s){ray.x, ray.y}, gctx.ch1.fov);
+		uv_proj = vec2_divs(uv_proj, divider);
+		uv_proj = vec2_scale(uv_proj, 2);
 		glUniform2fv(gctx.border_shader.transform, 1, uv_proj.raw);
 		glUniform3fv(gctx.border_shader.color, 1, color.raw);
 		/* Draw small quad */
@@ -50,7 +50,7 @@ void interp_border_pts_simple(vec2s a, vec2s b, int subdiv,
 	for (int x = 0; x < subdiv; ++x)
 	{
 		float mult = (1.0 / subdiv) * x;
-		out = glms_vec2_lerp(a, b, mult);
+		out = vec2_lerp(a, b, mult);
 		/* I scale here the position by the size of the points to get them to
 		   touch the inner border, instead of being cut in half by the screen
 		   edges. Technically, this breaks the projection of the points ever so
@@ -67,7 +67,7 @@ void interp_border_pts_simple(vec2s a, vec2s b, int subdiv,
 			out.y *= 1.0 - POINT_SIZE * aspect;
 			out.y /= aspect;
 		}
-		color = glms_vec3_lerp(color_a, color_b, mult);
+		color = vec3_lerp(color_a, color_b, mult);
 		glUniform2fv(gctx.border_shader.transform, 1, out.raw);
 		glUniform3fv(gctx.border_shader.color, 1, color.raw);
 		/* Draw small quad */
