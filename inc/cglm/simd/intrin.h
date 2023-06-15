@@ -63,7 +63,7 @@
 #endif
 
 /* ARM Neon */
-#if defined(_MSC_VER)
+#if defined(_WIN32)
 /* TODO: non-ARM stuff already inported, will this be better option */
 /* #  include <intrin.h> */
 
