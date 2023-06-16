@@ -98,10 +98,6 @@ void init_shaders()
 
 	gctx.border_shader.vtx =
 		glGetAttribLocation(gctx.border_shader.shader, "vtx");
-	gctx.border_shader.aspect_w =
-		glGetUniformLocation(gctx.border_shader.shader, "aspect_w");
-	gctx.border_shader.aspect_h =
-		glGetUniformLocation(gctx.border_shader.shader, "aspect_h");
 	gctx.border_shader.scale =
 		glGetUniformLocation(gctx.border_shader.shader, "scale");
 	gctx.border_shader.transform =

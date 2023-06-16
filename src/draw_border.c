@@ -13,7 +13,7 @@
 
 /* Interpolates and projects the border points for a nice little vizualization
    to explain the projection mapping */
-void interp_border_pts(vec3s a, vec3s b, int subdiv,
+void interp_border_pts(vec3s a, vec3s b, int subdiv, vec2s aspect_ratio,
 					   vec3s color_a, vec3s color_b)
 {
 	if (subdiv % 2 == 1)
@@ -31,6 +31,7 @@ void interp_border_pts(vec3s a, vec3s b, int subdiv,
 		uv_proj = vec2_scale((vec2s){ray.x, ray.y}, gctx.ch1.fov);
 		uv_proj = vec2_divs(uv_proj, divider);
 		uv_proj = vec2_scale(uv_proj, 2);
+		uv_proj = vec2_mul(uv_proj, aspect_ratio);
 		glUniform2fv(gctx.border_shader.transform, 1, uv_proj.raw);
 		glUniform3fv(gctx.border_shader.color, 1, color.raw);
 		/* Draw small quad */
@@ -40,7 +41,7 @@ void interp_border_pts(vec3s a, vec3s b, int subdiv,
 
 /* Interpolates and projects the border points for a nice little vizualization
    to explain the projection mapping */
-void interp_border_pts_simple(vec2s a, vec2s b, int subdiv,
+void interp_border_pts_simple(vec2s a, vec2s b, int subdiv, vec2s aspect_ratio,
 							  vec3s color_a, vec3s color_b, float aspect)
 {
 	if (subdiv % 2 == 1)
@@ -55,18 +56,17 @@ void interp_border_pts_simple(vec2s a, vec2s b, int subdiv,
 		   touch the inner border, instead of being cut in half by the screen
 		   edges. Technically, this breaks the projection of the points ever so
 		   slightly. Maybe I should add this logic in the upper calculation. */
+
+		/* Disabled Point scale logic for now */
 		if (aspect > 1)
 		{
-			out.x *= 1.0 - (POINT_SIZE / aspect);
-			out.y *= 1.0 - POINT_SIZE;
 			out.x *= aspect;
 		}
 		else
 		{
-			out.x *= 1.0 - POINT_SIZE;
-			out.y *= 1.0 - POINT_SIZE * aspect;
 			out.y /= aspect;
 		}
+		out = vec2_mul(out, aspect_ratio);
 		color = vec3_lerp(color_a, color_b, mult);
 		glUniform2fv(gctx.border_shader.transform, 1, out.raw);
 		glUniform3fv(gctx.border_shader.color, 1, color.raw);
@@ -90,28 +90,25 @@ void draw_border(bool project_points, int subdiv)
 	int postcrop_h =
 		gctx.ch1.img.h - (gctx.ch1.crop.top + gctx.ch1.crop.bot);
 
+	vec2s aspect_ratio = vec2_one();
 	if (((float)postcrop_h / (float)postcrop_w) >
 		((float)win_height / (float)win_width))
-	{
-		glUniform1f(gctx.border_shader.aspect_h, 1.0);
-		glUniform1f(gctx.border_shader.aspect_w,
-					((float)postcrop_w / (float)postcrop_h) /
-						((float)win_width / (float)win_height));
-	}
+		aspect_ratio.x = ((float)postcrop_w / (float)postcrop_h) /
+						 ((float)win_width / (float)win_height);
 	else
-	{
-		glUniform1f(gctx.border_shader.aspect_h,
-					((float)postcrop_h / (float)postcrop_w) /
-						((float)win_height / (float)win_width));
-		glUniform1f(gctx.border_shader.aspect_w, 1.0);
-	}
+		aspect_ratio.y = ((float)postcrop_h / (float)postcrop_w) /
+						 ((float)win_height / (float)win_width);
 
 	glVertexAttribPointer(gctx.border_shader.vtx, 2, GL_FLOAT, GL_FALSE,
 						  2 * sizeof(float), 0);
 
 	if (project_points)
 	{
-		glUniform1f(gctx.border_shader.scale, POINT_SIZE * 0.8);
+		vec2s scale = {POINT_SIZE / aspect, POINT_SIZE};
+		scale = vec2_scale(scale, 0.8);
+		glUniform2fv(gctx.border_shader.scale,
+					 1,
+					 scale.raw);
 		vec3s ray_topleft;
 		glm_vec3_copy(&gctx.ch1.viewrays[2], ray_topleft.raw);
 		vec3s ray_topright;
@@ -123,51 +120,54 @@ void draw_border(bool project_points, int subdiv)
 
 		/* Should use instanced rendering */
 		/* Top */
-		interp_border_pts(ray_topleft, ray_topright, subdiv * aspect,
+		interp_border_pts(ray_topleft, ray_topright, subdiv * aspect, aspect_ratio,
 						  COLOR_TOPLEFT, COLOR_TOPRIGHT);
 		/* Right */
-		interp_border_pts(ray_topright, ray_botright, subdiv,
+		interp_border_pts(ray_topright, ray_botright, subdiv, aspect_ratio,
 						  COLOR_TOPRIGHT, COLOR_BOTRIGHT);
 		/* Bottom */
-		interp_border_pts(ray_botright, ray_botleft, subdiv * aspect,
+		interp_border_pts(ray_botright, ray_botleft, subdiv * aspect, aspect_ratio,
 						  COLOR_BOTRIGHT, COLOR_BOTLEFT);
 		/* Left */
-		interp_border_pts(ray_botleft, ray_topleft, subdiv,
+		interp_border_pts(ray_botleft, ray_topleft, subdiv, aspect_ratio,
 						  COLOR_BOTLEFT, COLOR_TOPLEFT);
 		/* Diagonal, Bottom-left -> Top-right */
 		interp_border_pts(ray_botleft, ray_topright,
-						  subdiv * aspect * GLM_SQRT2,
+						  subdiv * aspect * GLM_SQRT2, aspect_ratio,
 						  COLOR_BOTLEFT, COLOR_TOPRIGHT);
 		/* Diagonal, Top-left -> Bottom-right */
 		interp_border_pts(ray_topleft, ray_botright,
-						  subdiv * aspect * GLM_SQRT2,
+						  subdiv * aspect * GLM_SQRT2, aspect_ratio,
 						  COLOR_TOPLEFT, COLOR_BOTRIGHT);
 	}
 	else
 	{
-		glUniform1f(gctx.border_shader.scale, POINT_SIZE);
+		vec2s scale = {POINT_SIZE / aspect, POINT_SIZE};
+		glUniform2fv(gctx.border_shader.scale,
+					 1,
+					 scale.raw);
 		vec2s topleft = {-1, 1};
 		vec2s topright = {1, 1};
 		vec2s botright = {1, -1};
 		vec2s botleft = {-1, -1};
 
 		/* Top */
-		interp_border_pts_simple(topleft, topright, subdiv * aspect,
+		interp_border_pts_simple(topleft, topright, subdiv * aspect, aspect_ratio,
 								 COLOR_TOPLEFT, COLOR_TOPRIGHT, aspect);
 		/* Right */
-		interp_border_pts_simple(topright, botright, subdiv,
+		interp_border_pts_simple(topright, botright, subdiv, aspect_ratio,
 								 COLOR_TOPRIGHT, COLOR_BOTRIGHT, aspect);
 		/* Bottom */
-		interp_border_pts_simple(botright, botleft, subdiv * aspect,
+		interp_border_pts_simple(botright, botleft, subdiv * aspect, aspect_ratio,
 								 COLOR_BOTRIGHT, COLOR_BOTLEFT, aspect);
 		/* Left */
-		interp_border_pts_simple(botleft, topleft, subdiv,
+		interp_border_pts_simple(botleft, topleft, subdiv, aspect_ratio,
 								 COLOR_BOTLEFT, COLOR_TOPLEFT, aspect);
 		/* Diagonal, Bottom-left -> Top-right */
-		interp_border_pts_simple(botleft, topright, subdiv * aspect * GLM_SQRT2,
+		interp_border_pts_simple(botleft, topright, subdiv * aspect * GLM_SQRT2, aspect_ratio,
 								 COLOR_BOTLEFT, COLOR_TOPRIGHT, aspect);
 		/* Diagonal, Top-left -> Bottom-right */
-		interp_border_pts_simple(topleft, botright, subdiv * aspect * GLM_SQRT2,
+		interp_border_pts_simple(topleft, botright, subdiv * aspect * GLM_SQRT2, aspect_ratio,
 								 COLOR_TOPLEFT, COLOR_BOTRIGHT, aspect);
 	}
 
