@@ -7,7 +7,8 @@
 # ========= Settings ========= #
 WARN=-Wall -Wno-missing-braces -Wmissing-field-initializers
 
-release: CFLAGS = $(WARN) -std=gnu11 -O3 -flto # O3 + LTO + SIMD
+# Don't use SIMD -msimd128. It is broken on iPhone for whatever reason
+release: CFLAGS = $(WARN) -std=gnu11 -O3 -flto # O3 + LTO
 debug: CFLAGS = $(WARN) -std=gnu11 -O0
 
 # Functions to be prevented from being deleted as dead code. This is to allow
