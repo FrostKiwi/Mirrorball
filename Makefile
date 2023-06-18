@@ -68,9 +68,9 @@ EMCC_LINKER_FLAGS = $(EMCC_FLAGS) \
 SRC = $(shell find src -type f -name '*.c')
 OBJ = $(patsubst src/%.c, obj/%.o, $(SRC))
 
-# Include files for Nuklear were moved into their own folder, so two includes
-# are needed
-INC = -Iinc -Iinc/nuklear
+# Include files for Nuklear were moved into their own folder and cglm is
+# imported as a submodule
+INC = -Iinc -Iinc/nuklear -Isub/cglm/include
 
 release debug: out/index.html
 
