@@ -12,14 +12,6 @@ void gui()
 				 NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 					 NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 	{
-		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
-		nk_style_set_font(ctx, gctx.big.handle);
-		nk_label_colored(ctx, "Purposefully broken on iOS!",
-				 NK_TEXT_ALIGN_LEFT, nk_rgb_f(1, 0.25, 0.25));
-		nk_label_colored(ctx, "Tracking down an iPhone bug",
-						 NK_TEXT_ALIGN_LEFT, nk_rgb_f(1, 0.25, 0.25));
-		nk_label_colored(ctx, "related to SIMD",
-						 NK_TEXT_ALIGN_LEFT, nk_rgb_f(1, 0.25, 0.25));
 		nk_style_set_font(ctx, gctx.std.handle);
 		nk_layout_row_dynamic(ctx, 18 * gctx.interface_mult, 1);
 		nk_label(ctx, "Switch between Setup and Projection here",
