@@ -42,7 +42,7 @@ CAUSE_FOR_RELINKING = $(wildcard src/web/*) \
 # the associated dependencies.
 EMCC_FLAGS= -s USE_SDL=2 \
 			-s USE_SDL_IMAGE=2 \
-			-s SDL2_IMAGE_FORMATS='["jpg", "png", "heic"]' \
+			-s SDL2_IMAGE_FORMATS='["jpg", "png", "heic"]'
 
 # Pull javascript through the emscripten optimizer pipeline
 JS_FILES= --extern-pre-js=src/web/js/shell.js \

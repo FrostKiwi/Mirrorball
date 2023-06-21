@@ -1,5 +1,22 @@
 #include "gui.h"
 
+/* 1 SDL Tick = 1ms */
+struct
+{
+	Uint32 ticks_prev;
+	Uint32 ticks_cur;
+	Uint32 ms_cur;
+	float ms_fading;
+} Debug = {
+	/* Init to 16.6ms to prevent long time to set due to huge undefined value */
+	.ms_fading = 16.6
+};
+
+float fading_average(float alpha, float old_average, float new_sample)
+{
+	return alpha * new_sample + (1.0 - alpha) * old_average;
+}
+
 void gui()
 {
 	struct nk_context *ctx = gctx.ctx;
@@ -132,7 +149,7 @@ void gui()
 			if (nk_button_label(ctx, ""))
 			{
 				/* NON BLOCKING! */
-				EM_ASM(open_video(););
+				EM_ASM(open_video(video00_intro.mp4););
 			}
 
 			nk_tree_pop(ctx);
@@ -199,6 +216,38 @@ void gui()
 
 		/* Reset to standard Font */
 		nk_style_set_font(ctx, gctx.std.handle);
+	}
+	nk_end(ctx);
+
+	if (nk_begin(ctx, "Debug",
+				 nk_rect(200 * gctx.interface_mult,
+						 200 * gctx.interface_mult,
+						 400 * gctx.interface_mult,
+						 400 * gctx.interface_mult),
+				 NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
+					 NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
+	{
+		nk_style_set_font(ctx, gctx.big.handle);
+		nk_layout_row_dynamic(ctx, 32 * gctx.interface_mult, 1);
+		nk_label(ctx, "Main Thread timings", NK_TEXT_ALIGN_LEFT);
+		nk_layout_row_dynamic(ctx, 4 * gctx.interface_mult, 1);
+		nk_rule_horizontal(ctx, nk_rgb(176, 176, 176), nk_true);
+
+		Debug.ticks_cur = SDL_GetTicks();
+		Debug.ms_cur = Debug.ticks_cur - Debug.ticks_prev;
+		Debug.ms_fading = fading_average(0.01, Debug.ms_fading, Debug.ms_cur);
+		nk_style_set_font(ctx, gctx.std.handle);
+		nk_layout_row_dynamic(ctx, 20 * gctx.interface_mult, 1);
+		nk_labelf(ctx, NK_TEXT_ALIGN_LEFT,
+				  "FPS: %.0f Hz, Smoothed: %.1f Hz",
+				  1000.f / Debug.ms_cur,
+				  1000.f / Debug.ms_fading);
+		nk_labelf(ctx, NK_TEXT_ALIGN_LEFT,
+				  "Frame time: %d ms, Smoothed: %.1f ms",
+				  Debug.ms_cur, Debug.ms_fading);
+		/* nk_label(ctx, "Distortion Correction", NK_TEXT_ALIGN_LEFT); */
+		/* printf("%f Hz\n", 1000.0 / (double)(SDL_GetTicks() - wrap_around)); */
+		Debug.ticks_prev = SDL_GetTicks();
 	}
 	nk_end(ctx);
 }

@@ -1,8 +1,6 @@
 #include "main.h"
 #include <SDL2/SDL_image.h>
 
-Uint32 wrap_around;
-
 void setup_webcam(uint8_t *buffer, size_t buffer_size, int width, int height)
 {
 	glDeleteTextures(1, &gctx.ch1.img.tex);
@@ -41,9 +39,6 @@ int process_webcam()
 	glBindTexture(GL_TEXTURE_2D, gctx.ch1.img.tex);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, gctx.ch1.img.w, gctx.ch1.img.h,
 					gctx.ch1.img.channels, GL_UNSIGNED_BYTE, gctx.ch1.img.buf);
-
-	printf("%f Hz\n", 1000.0 / (double)(SDL_GetTicks() - wrap_around));
-	wrap_around = SDL_GetTicks();
 
 	return 1;
 }
