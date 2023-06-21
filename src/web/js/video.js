@@ -16,12 +16,12 @@ open_video = function (url) {
 		let imageData =
 			context.getImageData(0, 0, canvas.width, canvas.height);
 		const dataPtr = Module._malloc(imageData.data.length);
+		const dataOnHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, imageData.data.length);
 
 		// Call the setup_webcam function with the initial frame
 		function setupVideo() {
 			context.drawImage(video, 0, 0, canvas.width, canvas.height);
 			imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-			const dataOnHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, imageData.data.length);
 			dataOnHeap.set(imageData.data);
 			Module.ccall(
 				'setup_webcam',
@@ -37,7 +37,6 @@ open_video = function (url) {
 		function processFrame() {
 			context.drawImage(video, 0, 0, canvas.width, canvas.height);
 			imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-			const dataOnHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, imageData.data.length);
 			dataOnHeap.set(imageData.data);
 			Module.ccall('process_webcam');
 
