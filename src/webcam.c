@@ -15,7 +15,7 @@ void setup_webcam(uint8_t *buffer, size_t buffer_size, int width, int height)
 	gctx.ch1.img.h = height;
 	gctx.ch1.img.buf = buffer;
 
-	switch (width * height / buffer_size)
+	switch (buffer_size / (width * height))
 	{
 	case 3:
 		gctx.ch1.img.channels = GL_RGB;

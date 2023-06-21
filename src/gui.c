@@ -149,7 +149,7 @@ void gui()
 			if (nk_button_label(ctx, ""))
 			{
 				/* NON BLOCKING! */
-				EM_ASM(open_video(video00_intro.mp4););
+				EM_ASM(open_video("video00_intro.mp4"););
 			}
 
 			nk_tree_pop(ctx);
