@@ -1,0 +1,26 @@
+{
+	/* Config to allow IntelliSense to pick up emscripten's clang with the
+	   correct settings to understand WASM compilation and requirements */
+    "configurations": [
+        {
+            "name": "emscripten",
+            "includePath": [
+                "${workspaceFolder}/inc",
+                "${workspaceFolder}/inc/nuklear",
+                "${workspaceFolder}/sub/cglm/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+			/* On Windows, path to emcc.bat.
+			   In this example "emsdk/upstream/emscripten/" was put into the
+			   PATH environment variable and thus emcc.bat is visible */
+            "compilerPath": "emcc.bat",
+            "cStandard": "gnu11",
+            "intelliSenseMode": "linux-clang-x64"
+        }
+    ],
+    "version": 4
+}
