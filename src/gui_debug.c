@@ -59,29 +59,26 @@ void gui_debug()
 			gctx.debug.time.ticks_cur = SDL_GetTicks();
 			gctx.debug.time.ms_cur =
 				gctx.debug.time.ticks_cur - gctx.debug.time.ticks_prev;
-			gctx.debug.time.ms_fading =
-				fading_average(0.01,
-							   gctx.debug.time.ms_fading,
-							   gctx.debug.time.ms_cur);
+			gctx.debug.time.ticks_prev = SDL_GetTicks();
+
+			float ms_avg = update_100_average(gctx.debug.time.ms_cur);
 			/* Draw the timing info */
 			nk_label_colored(ctx, "FPS:", NK_TEXT_ALIGN_LEFT,
 							 nk_rgb(100, 123, 23));
 			nk_labelf(ctx, NK_TEXT_ALIGN_RIGHT, "%.0f Hz",
 					  1000.f / gctx.debug.time.ms_cur);
-			nk_label_colored(ctx, "Smoothed FPS:", NK_TEXT_ALIGN_LEFT,
+			nk_label_colored(ctx, "100 Average FPS:", NK_TEXT_ALIGN_LEFT,
 							 nk_rgb(100, 123, 23));
 			nk_labelf(ctx, NK_TEXT_ALIGN_RIGHT, "%.1f Hz",
-					  1000.f / gctx.debug.time.ms_fading);
-			nk_label_colored(ctx, "Frame time:", NK_TEXT_ALIGN_LEFT,
+					  1000.f / ms_avg);
+			nk_label_colored(ctx, "100 Average frame time:", NK_TEXT_ALIGN_LEFT,
 							 nk_rgb(100, 123, 23));
 			nk_labelf(ctx, NK_TEXT_ALIGN_RIGHT, "%d ms",
 					  gctx.debug.time.ms_cur);
 			nk_label_colored(ctx, "Smoothed Frame time:", NK_TEXT_ALIGN_LEFT,
 							 nk_rgb(100, 123, 23));
-			nk_labelf(ctx, NK_TEXT_ALIGN_RIGHT, "%.1f ms",
-					  gctx.debug.time.ms_fading);
-
-			gctx.debug.time.ticks_prev = SDL_GetTicks();
+			nk_labelf(ctx, NK_TEXT_ALIGN_RIGHT, "%.2f ms",
+					  ms_avg);
 			nk_tree_pop(ctx);
 		}
 		/* Image Info */

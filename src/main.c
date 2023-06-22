@@ -15,18 +15,6 @@ struct global_context gctx = {
 		1.0, -1.0, 0.0, 0.0, 0.0,
 		-1.0, -1.0, 0.0, 0.0, 0.0}};
 
-void reset_image()
-{
-	gctx.cam.cam_rotation = vec3_zero();
-	gctx.ch1.rotation = vec3_zero();
-	gctx.ch1.fov_deg = 360;
-	gctx.cam.fov = glm_rad(100);
-	gctx.ch1.crop.bot = 0;
-	gctx.ch1.crop.top = 0;
-	gctx.ch1.crop.left = 0;
-	gctx.ch1.crop.right = 0;
-}
-
 int main(int argc, char *argv[])
 {
 	/* GUI */

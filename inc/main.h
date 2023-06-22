@@ -115,7 +115,8 @@ struct global_context
 			Uint32 ticks_prev;
 			Uint32 ticks_cur;
 			Uint32 ms_cur;
-			float ms_fading;
+			int floating_pnt;
+			Uint32 floating_average[100];
 		} time;
 	} debug;
 
@@ -128,5 +129,4 @@ struct global_context
 extern struct global_context gctx;
 
 void render_loop(void *loopArg);
-void reset_image();
 #endif
