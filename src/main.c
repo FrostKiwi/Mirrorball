@@ -45,7 +45,8 @@ int main(int argc, char *argv[])
 
 	gctx.ctx = nk_sdl_init(gctx.win);
 
-	gctx.ch1.img = load_texture("res/img/room.jpg", gctx.ch1.img);
+	/* gctx.ch1.img = load_texture("res/img/room.jpg", gctx.ch1.img); */
+	EM_ASM(load_from_url("img/room.jpg"););
 	gctx.cam.fov = glm_rad(100);
 	gctx.cam.cam_rotation.y = 1.5;
 	gctx.ch1.crop.top = 46;

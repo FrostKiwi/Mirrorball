@@ -1,5 +1,4 @@
 #include "main.h"
-#include <SDL2/SDL_image.h>
 
 void setup_webcam(uint8_t *buffer, size_t buffer_size, int width, int height)
 {

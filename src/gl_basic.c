@@ -1,5 +1,4 @@
 #include "gl_basic.h"
-#include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -88,7 +87,7 @@ GLuint compile_shader(const char *vert_shader_path,
 	return shader_program;
 }
 
-struct image load_texture(char *file, struct image img)
+/* struct image load_texture(char *file, struct image img)
 {
 	SDL_Surface *surface = IMG_Load(file);
 	if (!surface)
@@ -122,7 +121,7 @@ struct image load_texture(char *file, struct image img)
 				 GL_UNSIGNED_BYTE, surface->pixels);
 	SDL_FreeSurface(surface);
 	return img;
-}
+} */
 
 void print_glinfo()
 {

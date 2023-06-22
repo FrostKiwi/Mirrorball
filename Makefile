@@ -17,7 +17,7 @@ debug: CFLAGS = $(WARN) -std=gnu11 -O0
 # but that doesn't for for things not defined in the C source like malloc.
 PROTECT = ["_process_webcam", \
 		   "_setup_webcam", \
-		   "_load_photo", \
+		   "_media_setup", \
 		   "_main", \
 		   "_malloc", \
 		   "_free"]
@@ -40,14 +40,13 @@ CAUSE_FOR_RELINKING = $(wildcard src/web/*) \
 # These emscripten flags need to be present during compilation, because this
 # triggers the package manager to download everything that's needed like SDL and
 # the associated dependencies.
-EMCC_FLAGS= -s USE_SDL=2 \
-			-s USE_SDL_IMAGE=2 \
-			-s SDL2_IMAGE_FORMATS='["jpg", "png", "heic"]'
+EMCC_FLAGS= -s USE_SDL=2
 
 # Pull javascript through the emscripten optimizer pipeline
 JS_FILES= --extern-pre-js=src/web/js/shell.js \
 		  --pre-js=src/web/js/userfile.js \
 		  --pre-js=src/web/js/webcam.js \
+		  --pre-js=src/web/js/media.js \
 		  --pre-js=src/web/js/video.js \
 		  --pre-js=src/web/js/videofile.js
 
@@ -59,8 +58,7 @@ EMCC_LINKER_FLAGS = $(EMCC_FLAGS) \
 					-s EXPORTED_RUNTIME_METHODS=[ccall] \
 					-s ALLOW_MEMORY_GROWTH \
 					$(JS_FILES) \
-					--use-preload-plugins \
-					--preload-file res \
+					--embed-file res \
 					-Wl,-u,fileno
 
 # ========= Implementation ========= #
@@ -83,7 +81,7 @@ out/index.html: $(OBJ) $(CAUSE_FOR_RELINKING)
 		 $(OBJ) $(CFLAGS) \
 		 -o out/index.html \
 		 --shell-file src/web/shell.html
-	cp src/web/favicon.svg src/web/shell.css out/
+	cp -r img src/web/favicon.svg src/web/shell.css out/
 
 # Compile every C file in parallel.
 # Changes to the headers, Makefile or shaders as cause to recompile everything

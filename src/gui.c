@@ -68,7 +68,8 @@ void gui()
 			{
 				gctx.ch1.rotation = vec3_zero();
 				gctx.cam.cam_rotation = vec3_zero();
-				gctx.ch1.img = load_texture("res/img/room.jpg", gctx.ch1.img);
+				/* gctx.ch1.img = load_texture("res/img/room.jpg", gctx.ch1.img); */
+				EM_ASM(load_from_url("img/room.jpg"););
 				gctx.cam.fov = glm_rad(100);
 				gctx.cam.cam_rotation.y = 1.5;
 				gctx.ch1.crop.top = 46;
@@ -81,7 +82,8 @@ void gui()
 			{
 				gctx.ch1.rotation = vec3_zero();
 				gctx.cam.cam_rotation = vec3_zero();
-				gctx.ch1.img = load_texture("res/img/store.jpg", gctx.ch1.img);
+				/* gctx.ch1.img = load_texture("res/img/store.jpg", gctx.ch1.img); */
+				EM_ASM(load_from_url("img/store.jpg"););
 				gctx.cam.fov = glm_rad(100);
 				gctx.cam.cam_rotation.x = -0.5;
 				gctx.cam.cam_rotation.y = 1.5;
@@ -96,7 +98,8 @@ void gui()
 			{
 				gctx.ch1.rotation = vec3_zero();
 				gctx.cam.cam_rotation = vec3_zero();
-				gctx.ch1.img = load_texture("res/img/mouth.jpg", gctx.ch1.img);
+				/* gctx.ch1.img = load_texture("res/img/mouth.jpg", gctx.ch1.img); */
+				EM_ASM(load_from_url("img/mouth.jpg"););
 				gctx.cam.fov = glm_rad(100);
 				gctx.cam.cam_rotation.y = 3;
 				gctx.ch1.crop.top = 567;
@@ -112,7 +115,8 @@ void gui()
 			{
 				gctx.ch1.rotation = vec3_zero();
 				gctx.cam.cam_rotation = vec3_zero();
-				gctx.ch1.img = load_texture("res/img/tokyo.jpg", gctx.ch1.img);
+				/* gctx.ch1.img = load_texture("res/img/tokyo.jpg", gctx.ch1.img); */
+				EM_ASM(load_from_url("img/tokyo.jpg"););
 				gctx.cam.fov = glm_rad(100);
 				gctx.cam.cam_rotation.y = 2;
 				gctx.ch1.crop.top = 32;
