@@ -122,7 +122,8 @@ void gui()
 			if (nk_button_label(ctx, ""))
 			{
 				/* NON BLOCKING! */
-				EM_ASM(open_file(););
+				EM_ASM(load_user_photo(););
+				reset_image();
 			}
 			if (nk_button_label(ctx, ""))
 			{
