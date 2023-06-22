@@ -8,29 +8,28 @@ load_user_photo = function () {
 	file_selector.click();
 }
 
-load_from_url = function (url) {
-	fetch(url).then(response => response.blob()).then(blob => {
-		createImageBitmap(blob).then(imgBitmap => {
-			const offscreen = new OffscreenCanvas(imgBitmap.width, imgBitmap.height);
-			const ctx = offscreen.getContext('2d');
-			console.log(imgBitmap);
+async function load_from_url(url) {
+	try {
+		const response = await fetch(url);
+		const blob = await response.blob();
+		const bitmap = await createImageBitmap(blob);
 
-			ctx.drawImage(imgBitmap, 0, 0, offscreen.width, offscreen.height);
-			let imageData = ctx.getImageData(0, 0, offscreen.width, offscreen.height);
-			const dataPtr = Module._malloc(imageData.data.length);
+		const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+		const ctx = canvas.getContext('2d');
 
-			Module.HEAPU8.set(imageData.data, dataPtr);
-			Module.ccall(
-				'media_setup',
-				'number',
-				['number', 'number', 'number'],
-				[dataPtr, offscreen.width, offscreen.height]
-			);
-			Module._free(dataPtr);
-		}).catch(
-			err => console.log('ImageBitmap creation failed!', err)
+		ctx.drawImage(bitmap, 0, 0);
+		const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		const dataPtr = Module._malloc(imageData.data.length);
+
+		Module.HEAPU8.set(imageData.data, dataPtr);
+		Module.ccall(
+			'media_setup',
+			'number',
+			['number', 'number', 'number'],
+			[dataPtr, canvas.width, canvas.height]
 		);
-	}).catch(
-		err => console.log('Image loading failed!', err)
-	);
+		Module._free(dataPtr);
+	} catch (err) {
+		console.error(err);
+	}
 };
