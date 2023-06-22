@@ -50,10 +50,14 @@ JS_FILES= --extern-pre-js=src/web/js/shell.js \
 		  --pre-js=src/web/js/video.js \
 		  --pre-js=src/web/js/videofile.js
 
+# Linker flags only relevant for the debug build
+debug: EMCC_LINKER_DEBUG_FLAGS = --emrun
+
 # -Wl,-u,fileno is a workaround for an outstanding issue with LTO and emscripten
 # LTO is mega awesome, but the interaction with javascript causes it to
 # optimize away needed symbols, requiring an exception.
 EMCC_LINKER_FLAGS = $(EMCC_FLAGS) \
+					$(EMCC_LINKER_DEBUG_FLAGS) \
 					-s EXPORTED_FUNCTIONS='$(PROTECT)' \
 					-s EXPORTED_RUNTIME_METHODS=[ccall] \
 					-s ALLOW_MEMORY_GROWTH \

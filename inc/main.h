@@ -14,6 +14,7 @@
 
 /* Internal Headers */
 #include "gl_basic.h"
+#include "util.h"
 
 struct font
 {
@@ -95,6 +96,29 @@ struct global_context
 		float fovmax;
 	} cam;
 
+	struct
+	{
+		struct
+		{
+			const char *version;
+			const char *vendor;
+			const char *renderer;
+			const char *glsl;
+			char *extensions;
+			int extension_count;
+			int max_tex;
+		} gl;
+
+		struct
+		{
+			/* 1 SDL Tick = 1ms */
+			Uint32 ticks_prev;
+			Uint32 ticks_cur;
+			Uint32 ms_cur;
+			float ms_fading;
+		} time;
+	} debug;
+
 	GLuint bgvbo;
 	GLuint rayvbo;
 	bool projection;
@@ -104,4 +128,5 @@ struct global_context
 extern struct global_context gctx;
 
 void render_loop(void *loopArg);
+void reset_image();
 #endif

@@ -18,6 +18,7 @@ void render_loop(void *loopArg)
 
 	/* Define GUI */
 	gui();
+	gui_debug();
 
 	/* Update Camera */
 	mat4s basis;

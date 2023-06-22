@@ -1,0 +1,1 @@
+float fading_average(float alpha, float old_average, float new_sample);

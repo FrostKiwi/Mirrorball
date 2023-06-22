@@ -1,6 +1,6 @@
 #include "main.h"
 
-void media_setup(uint8_t *buffer, size_t buffer_size, int width, int height)
+void media_setup(uint8_t *buffer, int width, int height)
 {
 	glDeleteTextures(1, &gctx.ch1.img.tex);
 	glGenTextures(1, &gctx.ch1.img.tex);
@@ -16,13 +16,4 @@ void media_setup(uint8_t *buffer, size_t buffer_size, int width, int height)
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
 				 GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-
-	gctx.cam.cam_rotation = vec3_zero();
-	gctx.ch1.rotation = vec3_zero();
-	gctx.ch1.fov_deg = 360;
-	gctx.cam.fov = glm_rad(100);
-	gctx.ch1.crop.bot = 0;
-	gctx.ch1.crop.top = 0;
-	gctx.ch1.crop.left = 0;
-	gctx.ch1.crop.right = 0;
 }

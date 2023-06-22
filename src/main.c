@@ -15,6 +15,18 @@ struct global_context gctx = {
 		1.0, -1.0, 0.0, 0.0, 0.0,
 		-1.0, -1.0, 0.0, 0.0, 0.0}};
 
+void reset_image()
+{
+	gctx.cam.cam_rotation = vec3_zero();
+	gctx.ch1.rotation = vec3_zero();
+	gctx.ch1.fov_deg = 360;
+	gctx.cam.fov = glm_rad(100);
+	gctx.ch1.crop.bot = 0;
+	gctx.ch1.crop.top = 0;
+	gctx.ch1.crop.left = 0;
+	gctx.ch1.crop.right = 0;
+}
+
 int main(int argc, char *argv[])
 {
 	/* GUI */
@@ -35,7 +47,28 @@ int main(int argc, char *argv[])
 									SDL_WINDOW_ALLOW_HIGHDPI);
 	glContext = SDL_GL_CreateContext(gctx.win);
 
+	/* Set basic GL info to prevent calling it every frame */
 	print_glinfo();
+	gctx.debug.gl.version = (const char *)glGetString(GL_VERSION);
+	gctx.debug.gl.vendor = (const char *)glGetString(GL_VENDOR);
+	gctx.debug.gl.renderer = (const char *)glGetString(GL_RENDERER);
+	gctx.debug.gl.glsl = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &gctx.debug.gl.max_tex);
+
+	/* Copy Extensions string, replace spaces with nulls and count extensions */
+	int ext_strlen = strlen((const char *)glGetString(GL_EXTENSIONS));
+	gctx.debug.gl.extension_count = (ext_strlen) ? 1 : 0;
+	gctx.debug.gl.extensions = malloc(ext_strlen + 1);
+	strcpy(gctx.debug.gl.extensions, (const char *)glGetString(GL_EXTENSIONS));
+
+	for (int i = 0; i < ext_strlen; ++i)
+	{
+		if (gctx.debug.gl.extensions[i] == ' ')
+		{
+			gctx.debug.gl.extensions[i] = '\0';
+			gctx.debug.gl.extension_count++;
+		}
+	}
 
 	/* OpenGL setup */
 	glClearColor(0, 0, 0, 1);
