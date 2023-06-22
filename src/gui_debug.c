@@ -12,10 +12,11 @@ void gui_debug()
 				 NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
 					 NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
 	{
+
 		/* General WebGL Info */
 		if (nk_tree_push(ctx, NK_TREE_TAB, "WebGL Information", NK_MINIMIZED))
 		{
-			nk_layout_row_dynamic(ctx, 20 * gctx.interface_mult, 2);
+			nk_layout_row(ctx, NK_DYNAMIC, 22, 2, (float[2]){0.25, 0.75});
 			nk_label_colored(ctx, "Version:", NK_TEXT_ALIGN_LEFT,
 							 nk_rgb(100, 123, 23));
 			nk_label(ctx, gctx.debug.gl.version, NK_TEXT_ALIGN_RIGHT);
@@ -28,7 +29,7 @@ void gui_debug()
 			nk_label_colored(ctx, "GLSL Version:", NK_TEXT_ALIGN_LEFT,
 							 nk_rgb(100, 123, 23));
 			nk_label(ctx, gctx.debug.gl.glsl, NK_TEXT_ALIGN_RIGHT);
-			nk_label_colored(ctx, "GLSL Version:", NK_TEXT_ALIGN_LEFT,
+			nk_label_colored(ctx, "Max texture:", NK_TEXT_ALIGN_LEFT,
 							 nk_rgb(100, 123, 23));
 			nk_labelf(ctx, NK_TEXT_ALIGN_RIGHT, "%d px²", gctx.debug.gl.max_tex);
 			if (nk_tree_push(ctx, NK_TREE_TAB, "Extension list", NK_MINIMIZED))
