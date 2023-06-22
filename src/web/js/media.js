@@ -2,7 +2,7 @@ load_from_url = function (url) {
 	const img = new Image();
 	img.src = url;
 
-	img.onload = function () {
+	img.decode().then(() => {
 		const canvas = document.createElement('canvas');
 		canvas.width = img.width;
 		canvas.height = img.height;
@@ -21,5 +21,5 @@ load_from_url = function (url) {
 			[dataPtr, canvas.width, canvas.height]
 		);
 		Module._free(dataPtr);
-	};
+	}).catch(err => console.log('Image loading failed', err));
 };
