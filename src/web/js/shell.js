@@ -87,9 +87,11 @@ var Module = {
 
 Module.setStatus('Downloading...');
 
-window.onerror = function () {
-	Module.setStatus('Exception thrown, see JavaScript console');
+window.onerror = function (message) {
+	var errMsg = `Crashed😭<br>Error: ${message}`;
+	Module.setStatus(errMsg);
 	Module.setStatus = function (text) {
 		if (text) console.error('[post-exception status] ' + text);
 	};
 };
+
