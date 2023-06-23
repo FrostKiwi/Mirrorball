@@ -42,9 +42,7 @@ EMCC_FLAGS= -s USE_SDL=2
 
 # Pull javascript through the emscripten optimizer pipeline
 JS_FILES= --extern-pre-js=src/web/js/shell.js \
-		  --pre-js=src/web/js/media.js \
-		  --pre-js=src/web/js/video.js \
-		  --pre-js=src/web/js/videofile.js
+		  --pre-js=src/web/js/media.js
 
 # Linker flags only relevant for the debug build
 debug: EMCC_LINKER_DEBUG_FLAGS = --emrun
@@ -58,8 +56,7 @@ EMCC_LINKER_FLAGS = $(EMCC_FLAGS) \
 					-s EXPORTED_RUNTIME_METHODS=ccall \
 					-s ALLOW_MEMORY_GROWTH \
 					$(JS_FILES) \
-					--embed-file res \
-					-Wl,-u,fileno
+					--embed-file res
 
 # ========= Implementation ========= #
 # Source files are all .c files under src

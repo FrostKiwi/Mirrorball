@@ -1,4 +1,4 @@
-const webcams_get = () =>
+function webcams_get() {
 	navigator.mediaDevices.enumerateDevices().then(devices => {
 		devices.forEach(device => {
 			if (device.kind === 'videoinput') {
@@ -13,8 +13,10 @@ const webcams_get = () =>
 		Module.ccall('format_label_list', null, null, null);
 	}
 	);
+}
 
-const media_setup_js = async (source) => {
+
+function media_setup_js(source) {
 	// Create offscreen canvas
 	const canvas = new OffscreenCanvas(
 		source.videoWidth || source.width, source.videoHeight || source.height);
@@ -34,6 +36,14 @@ const media_setup_js = async (source) => {
 	);
 
 	return [ctx, dataPtr];
+}
+
+function media_update_js(source, ctx, dataPtr) {
+	ctx.drawImage(source, 0, 0);
+	const imageData =
+		ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+	Module.HEAPU8.set(imageData.data, dataPtr);
+	Module.ccall('media_update', null, null, null);
 }
 
 
@@ -61,14 +71,10 @@ const load_from_webcam = async (deviceId) => {
 			video.onplaying = resolve;
 		});
 
-		const [ctx, dataPtr] = await media_setup_js(video);
+		const [ctx, dataPtr] = media_setup_js(video);
 
 		const animate = () => {
-			ctx.drawImage(video, 0, 0);
-			const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-			Module.HEAPU8.set(imageData.data, dataPtr);
-			Module.ccall('media_update', null, null, null);
+			media_update_js(video, ctx, dataPtr);
 			requestAnimationFrame(animate);
 		};
 
@@ -78,8 +84,8 @@ const load_from_webcam = async (deviceId) => {
 	}
 };
 
-const load_user_photo = () => {
-	let file_selector = document.createElement('input');
+function load_user_photo() {
+	const file_selector = document.createElement('input');
 	file_selector.type = 'file';
 	file_selector.accept = 'image/*';
 	file_selector.onchange = event => load_from_url(
@@ -94,7 +100,7 @@ const load_from_url = async (url) => {
 		const blob = await response.blob();
 		const bitmap = await createImageBitmap(blob);
 
-		await media_setup_js(bitmap);
+		const [ctx, dataPtr] = media_setup_js(bitmap);
 		Module._free(dataPtr);
 	} catch (err) {
 		console.error(err);

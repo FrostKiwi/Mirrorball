@@ -131,7 +131,7 @@ void gui()
 			}
 			if (nk_button_label(ctx, ""))
 			{
-				EM_ASM(open_video("video00_intro.mp4"););
+				/* EM_ASM(open_video("video00_intro.mp4");); */
 			}
 			nk_style_set_font(ctx, gctx.std.handle);
 			nk_layout_row_dynamic(ctx, 23 * gctx.interface_mult, 1);
