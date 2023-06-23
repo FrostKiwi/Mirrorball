@@ -43,6 +43,9 @@ int main(int argc, char *argv[])
 	gctx.debug.gl.glsl = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &gctx.debug.gl.max_tex);
 
+	/* Write available webcams to an array */
+	EM_ASM(webcams_get(););
+
 	/* Copy Extensions string, replace spaces with nulls and count extensions */
 	int ext_strlen = strlen((const char *)glGetString(GL_EXTENSIONS));
 	gctx.debug.gl.extension_count = (ext_strlen) ? 1 : 0;

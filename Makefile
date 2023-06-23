@@ -14,13 +14,11 @@ debug: CFLAGS = $(WARN) -std=gnu11 -O0
 # Functions to be prevented from being deleted as dead code. This is to allow
 # for C code to be alled from Javascript, even when the functions in question
 # are not called in the C code itself. Other options is EMSCRIPTEN_KEEPALIVE,
-# but that doesn't for for things not defined in the C source like malloc.
-PROTECT = ["_process_webcam", \
-		   "_setup_webcam", \
-		   "_media_setup", \
-		   "_main", \
-		   "_malloc", \
-		   "_free"]
+# but that doesn't for for things not defined in the C source like malloc. Als0
+# it produces a warning with main() for some reason.
+PROTECT = ["_malloc", \
+		   "_free", \
+		   "_main"]
 
 # If any of these files change, recompile everything
 # Consider the Makefile and headers
@@ -58,7 +56,7 @@ debug: EMCC_LINKER_DEBUG_FLAGS = --emrun
 EMCC_LINKER_FLAGS = $(EMCC_FLAGS) \
 					$(EMCC_LINKER_DEBUG_FLAGS) \
 					-s EXPORTED_FUNCTIONS='$(PROTECT)' \
-					-s EXPORTED_RUNTIME_METHODS=[ccall] \
+					-s EXPORTED_RUNTIME_METHODS=ccall \
 					-s ALLOW_MEMORY_GROWTH \
 					$(JS_FILES) \
 					--embed-file res \

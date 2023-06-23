@@ -22,6 +22,12 @@ struct font
 	nk_rune *ranges;
 };
 
+struct webcam
+{
+	char *id;
+	char *label;
+};
+
 struct channel
 {
 	struct image img;
@@ -119,6 +125,10 @@ struct global_context
 			Uint32 floating_average[100];
 		} time;
 	} debug;
+
+	int webcam_count;
+	int *webcam_choise;
+	struct webcam *webcams;
 
 	GLuint bgvbo;
 	GLuint rayvbo;

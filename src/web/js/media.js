@@ -1,4 +1,27 @@
-load_user_photo = function () {
+const webcamSettings = {
+	/* Set requested webcam settings to insane heights, to ensure even highend
+	   capture cards are selected with their highest resolution */
+	video: {
+		width: { ideal: 8192 },
+		height: { ideal: 8192 }
+	}
+};
+
+const webcams_get = () =>
+	navigator.mediaDevices.enumerateDevices().then(devices =>
+		devices.forEach(device => {
+			if (device.kind === 'videoinput') {
+				Module.ccall(
+					'webcam_add',
+					'number',
+					['string', 'string'],
+					[device.deviceId, device.label]
+				);
+			}
+		})
+	);
+
+const load_user_photo = () => {
 	let file_selector = document.createElement('input');
 	file_selector.type = 'file';
 	file_selector.accept = 'image/*';
@@ -8,7 +31,7 @@ load_user_photo = function () {
 	file_selector.click();
 }
 
-async function load_from_url(url) {
+const load_from_url = async (url) => {
 	try {
 		const response = await fetch(url);
 		const blob = await response.blob();

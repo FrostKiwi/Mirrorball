@@ -1,6 +1,6 @@
 #include "main.h"
 
-void media_setup(uint8_t *buffer, int width, int height)
+EMSCRIPTEN_KEEPALIVE void media_setup(uint8_t *buffer, int width, int height)
 {
 	glDeleteTextures(1, &gctx.ch1.img.tex);
 	glGenTextures(1, &gctx.ch1.img.tex);

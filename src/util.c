@@ -26,3 +26,23 @@ float update_100_average(Uint32 new)
 	}
 	return (float)sum / 100.f;
 }
+
+EMSCRIPTEN_KEEPALIVE void webcam_add(char *id, char *label)
+{
+	if (!gctx.webcam_count)
+		gctx.webcams = malloc(sizeof(struct webcam));
+	else
+		gctx.webcams = realloc(gctx.webcams,
+							   sizeof(struct webcam) * (gctx.webcam_count + 1));
+
+	struct webcam new = {
+		.id = malloc(strlen(id) + 1),
+		.label = malloc(strlen(label) + 1)};
+
+	strcpy(new.id, id);
+	strcpy(new.label, label);
+
+	gctx.webcams[gctx.webcam_count] = new;
+
+	gctx.webcam_count++;
+}

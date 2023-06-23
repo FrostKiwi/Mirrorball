@@ -1,5 +1,6 @@
 #include "main.h"
 
+EMSCRIPTEN_KEEPALIVE
 void setup_webcam(uint8_t *buffer, size_t buffer_size, int width, int height)
 {
 	glDeleteTextures(1, &gctx.ch1.img.tex);
@@ -32,7 +33,7 @@ void setup_webcam(uint8_t *buffer, size_t buffer_size, int width, int height)
 }
 
 /* TODO: Don't regenerate the texture! Just update it. */
-int process_webcam()
+EMSCRIPTEN_KEEPALIVE int process_webcam()
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, gctx.ch1.img.tex);

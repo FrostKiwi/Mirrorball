@@ -1,14 +1,3 @@
-var webcamSettings = {
-	video: {
-		width: {
-			ideal: 8192
-		},
-		height: {
-			ideal: 8192
-		}
-	}
-};
-
 var open_webcam = function () {
 	if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 		navigator.mediaDevices.getUserMedia(webcamSettings)
