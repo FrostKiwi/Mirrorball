@@ -127,8 +127,13 @@ struct global_context
 	} debug;
 
 	int webcam_count;
-	int *webcam_choise;
+	int webcam_choise;
 	struct webcam *webcams;
+	const char** label_list;
+	/* As a signal whether or not the webcam list is finalized. Technically you
+	   are supposed to use JS Asyncify, but it's really overkill here. Just in
+	   case, here is a signal. */
+	bool formatted;
 
 	GLuint bgvbo;
 	GLuint rayvbo;

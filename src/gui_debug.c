@@ -93,12 +93,6 @@ void gui_debug()
 
 			nk_tree_pop(ctx);
 		}
-		nk_layout_row_dynamic(ctx, 18 * gctx.interface_mult, 1);
-		for (int i = 0; i < gctx.webcam_count; ++i)
-		{
-			nk_label(ctx, gctx.webcams[i].id, NK_TEXT_ALIGN_LEFT);
-			nk_label(ctx, gctx.webcams[i].label, NK_TEXT_ALIGN_LEFT);
-		}
 	}
 	nk_end(ctx);
 }

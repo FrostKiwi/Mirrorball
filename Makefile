@@ -42,7 +42,6 @@ EMCC_FLAGS= -s USE_SDL=2
 
 # Pull javascript through the emscripten optimizer pipeline
 JS_FILES= --extern-pre-js=src/web/js/shell.js \
-		  --pre-js=src/web/js/webcam.js \
 		  --pre-js=src/web/js/media.js \
 		  --pre-js=src/web/js/video.js \
 		  --pre-js=src/web/js/videofile.js

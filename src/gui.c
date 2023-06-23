@@ -121,21 +121,30 @@ void gui()
 			ctx->style.button.text_active = nk_rgb(8, 166, 142);
 			if (nk_button_label(ctx, ""))
 			{
-				/* NON BLOCKING! */
 				EM_ASM(load_user_photo(););
 				reset_image();
 			}
 			if (nk_button_label(ctx, ""))
 			{
-				/* NON BLOCKING! */
-				EM_ASM(open_webcam(););
+				EM_ASM(load_from_webcam(UTF8ToString($0)),
+					   gctx.webcams[gctx.webcam_choise].id);
 			}
 			if (nk_button_label(ctx, ""))
 			{
-				/* NON BLOCKING! */
 				EM_ASM(open_video("video00_intro.mp4"););
 			}
-
+			nk_style_set_font(ctx, gctx.std.handle);
+			nk_layout_row_dynamic(ctx, 23 * gctx.interface_mult, 1);
+			nk_label(ctx, "Choose Webcam:", NK_TEXT_ALIGN_LEFT);
+			nk_layout_row_dynamic(ctx, 35 * gctx.interface_mult, 1);
+			if (gctx.formatted && gctx.webcam_count)
+				gctx.webcam_choise = nk_combo(ctx, gctx.label_list,
+											  gctx.webcam_count,
+											  gctx.webcam_choise,
+											  30,
+											  nk_vec2(
+												  nk_widget_width(ctx),
+												  500));
 			nk_tree_pop(ctx);
 		}
 		/* Cropping */

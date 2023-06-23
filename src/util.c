@@ -46,3 +46,13 @@ EMSCRIPTEN_KEEPALIVE void webcam_add(char *id, char *label)
 
 	gctx.webcam_count++;
 }
+
+EMSCRIPTEN_KEEPALIVE void format_label_list()
+{
+	if (!gctx.webcam_count)
+		return;
+	gctx.label_list = malloc(sizeof(char *) * gctx.webcam_count);
+	for (int i = 0; i < gctx.webcam_count; ++i)
+		gctx.label_list[i] = gctx.webcams[i].label;
+	gctx.formatted = true;
+}
