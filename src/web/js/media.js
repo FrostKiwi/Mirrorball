@@ -14,16 +14,36 @@ const webcams_get = () =>
 	}
 	);
 
+const media_setup_js = async (source) => {
+	// Create offscreen canvas
+	const canvas = new OffscreenCanvas(
+		source.videoWidth || source.width, source.videoHeight || source.height);
+	const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+	ctx.drawImage(source, 0, 0);
+
+	const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	const dataPtr = Module._malloc(imageData.data.length);
+
+	Module.HEAPU8.set(imageData.data, dataPtr);
+	Module.ccall(
+		'media_setup',
+		null,
+		['number', 'number', 'number'],
+		[dataPtr, canvas.width, canvas.height]
+	);
+
+	return [ctx, dataPtr];
+}
+
+
 const load_from_webcam = async (deviceId) => {
 	try {
 		const stream = await navigator.mediaDevices.getUserMedia({
 			video: {
 				deviceId: { exact: deviceId },
 				width: { ideal: 8192 },
-				height: { ideal: 8192 },
-				muted: true,
-				loop: true,
-				autoplay: true
+				height: { ideal: 8192 }
 			}
 		});
 		const video = document.createElement('video');
@@ -36,39 +56,22 @@ const load_from_webcam = async (deviceId) => {
 			};
 		});
 
-		// Wait for first frame
+		/* Wait for first frame */
 		await new Promise(resolve => {
 			video.onplaying = resolve;
 		});
 
-		// Create offscreen canvas
-		const canvas = new OffscreenCanvas(video.videoWidth, video.videoHeight);
-		const ctx = canvas.getContext('2d', { willReadFrequently: true });
-		let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-		const dataPtr = Module._malloc(imageData.data.length);
+		const [ctx, dataPtr] = await media_setup_js(video);
 
-		let isFirstFrame = true;
 		const animate = () => {
 			ctx.drawImage(video, 0, 0);
-			imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
 
 			Module.HEAPU8.set(imageData.data, dataPtr);
-
-			if (isFirstFrame) {
-				Module.ccall(
-					'media_setup',
-					null,
-					['number', 'number', 'number'],
-					[dataPtr, canvas.width, canvas.height]
-				);
-				isFirstFrame = false;
-			} else {
-				Module.ccall('media_update', null, null, null);
-			}
-			requestAnimationFrame(animate); // schedule the next frame
+			Module.ccall('media_update', null, null, null);
+			requestAnimationFrame(animate);
 		};
 
-		// Start the animation loop
 		animate();
 	} catch (err) {
 		console.error(err);
@@ -91,20 +94,7 @@ const load_from_url = async (url) => {
 		const blob = await response.blob();
 		const bitmap = await createImageBitmap(blob);
 
-		const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
-		const ctx = canvas.getContext('2d', { willReadFrequently: true });
-
-		ctx.drawImage(bitmap, 0, 0);
-		const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-		const dataPtr = Module._malloc(imageData.data.length);
-
-		Module.HEAPU8.set(imageData.data, dataPtr);
-		Module.ccall(
-			'media_setup',
-			null,
-			['number', 'number', 'number'],
-			[dataPtr, canvas.width, canvas.height]
-		);
+		await media_setup_js(bitmap);
 		Module._free(dataPtr);
 	} catch (err) {
 		console.error(err);
