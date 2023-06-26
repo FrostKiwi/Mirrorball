@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "eslint": "^8.43.0",
+    "three": "^0.153.0"
+  },
+  "devDependencies": {
+    "vite": "^4.3.9"
+  }
+}
