@@ -1,7 +1,7 @@
 import * as webglUtils from 'webgl-utils.js';
 import * as glm from 'gl-matrix';
 import ctx from './state.js';
-import { init_gui } from './gui.js';
+import { init_gui, updateSlider } from './gui.js';
 
 const canvas = document.querySelector( "canvas" );
 const gl = canvas.getContext( "webgl" );
@@ -44,7 +44,12 @@ async function init() {
 	gl.clearColor( 0, 0, 0, 1 );
 	/* Prevents headaches when loading NPOT textures */
 	gl.pixelStorei( gl.UNPACK_ALIGNMENT, 1 );
+
 	load_from_url( "img/room.jpg" );
+	ctx.ch1.crop.top = 46;
+	ctx.ch1.crop.bot = 62;
+	ctx.ch1.crop.left = 45;
+	ctx.ch1.crop.right = 63;
 
 }
 
@@ -78,14 +83,14 @@ function render() {
 	gl.useProgram( ctx.shaders.crop.handle );
 
 	gl.uniform4fv( ctx.shaders.crop.crop, crop );
+	gl.uniform1i( ctx.shaders.crop.mask_toggle, ctx.shaders.crop.mask );
 
 	if ( postcrop_h / postcrop_w > canvas.height / canvas.width ) {
 
 		gl.uniform1f( ctx.shaders.crop.aspect_h, 1.0 );
 		gl.uniform1f(
 			ctx.shaders.crop.aspect_w,
-			( postcrop_w	/ postcrop_h ) / ( canvas.width / canvas.height )
-		);
+			( postcrop_w / postcrop_h ) / ( canvas.width / canvas.height ) );
 
 	} else {
 
@@ -142,16 +147,7 @@ async function init_shaders() {
 		- 1.0, - 1.0
 	] );
 
-	ctx.shaders.border = {
-		vtx: gl.getAttribLocation( ctx.shaders.border.handle, "vtx" ),
-		scale: gl.getUniformLocation( ctx.shaders.border.handle, "scale" ),
-		transform: gl.getUniformLocation( ctx.shaders.border.handle, "transform" ),
-		color: gl.getUniformLocation( ctx.shaders.border.handle, "color" ),
-		quadvbo: createBufferWithData( gl, unitquad_small )
-	};
-
-	ctx.shaders.crop = {
-		handle: ctx.shaders.crop.handle,
+	Object.assign( ctx.shaders.crop, {
 		vtx: gl.getAttribLocation( ctx.shaders.crop.handle, "vtx" ),
 		coord: gl.getAttribLocation( ctx.shaders.crop.handle, "coord" ),
 		aspect_w: gl.getUniformLocation( ctx.shaders.crop.handle, "aspect_w" ),
@@ -159,15 +155,23 @@ async function init_shaders() {
 		crop: gl.getUniformLocation( ctx.shaders.crop.handle, "crop" ),
 		mask_toggle: gl.getUniformLocation( ctx.shaders.crop.handle, "mask_toggle" ),
 		bgvbo: createBufferWithData( gl, unitquadtex )
-	};
+	} );
 
-	ctx.shaders.project = {
+	Object.assign( ctx.shaders.border, {
+		vtx: gl.getAttribLocation( ctx.shaders.border.handle, "vtx" ),
+		scale: gl.getUniformLocation( ctx.shaders.border.handle, "scale" ),
+		transform: gl.getUniformLocation( ctx.shaders.border.handle, "transform" ),
+		color: gl.getUniformLocation( ctx.shaders.border.handle, "color" ),
+		quadvbo: createBufferWithData( gl, unitquad_small )
+	} );
+
+	Object.assign( ctx.shaders.project, {
 		pos: gl.getAttribLocation( ctx.shaders.project.handle, "pos" ),
 		viewray: gl.getAttribLocation( ctx.shaders.project.handle, "rayvtx" ),
 		scaler: gl.getUniformLocation( ctx.shaders.project.handle, "scalar" ),
 		crop: gl.getUniformLocation( ctx.shaders.project.handle, "crop" ),
 		rayvbo: gl.createBuffer()
-	};
+	} );
 
 }
 
@@ -200,6 +204,15 @@ async function load_from_url( url ) {
 
 function media_setup( bitmap ) {
 
+	updateSlider( ctx.gui.folder.crop,
+		'left', ctx.ch1.crop, 'left', 0, bitmap.width / 2, "Left (Pixels)" );
+	updateSlider( ctx.gui.folder.crop,
+		'right', ctx.ch1.crop, 'right', 0, bitmap.width / 2, "Right (Pixels)" );
+	updateSlider( ctx.gui.folder.crop,
+		'top', ctx.ch1.crop, 'top', 0, bitmap.height / 2, "Top (Pixels)" );
+	updateSlider( ctx.gui.folder.crop,
+		'bot', ctx.ch1.crop, 'bot', 0, bitmap.height / 2, "Bottom (Pixels)" );
+
 	gl.deleteTexture( ctx.ch1.tex );
 	ctx.ch1.tex = gl.createTexture();
 	gl.bindTexture( gl.TEXTURE_2D, ctx.ch1.tex );
@@ -210,7 +223,8 @@ function media_setup( bitmap ) {
 
 	ctx.ch1.w = bitmap.width;
 	ctx.ch1.h = bitmap.height;
-	gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmap );
+	gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,
+		bitmap );
 	bitmap.close();
 
 }
@@ -258,7 +272,8 @@ function onResize( entries ) {
 
 		const displayWidth = Math.round( width * dpr );
 		const displayHeight = Math.round( height * dpr );
-		canvasToDisplaySizeMap.set( entry.target, [ displayWidth, displayHeight ] );
+		canvasToDisplaySizeMap.set( entry.target,
+			[ displayWidth, displayHeight ] );
 
 	}
 
@@ -270,7 +285,8 @@ resizeObserver.observe( canvas, { box: 'content-box' } );
 function resizeCanvasToDisplaySize( canvas ) {
 
 	// Get the size the browser is displaying the canvas in device pixels.
-	const [ displayWidth, displayHeight ] = canvasToDisplaySizeMap.get( canvas );
+	const [ displayWidth, displayHeight ] =
+		canvasToDisplaySizeMap.get( canvas );
 
 	// Check if the canvas is not the same size.
 	const needResize = canvas.width !== displayWidth ||
@@ -287,6 +303,5 @@ function resizeCanvasToDisplaySize( canvas ) {
 	return needResize;
 
 }
-
 
 main();

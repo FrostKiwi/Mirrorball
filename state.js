@@ -7,7 +7,8 @@ let ctx = {
 			handle: null
 		},
 		crop: {
-			handle: null
+			handle: null,
+			mask: false
 		},
 		project: {
 			handle: null
@@ -28,10 +29,12 @@ let ctx = {
 	gui: {
 		handle: null,
 		folder: {
+			viz: null,
 			crop: null,
 			camera: null,
 			settings: null
-		}
+		},
+		showStats: false
 	}
 };
 
