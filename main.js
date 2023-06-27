@@ -1,7 +1,7 @@
 import * as webglUtils from 'webgl-utils.js';
+import * as glm from 'gl-matrix';
 import ctx from './state.js';
-import Stats from 'stats.js';
-import { GUI } from 'dat.gui';
+import { init_gui } from './gui.js';
 
 const canvas = document.querySelector( "canvas" );
 const gl = canvas.getContext( "webgl" );
@@ -36,7 +36,10 @@ function loadTextFile( url ) {
 
 async function init() {
 
+	init_gui();
 	await init_shaders();
+	/* Add the stats */
+	document.body.appendChild( ctx.stats.dom );
 
 	gl.clearColor( 0, 0, 0, 1 );
 	/* Prevents headaches when loading NPOT textures */
@@ -45,17 +48,6 @@ async function init() {
 
 }
 
-const stats = new Stats();
-document.body.appendChild( stats.dom );
-
-const gui = new GUI();
-const cropFolder = gui.addFolder( 'Crop' );
-cropFolder.open();
-const cameraFolder = gui.addFolder( 'Camera' );
-cameraFolder.open();
-const settingsFolder = gui.addFolder( 'Settings' );
-settingsFolder.open();
-
 function animate() {
 
 	requestAnimationFrame( animate );
@@ -63,7 +55,7 @@ function animate() {
 
 	render();
 
-	stats.update();
+	ctx.stats.update();
 
 }
 
@@ -74,7 +66,36 @@ function render() {
 	gl.clear( gl.COLOR_BUFFER_BIT );
 	gl.viewport( 0, 0, canvas.width, canvas.height );
 
+	/* Crop Shader */
+	const postcrop_w =
+		ctx.ch1.w - ( ctx.ch1.crop.left + ctx.ch1.crop.right );
+	const postcrop_h =
+	ctx.ch1.h - ( ctx.ch1.crop.top + ctx.ch1.crop.bot );
+	const crop = glm.vec4.create();
+	crop[ 0 ] = ( 1.0 / ctx.ch1.w ) * ctx.ch1.crop.left;
+	crop[ 1 ] = ( 1.0 / ctx.ch1.h ) * ctx.ch1.crop.top;
+	crop[ 2 ] = ( 1.0 / ctx.ch1.w ) * postcrop_w;
+	crop[ 3 ] = ( 1.0 / ctx.ch1.h ) * postcrop_h;
+
 	gl.useProgram( ctx.shaders.crop.handle );
+
+	gl.uniform4fv( ctx.shaders.crop.crop, crop );
+
+	if ( postcrop_h / postcrop_w > canvas.height / canvas.width ) {
+
+		gl.uniform1f( ctx.shaders.crop.aspect_h, 1.0 );
+		gl.uniform1f(
+			ctx.shaders.crop.aspect_w,
+			( postcrop_w	/ postcrop_h ) / ( canvas.width / canvas.height )
+		);
+
+	} else {
+
+		gl.uniform1f( ctx.shaders.crop.aspect_h,
+			( postcrop_h / postcrop_w ) / ( canvas.height / canvas.width ) );
+		gl.uniform1f( ctx.shaders.crop.aspect_w, 1.0 );
+
+	}
 
 	gl.bindBuffer( gl.ARRAY_BUFFER, ctx.shaders.crop.bgvbo );
 	gl.enableVertexAttribArray( ctx.shaders.crop.vtx );
@@ -108,8 +129,6 @@ async function init_shaders() {
 		[ files[ 2 ], files[ 3 ] ] );
 	ctx.shaders.project.handle = webglUtils.createProgramFromSources( gl,
 		[ files[ 4 ], files[ 5 ] ] );
-
-
 
 	const unitquadtex = new Float32Array( [
 		- 1.0, 1.0, 0.0, 0.0,
