@@ -1,10 +1,5 @@
 {
-	"dependencies": {
-		"three": "^0.153.0"
-	},
 	"devDependencies": {
-		"@types/dat.gui": "^0.7.10",
-		"@types/stats.js": "^0.17.0",
 		"dat.gui": "^0.7.9",
 		"eslint": "^8.43.0",
 		"eslint-config-mdcs": "^5.0.0",
@@ -13,5 +8,9 @@
 	},
 	"eslintConfig": {
 		"extends": "mdcs"
+	},
+	"dependencies": {
+		"gl-matrix": "^3.4.3",
+		"webgl-utils.js": "^1.1.0"
 	}
 }
