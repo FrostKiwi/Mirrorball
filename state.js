@@ -8,7 +8,12 @@ let ctx = {
 		},
 		project: {
 			handle: null
-		},
+		}
+	},
+	ch1: {
+		tex: null,
+		w: 0,
+		h: 0
 	}
 };
 
