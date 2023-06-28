@@ -1,8 +1,8 @@
-import * as glm from 'gl-matrix';
 import ctx from './state.js';
 import { init_gui } from './gui.js';
 import { resizeCanvasToDisplaySize, onResize } from './resize.js'
 import { init_shaders } from './init_shaders.js'
+import { render_crop } from './render_crop.js'
 
 const canvas = document.querySelector("canvas");
 const gl = canvas.getContext("webgl");
@@ -40,10 +40,6 @@ function init() {
 	gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 
 	load_from_url("img/room.jpg");
-	ctx.ch1.crop.top = 46;
-	ctx.ch1.crop.bot = 62;
-	ctx.ch1.crop.left = 45;
-	ctx.ch1.crop.right = 63;
 }
 
 function animate() {
@@ -59,63 +55,35 @@ function render() {
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	gl.viewport(0, 0, canvas.width, canvas.height);
 
-	/* Crop Shader */
-	const postcrop_w =
-		ctx.ch1.w - (ctx.ch1.crop.left + ctx.ch1.crop.right);
-	const postcrop_h =
-		ctx.ch1.h - (ctx.ch1.crop.top + ctx.ch1.crop.bot);
-	const crop = glm.vec4.create();
-	crop[0] = (1.0 / ctx.ch1.w) * ctx.ch1.crop.left;
-	crop[1] = (1.0 / ctx.ch1.h) * ctx.ch1.crop.top;
-	crop[2] = (1.0 / ctx.ch1.w) * postcrop_w;
-	crop[3] = (1.0 / ctx.ch1.h) * postcrop_h;
-
-	gl.useProgram(ctx.shaders.crop.handle);
-
-	gl.uniform4fv(ctx.shaders.crop.crop, crop);
-	gl.uniform1i(ctx.shaders.crop.mask_toggle, ctx.shaders.crop.mask);
-
-	if (postcrop_h / postcrop_w > canvas.height / canvas.width) {
-		gl.uniform1f(ctx.shaders.crop.aspect_h, 1.0);
-		gl.uniform1f(
-			ctx.shaders.crop.aspect_w,
-			(postcrop_w / postcrop_h) / (canvas.width / canvas.height));
-	} else {
-		gl.uniform1f(ctx.shaders.crop.aspect_h,
-			(postcrop_h / postcrop_w) / (canvas.height / canvas.width));
-		gl.uniform1f(ctx.shaders.crop.aspect_w, 1.0);
-	}
-
-	gl.bindBuffer(gl.ARRAY_BUFFER, ctx.shaders.crop.bgvbo);
-	gl.enableVertexAttribArray(ctx.shaders.crop.vtx);
-	gl.enableVertexAttribArray(ctx.shaders.crop.coord);
-	gl.vertexAttribPointer(ctx.shaders.crop.vtx, 2, gl.FLOAT, false,
-		4 * Float32Array.BYTES_PER_ELEMENT, 0);
-	gl.vertexAttribPointer(ctx.shaders.crop.coord, 2, gl.FLOAT, false,
-		4 * Float32Array.BYTES_PER_ELEMENT,
-		2 * Float32Array.BYTES_PER_ELEMENT);
-
-	gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
+	if (ctx.gui.crop)
+		render_crop(ctx, gl, canvas.width, canvas.height);
 }
 
 async function load_from_url(url) {
 	try {
-
 		const response = await fetch(url);
 		const blob = await response.blob();
 		const bitmap = await createImageBitmap(blob);
-		media_setup(bitmap);
+
+		const crop = {
+			top: 46,
+			bot: 62,
+			left: 45,
+			right: 63
+		}
+
+		media_setup(bitmap, crop);
 
 	} catch (err) {
 		console.error(err);
 	}
 }
 
-function media_setup(bitmap) {
-	ctx.gui.controller.left.max(bitmap.width / 2);
-	ctx.gui.controller.right.max(bitmap.width / 2);
-	ctx.gui.controller.top.max(bitmap.height / 2);
-	ctx.gui.controller.bot.max(bitmap.height / 2);
+function media_setup(bitmap, crop) {
+	ctx.gui.controller.left.max(bitmap.width / 2).setValue(crop.left);
+	ctx.gui.controller.right.max(bitmap.width / 2).setValue(crop.right);
+	ctx.gui.controller.top.max(bitmap.height / 2).setValue(crop.top);
+	ctx.gui.controller.bot.max(bitmap.height / 2).setValue(crop.bot);
 
 	gl.deleteTexture(ctx.ch1.tex);
 	ctx.ch1.tex = gl.createTexture();

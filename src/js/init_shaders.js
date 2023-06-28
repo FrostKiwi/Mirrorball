@@ -1,11 +1,11 @@
 import { compile_and_link } from './gl_basics.js'
 
-import border_vs from '../shd/border.vs?raw'
-import border_fs from '../shd/border.fs?raw'
-import crop_vs from '../shd/crop.vs?raw'
-import crop_fs from '../shd/crop.fs?raw'
-import project_vs from '../shd/project.vs?raw'
-import project_fs from '../shd/project.fs?raw'
+import border_vs from '/shd/border.vs?raw'
+import border_fs from '/shd/border.fs?raw'
+import crop_vs from '/shd/crop.vs?raw'
+import crop_fs from '/shd/crop.fs?raw'
+import project_vs from '/shd/project.vs?raw'
+import project_fs from '/shd/project.fs?raw'
 
 function createBufferWithData(gl, data) {
 	let buffer = gl.createBuffer();
@@ -22,17 +22,17 @@ export function init_shaders(ctx, gl) {
 
 
 	const unitquadtex = new Float32Array([
-		- 1.0, 1.0, 0.0, 0.0,
+		-1.0, 1.0, 0.0, 0.0,
 		1.0, 1.0, 1.0, 0.0,
-		1.0, - 1.0, 1.0, 1.0,
-		- 1.0, - 1.0, 0.0, 1.0
+		1.0, -1.0, 1.0, 1.0,
+		-1.0, -1.0, 0.0, 1.0
 	]);
 
 	const unitquad_small = new Float32Array([
-		- 1.0, 1.0,
+		-1.0, 1.0,
 		1.0, 1.0,
-		1.0, - 1.0,
-		- 1.0, - 1.0
+		1.0, -1.0,
+		-1.0, -1.0
 	]);
 
 	Object.assign(ctx.shaders.crop, {

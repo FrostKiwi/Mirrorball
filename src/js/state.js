@@ -1,6 +1,6 @@
 import Stats from 'stats.js';
 
-let ctx = {
+const ctx = {
 	stats: new Stats(),
 	canvasToDisplaySizeMap: null,
 	shaders: {
