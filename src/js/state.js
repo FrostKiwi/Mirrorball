@@ -2,6 +2,7 @@ import Stats from 'stats.js';
 
 let ctx = {
 	stats: new Stats(),
+	canvasToDisplaySizeMap: null,
 	shaders: {
 		border: {
 			handle: null

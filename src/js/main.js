@@ -1,12 +1,13 @@
-import * as webglUtils from 'webgl-utils.js';
 import * as glm from 'gl-matrix';
 import ctx from './state.js';
 import { init_gui, updateSlider } from './gui.js';
+import { resizeCanvasToDisplaySize, onResize } from './resize.js'
+import { init_shaders } from './init_shaders.js'
 
 const canvas = document.querySelector("canvas");
 const gl = canvas.getContext("webgl");
 
-async function main() {
+function main() {
 	if (gl)
 		console.log(
 			"WebGL Version: " + gl.getParameter(gl.VERSION) + '\n' +
@@ -20,13 +21,17 @@ async function main() {
 		return;
 	}
 
-	await init();
+	init();
 	requestAnimationFrame(animate);
 }
 
-async function init() {
+function init() {
+	ctx.canvasToDisplaySizeMap = new Map([[canvas, [300, 150]]]);
+	const resizeObserver = new ResizeObserver(onResize);
+	resizeObserver.observe(canvas, { box: 'content-box' });
+
 	init_gui();
-	await init_shaders();
+	init_shaders(ctx, gl);
 	/* Add the stats */
 	document.body.appendChild(ctx.stats.dom);
 
@@ -43,7 +48,7 @@ async function init() {
 
 function animate() {
 	requestAnimationFrame(animate);
-	resizeCanvasToDisplaySize(canvas);
+	resizeCanvasToDisplaySize(canvas, ctx.canvasToDisplaySizeMap);
 
 	render();
 
@@ -93,79 +98,6 @@ function render() {
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 }
 
-async function loadTextFile(url) {
-	const response = await fetch(url);
-	return await response.text();
-}
-
-async function init_shaders() {
-	/* Compile shaders */
-	const paths = [
-		'shd/border.vs',
-		'shd/border.fs',
-		'shd/crop.vs',
-		'shd/crop.fs',
-		'shd/project.vs',
-		'shd/project.fs'
-	];
-
-	const files = await Promise.all(paths.map(loadTextFile));
-	ctx.shaders.border.handle = webglUtils.createProgramFromSources(gl,
-		[files[0], files[1]]);
-	ctx.shaders.crop.handle = webglUtils.createProgramFromSources(gl,
-		[files[2], files[3]]);
-	ctx.shaders.project.handle = webglUtils.createProgramFromSources(gl,
-		[files[4], files[5]]);
-
-	const unitquadtex = new Float32Array([
-		- 1.0, 1.0, 0.0, 0.0,
-		1.0, 1.0, 1.0, 0.0,
-		1.0, - 1.0, 1.0, 1.0,
-		- 1.0, - 1.0, 0.0, 1.0
-	]);
-
-	const unitquad_small = new Float32Array([
-		- 1.0, 1.0,
-		1.0, 1.0,
-		1.0, - 1.0,
-		- 1.0, - 1.0
-	]);
-
-	Object.assign(ctx.shaders.crop, {
-		vtx: gl.getAttribLocation(ctx.shaders.crop.handle, "vtx"),
-		coord: gl.getAttribLocation(ctx.shaders.crop.handle, "coord"),
-		aspect_w: gl.getUniformLocation(ctx.shaders.crop.handle, "aspect_w"),
-		aspect_h: gl.getUniformLocation(ctx.shaders.crop.handle, "aspect_h"),
-		crop: gl.getUniformLocation(ctx.shaders.crop.handle, "crop"),
-		mask_toggle: gl.getUniformLocation(ctx.shaders.crop.handle, "mask_toggle"),
-		bgvbo: createBufferWithData(gl, unitquadtex)
-	});
-
-	Object.assign(ctx.shaders.border, {
-		vtx: gl.getAttribLocation(ctx.shaders.border.handle, "vtx"),
-		scale: gl.getUniformLocation(ctx.shaders.border.handle, "scale"),
-		transform: gl.getUniformLocation(ctx.shaders.border.handle, "transform"),
-		color: gl.getUniformLocation(ctx.shaders.border.handle, "color"),
-		quadvbo: createBufferWithData(gl, unitquad_small)
-	});
-
-	Object.assign(ctx.shaders.project, {
-		pos: gl.getAttribLocation(ctx.shaders.project.handle, "pos"),
-		viewray: gl.getAttribLocation(ctx.shaders.project.handle, "rayvtx"),
-		scaler: gl.getUniformLocation(ctx.shaders.project.handle, "scalar"),
-		crop: gl.getUniformLocation(ctx.shaders.project.handle, "crop"),
-		rayvbo: gl.createBuffer()
-	});
-}
-
-function createBufferWithData(gl, data) {
-	let buffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-	gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-	gl.bindBuffer(gl.ARRAY_BUFFER, null);
-	return buffer;
-}
-
 async function load_from_url(url) {
 	try {
 
@@ -202,62 +134,6 @@ function media_setup(bitmap) {
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,
 		bitmap);
 	bitmap.close();
-}
-
-const canvasToDisplaySizeMap = new Map([[canvas, [300, 150]]]);
-
-function onResize(entries) {
-	for (const entry of entries) {
-		let width;
-		let height;
-		let dpr = window.devicePixelRatio;
-		if (entry.devicePixelContentBoxSize) {
-			// NOTE: Only this path gives the correct answer
-			// The other 2 paths are an imperfect fallback
-			// for browsers that don't provide anyway to do this
-			width = entry.devicePixelContentBoxSize[0].inlineSize;
-			height = entry.devicePixelContentBoxSize[0].blockSize;
-			dpr = 1; // it's already in width and height
-		} else if (entry.contentBoxSize) {
-			if (entry.contentBoxSize[0]) {
-				width = entry.contentBoxSize[0].inlineSize;
-				height = entry.contentBoxSize[0].blockSize;
-			} else {
-				// legacy
-				width = entry.contentBoxSize.inlineSize;
-				height = entry.contentBoxSize.blockSize;
-			}
-		} else {
-			// legacy
-			width = entry.contentRect.width;
-			height = entry.contentRect.height;
-		}
-
-		const displayWidth = Math.round(width * dpr);
-		const displayHeight = Math.round(height * dpr);
-		canvasToDisplaySizeMap.set(entry.target,
-			[displayWidth, displayHeight]);
-	}
-}
-
-const resizeObserver = new ResizeObserver(onResize);
-resizeObserver.observe(canvas, { box: 'content-box' });
-
-function resizeCanvasToDisplaySize(canvas) {
-	// Get the size the browser is displaying the canvas in device pixels.
-	const [displayWidth, displayHeight] =
-		canvasToDisplaySizeMap.get(canvas);
-
-	// Check if the canvas is not the same size.
-	const needResize = canvas.width !== displayWidth ||
-		canvas.height !== displayHeight;
-
-	if (needResize) {
-		// Make the canvas the same size
-		canvas.width = displayWidth;
-		canvas.height = displayHeight;
-	}
-	return needResize;
 }
 
 main();
