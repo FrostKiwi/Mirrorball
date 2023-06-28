@@ -29,6 +29,35 @@ function main() {
 }
 
 function init() {
+	ctx.canvasToDisplaySizeMap = new Map([[canvas, [300, 150]]]);
+	const resizeObserver = new ResizeObserver(onResize);
+	resizeObserver.observe(canvas, { box: 'content-box' });
+
+	init_gui();
+	init_shaders(ctx, gl);
+	/* Add the stats */
+	document.body.appendChild(ctx.stats.dom);
+
+	gl.clearColor(0, 0, 0, 1);
+	/* Prevents headaches when loading NPOT textures */
+	gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+
+	load_from_url("img/room.jpg");
+
+	/* DEBUG */
+	ctx.gui.menu();
+}
+
+function animate() {
+	requestAnimationFrame(animate);
+	resizeCanvasToDisplaySize(canvas, ctx.canvasToDisplaySizeMap);
+
+	render();
+
+	ctx.stats.update();
+}
+
+function update_camera() {
 	const basis = glm.mat4.create();
 	let view = glm.mat4.create();
 
@@ -68,51 +97,15 @@ function init() {
 		let result = glmVec3RotateM4(cam_rot_matrix, vec);
 		ctx.cam.viewrays[i + 2] = result[0];
 		ctx.cam.viewrays[i + 3] = result[1];
-		// This is if the z-component needs to be updated too
 		ctx.cam.viewrays[i + 4] = result[2];
 	}
-
-
-	for (let i = 0; i < 4; i++) {
-		let row = '';
-		for (let j = 0; j < 5; j++) {
-			row += parseFloat(ctx.cam.viewrays[i * 5 + j].toFixed(3)) + ' ';
-		}
-		console.log(row);
-	}
-
-	ctx.canvasToDisplaySizeMap = new Map([[canvas, [300, 150]]]);
-	const resizeObserver = new ResizeObserver(onResize);
-	resizeObserver.observe(canvas, { box: 'content-box' });
-
-	init_gui();
-	init_shaders(ctx, gl);
-	/* Add the stats */
-	document.body.appendChild(ctx.stats.dom);
-
-	gl.clearColor(0, 0, 0, 1);
-	/* Prevents headaches when loading NPOT textures */
-	gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-
-	load_from_url("img/room.jpg");
-
-	/* DEBUG */
-	ctx.gui.menu();
-}
-
-function animate() {
-	requestAnimationFrame(animate);
-	resizeCanvasToDisplaySize(canvas, ctx.canvasToDisplaySizeMap);
-
-	render();
-
-	ctx.stats.update();
 }
 
 function render() {
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	gl.viewport(0, 0, canvas.width, canvas.height);
 
+	update_camera();
 	if (ctx.gui.crop)
 		render_crop(ctx, gl, canvas.width, canvas.height);
 }
