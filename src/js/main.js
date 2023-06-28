@@ -5,7 +5,7 @@ import { init_gui } from './gui.js';
 import { resizeCanvasToDisplaySize, onResize } from './resize.js'
 import { init_shaders } from './init_shaders.js'
 import { render_crop } from './render_crop.js'
-import { eulerZYX, MulRot } from './custom_vector_funcs.js'
+import { eulerZYX, MulRot, printMat4, glmVec3RotateM4 } from './custom_vector_funcs.js'
 
 const canvas = document.querySelector("canvas");
 const gl = canvas.getContext("webgl");
@@ -28,30 +28,58 @@ function main() {
 	requestAnimationFrame(animate);
 }
 
-function printMat4(matrix) {
-	let result = '';
-	for (let col = 0; col < 4; col++) {
-		for (let row = 0; row < 4; row++) {
-			result += matrix[row + col * 4].toFixed(3) + ' ';
-		}
-		result += '\n';
-	}
-	console.log(result);
-}
-
 function init() {
 	const basis = glm.mat4.create();
 	let view = glm.mat4.create();
 
-	ctx.cam.rot[1] = 1.5
+	ctx.cam.rot[0] = 1.1;
+	ctx.cam.rot[1] = 1.5;
+	ctx.cam.rot[2] = 0.2;
+	ctx.ch1.rot[0] = 0.44;
+	ctx.ch1.rot[1] = 0.04;
+	ctx.ch1.rot[2] = 0.02;
 	let cam_rot_matrix = eulerZYX(ctx.cam.rot);
 	const world_rot_matrix = eulerZYX(ctx.ch1.rot);
-	glm.mat4.mul(basis, basis, world_rot_matrix);
+	glm.mat4.mul(basis, basis, world_rot_matrix);/* Useless? */
 	glm.mat4.mul(basis, basis, cam_rot_matrix);
 
 	glm.mat4.copy(cam_rot_matrix, basis);
-	view = MulRot(view, cam_rot_matrix);
-	printMat4(view);
+	view = MulRot(view, cam_rot_matrix); /* Just Copy basis? */
+	glm.mat4.invert(view, view);
+
+	const rof = glm.mat4.create();
+	glm.mat4.perspectiveNO(rof, ctx.cam.fov.cur, canvas.width / canvas.height, 0.01, 0);
+
+	// Update View-Rays
+	let distance = -0.5 / Math.tan(ctx.cam.fov.cur / 2.0);
+	for (let i = 0; i < 4 * 5; i += 5) {
+		ctx.cam.viewrays[i + 4] = distance;
+		ctx.cam.viewrays[i + 2] =
+			ctx.cam.viewrays[i] * 0.5 * canvas.width / canvas.height;
+		ctx.cam.viewrays[i + 3] = ctx.cam.viewrays[i + 1] * 0.5;
+
+		let vec = glm.vec3.fromValues(
+			ctx.cam.viewrays[i + 2],
+			ctx.cam.viewrays[i + 3],
+			ctx.cam.viewrays[i + 4]
+		);
+
+		// use the glmVec3RotateM4 function
+		let result = glmVec3RotateM4(cam_rot_matrix, vec);
+		ctx.cam.viewrays[i + 2] = result[0];
+		ctx.cam.viewrays[i + 3] = result[1];
+		// This is if the z-component needs to be updated too
+		ctx.cam.viewrays[i + 4] = result[2];
+	}
+
+
+	for (let i = 0; i < 4; i++) {
+		let row = '';
+		for (let j = 0; j < 5; j++) {
+			row += parseFloat(ctx.cam.viewrays[i * 5 + j].toFixed(3)) + ' ';
+		}
+		console.log(row);
+	}
 
 	ctx.canvasToDisplaySizeMap = new Map([[canvas, [300, 150]]]);
 	const resizeObserver = new ResizeObserver(onResize);

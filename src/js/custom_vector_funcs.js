@@ -101,3 +101,36 @@ export function glm_inv_tr(mat) {
 	glm_vec3_negate(t);
 	glm_vec3_copy(t, mat[3]);
 }
+
+export function printMat4(matrix) {
+	let result = '';
+	for (let col = 0; col < 4; col++) {
+		for (let row = 0; row < 4; row++) {
+			result += matrix[row + col * 4].toFixed(3) + ' ';
+		}
+		result += '\n';
+	}
+	console.log(result);
+}
+
+export function glmVec3RotateM4(m, v) {
+	let x = glm.vec4.create();
+	let y = glm.vec4.create();
+	let z = glm.vec4.create();
+	let res = glm.vec4.create();
+
+	// Normalize rows of matrix m
+	glm.vec4.normalize(x, m.subarray(0, 4));
+	glm.vec4.normalize(y, m.subarray(4, 8));
+	glm.vec4.normalize(z, m.subarray(8, 12));
+
+	// Scale x by v[0] and store in res
+	glm.vec4.scale(res, x, v[0]);
+	// Scale y by v[1] and add to res
+	glm.vec4.scaleAndAdd(res, res, y, v[1]);
+	// Scale z by v[2] and add to res
+	glm.vec4.scaleAndAdd(res, res, z, v[2]);
+
+	// Return the first three components of res as a vec3
+	return glm.vec3.fromValues(res[0], res[1], res[2]);
+}

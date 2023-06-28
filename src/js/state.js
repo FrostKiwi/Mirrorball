@@ -49,7 +49,13 @@ const ctx = {
 			min: glm.glMatrix.toRadian(10),
 			max: glm.glMatrix.toRadian(140),
 			cur: glm.glMatrix.toRadian(100)
-		}
+		},
+		viewrays: [
+			- 1.0, 1.0, 0.0, 0.0, 0.0,
+			1.0, 1.0, 0.0, 0.0, 0.0,
+			1.0, -1.0, 0.0, 0.0, 0.0,
+			-1.0, -1.0, 0.0, 0.0, 0.0
+		]
 	}
 };
 
