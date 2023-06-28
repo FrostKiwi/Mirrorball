@@ -8,3 +8,7 @@ canvas {
 	height: 100vh;
 	display: block;
 }
+
+.lil-gui {
+	--widget-color: #2d3741;
+}

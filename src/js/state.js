@@ -29,6 +29,7 @@ let ctx = {
 	},
 	gui: {
 		handle: null,
+		controller: {},
 		crop: true,
 		project: false,
 		folder: {
