@@ -29,6 +29,7 @@ const ctx = {
 	},
 	gui: {
 		handle: null,
+		menu: toggleMenu,
 		controller: {},
 		crop: true,
 		project: false,
@@ -43,3 +44,12 @@ const ctx = {
 };
 
 export default ctx;
+
+function toggleMenu() {
+	var menu = document.querySelector('.menu');
+	if (menu.style.display === 'none') {
+		menu.style.display = 'block';
+	} else {
+		menu.style.display = 'none';
+	}
+}

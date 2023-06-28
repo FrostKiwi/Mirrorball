@@ -4,7 +4,9 @@ import { GUI } from 'lil-gui';
 export function init_gui() {
 	ctx.gui.handle = new GUI();
 	ctx.gui.handle.title("Controls (Show / Hide)");
+	ctx.gui.handle.add(ctx.gui, 'menu').name("Toggle Main Menu");
 	ctx.gui.handle.add(ctx.gui, 'crop').name("Original");
+	ctx.gui.handle.add(ctx.gui, 'project').name("Projection");
 
 	ctx.gui.folder.viz = ctx.gui.handle.addFolder('Vizualizations');
 	ctx.gui.folder.crop = ctx.gui.handle.addFolder('Crop');
@@ -32,7 +34,8 @@ export function init_gui() {
 
 	ctx.gui.folder.settings.add(ctx.gui, 'showStats').onChange(toggleStats);
 	/* Trigger the function to apply the defaults stats value */
-	toggleStats();
+	/* Commented out during DEBUG! */
+	/* toggleStats(); */
 }
 
 function toggleStats(value) {

@@ -40,6 +40,9 @@ function init() {
 	gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 
 	load_from_url("img/room.jpg");
+
+	/* DEBUG */
+	ctx.gui.menu();
 }
 
 function animate() {
