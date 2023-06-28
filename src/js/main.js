@@ -1,6 +1,6 @@
 import * as glm from 'gl-matrix';
 import ctx from './state.js';
-import { init_gui, updateSlider } from './gui.js';
+import { init_gui } from './gui.js';
 import { resizeCanvasToDisplaySize, onResize } from './resize.js'
 import { init_shaders } from './init_shaders.js'
 
@@ -112,14 +112,10 @@ async function load_from_url(url) {
 }
 
 function media_setup(bitmap) {
-	updateSlider(ctx.gui.folder.crop,
-		'left', ctx.ch1.crop, 'left', 0, bitmap.width / 2, "Left (Pixels)");
-	updateSlider(ctx.gui.folder.crop,
-		'right', ctx.ch1.crop, 'right', 0, bitmap.width / 2, "Right (Pixels)");
-	updateSlider(ctx.gui.folder.crop,
-		'top', ctx.ch1.crop, 'top', 0, bitmap.height / 2, "Top (Pixels)");
-	updateSlider(ctx.gui.folder.crop,
-		'bot', ctx.ch1.crop, 'bot', 0, bitmap.height / 2, "Bottom (Pixels)");
+	ctx.gui.controller.left.max(bitmap.width / 2);
+	ctx.gui.controller.right.max(bitmap.width / 2);
+	ctx.gui.controller.top.max(bitmap.height / 2);
+	ctx.gui.controller.bot.max(bitmap.height / 2);
 
 	gl.deleteTexture(ctx.ch1.tex);
 	ctx.ch1.tex = gl.createTexture();

@@ -29,6 +29,8 @@ let ctx = {
 	},
 	gui: {
 		handle: null,
+		crop: true,
+		project: false,
 		folder: {
 			viz: null,
 			crop: null,
