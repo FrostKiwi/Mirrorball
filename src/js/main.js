@@ -1,8 +1,11 @@
+import * as glm from 'gl-matrix';
+
 import ctx from './state.js';
 import { init_gui } from './gui.js';
 import { resizeCanvasToDisplaySize, onResize } from './resize.js'
 import { init_shaders } from './init_shaders.js'
 import { render_crop } from './render_crop.js'
+import { eulerZYX, MulRot } from './custom_vector_funcs.js'
 
 const canvas = document.querySelector("canvas");
 const gl = canvas.getContext("webgl");
@@ -25,7 +28,31 @@ function main() {
 	requestAnimationFrame(animate);
 }
 
+function printMat4(matrix) {
+	let result = '';
+	for (let col = 0; col < 4; col++) {
+		for (let row = 0; row < 4; row++) {
+			result += matrix[row + col * 4].toFixed(3) + ' ';
+		}
+		result += '\n';
+	}
+	console.log(result);
+}
+
 function init() {
+	const basis = glm.mat4.create();
+	let view = glm.mat4.create();
+
+	ctx.cam.rot[1] = 1.5
+	let cam_rot_matrix = eulerZYX(ctx.cam.rot);
+	const world_rot_matrix = eulerZYX(ctx.ch1.rot);
+	glm.mat4.mul(basis, basis, world_rot_matrix);
+	glm.mat4.mul(basis, basis, cam_rot_matrix);
+
+	glm.mat4.copy(cam_rot_matrix, basis);
+	view = MulRot(view, cam_rot_matrix);
+	printMat4(view);
+
 	ctx.canvasToDisplaySizeMap = new Map([[canvas, [300, 150]]]);
 	const resizeObserver = new ResizeObserver(onResize);
 	resizeObserver.observe(canvas, { box: 'content-box' });

@@ -8,15 +8,17 @@ export function init_gui() {
 	ctx.gui.handle.add(ctx.gui, 'crop').name("Original");
 	ctx.gui.handle.add(ctx.gui, 'project').name("Projection");
 
-	ctx.gui.folder.viz = ctx.gui.handle.addFolder('Vizualizations');
-	ctx.gui.folder.crop = ctx.gui.handle.addFolder('Crop');
+	/* Vizualizations */
+	ctx.gui.folder.viz = ctx.gui.handle.addFolder('Vizualizations').close();
+	ctx.gui.folder.viz.add(ctx.shaders.crop, 'mask');
+
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera');
-	ctx.gui.folder.settings = ctx.gui.handle.addFolder('Settings');
-	ctx.gui.folder.settings.close();
-	ctx.gui.folder.crop.close();
+	ctx.gui.folder.camera.add(ctx.cam.rot, '0', -1, 1, 0.01).name("X");
+	ctx.gui.folder.camera.add(ctx.cam.rot, '1', -1, 1, 0.01).name("Y");
+	ctx.gui.folder.camera.add(ctx.cam.rot, '2', -1, 1, 0.01).name("Z");
 
-
-	/* Setup up changable sliders */
+	/* Crop */
+	ctx.gui.folder.crop = ctx.gui.handle.addFolder('Crop').close();
 	ctx.gui.controller.top =
 		ctx.gui.folder.crop.add(ctx.ch1.crop, 'top', 0, 1, 1);
 	ctx.gui.controller.top.name("Top (px)");
@@ -30,8 +32,7 @@ export function init_gui() {
 		ctx.gui.folder.crop.add(ctx.ch1.crop, 'right', 0, 1, 1);
 		ctx.gui.controller.right.name("Right (px)");
 
-	ctx.gui.folder.viz.add(ctx.shaders.crop, 'mask');
-
+	ctx.gui.folder.settings = ctx.gui.handle.addFolder('Settings').close();
 	ctx.gui.folder.settings.add(ctx.gui, 'showStats').onChange(toggleStats);
 	/* Trigger the function to apply the defaults stats value */
 	/* Commented out during DEBUG! */

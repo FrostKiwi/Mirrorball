@@ -1,3 +1,4 @@
+import * as glm from 'gl-matrix';
 import Stats from 'stats.js';
 
 const ctx = {
@@ -25,7 +26,8 @@ const ctx = {
 			bot: 0,
 			left: 0,
 			right: 0
-		}
+		},
+		rot: glm.vec3.create()
 	},
 	gui: {
 		handle: null,
@@ -40,6 +42,14 @@ const ctx = {
 			settings: null
 		},
 		showStats: false
+	},
+	cam: {
+		rot: glm.vec3.create(),
+		fov: {
+			min: glm.glMatrix.toRadian(10),
+			max: glm.glMatrix.toRadian(140),
+			cur: glm.glMatrix.toRadian(100)
+		}
 	}
 };
 
