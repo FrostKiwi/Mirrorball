@@ -2,9 +2,9 @@ import ctx from './state.js';
 import { init_gui } from './gui.js';
 import { resizeCanvasToDisplaySize, onResize } from './resize.js'
 import { init_shaders } from './init_shaders.js'
-import { render_crop } from './render_crop.js'
-import { render_project } from './render_projection.js'
-import { update_camera } from './update_camera.js'
+import render_crop from './render_crop.js'
+import render_project from './render_projection.js'
+import update_camera from './update_camera.js'
 
 ctx.canvas = document.querySelector("canvas");
 /* Since we draw over the whole screen, no need to flush */
@@ -16,9 +16,10 @@ function main() {
 			"WebGL Version: " + ctx.gl.getParameter(ctx.gl.VERSION) + '\n' +
 			"Vendor: " + ctx.gl.getParameter(ctx.gl.VENDOR) + '\n' +
 			"Renderer: " + ctx.gl.getParameter(ctx.gl.RENDERER) + '\n' +
-			"GLSL Version: " + ctx.gl.getParameter(ctx.gl.SHADING_LANGUAGE_VERSION)
-			+ '\n' +
-			"Max tex-size: " + ctx.gl.getParameter(ctx.gl.MAX_TEXTURE_SIZE) + "px²");
+			"GLSL Version: " +
+			ctx.gl.getParameter(ctx.gl.SHADING_LANGUAGE_VERSION) + '\n' +
+			"Max tex-size: " +
+			ctx.gl.getParameter(ctx.gl.MAX_TEXTURE_SIZE) + "px²");
 	else {
 		console.error("No WebGl context received.");
 		return;
@@ -50,7 +51,7 @@ function init() {
 
 function animate() {
 	requestAnimationFrame(animate);
-	resizeCanvasToDisplaySize(ctx.canvas, ctx.canvasToDisplaySizeMap);
+	resizeCanvasToDisplaySize();
 
 	render();
 

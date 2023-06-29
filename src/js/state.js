@@ -64,7 +64,7 @@ const ctx = {
 export default ctx;
 
 function toggleMenu() {
-	var menu = document.querySelector('.menu');
+	var menu = document.querySelector('#menu');
 	if (menu.style.display === 'none') {
 		menu.style.display = 'block';
 	} else {

@@ -26,7 +26,7 @@ canvas {
 	height: 100vh;
 }
 
-.menu {
+.panel {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -59,6 +59,15 @@ canvas {
 		backdrop-filter: blur(calc(1vw + 1vh));
 		background-color: #00000022;
 	}
+}
+
+.loader {
+	padding: 2em;
+}
+
+.loader img {
+	width: 90%;
+	height: 90%;
 }
 
 h1::before {

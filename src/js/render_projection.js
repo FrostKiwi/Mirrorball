@@ -1,6 +1,6 @@
 import ctx from './state.js';
 
-export function render_project() {
+export default function render_project() {
 	const crop = {
 		x: (1 / ctx.ch1.w) *
 			(ctx.ch1.w / 2 + ctx.ch1.crop.left / 2 - ctx.ch1.crop.right / 2),

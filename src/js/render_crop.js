@@ -1,6 +1,6 @@
 import ctx from './state.js';
 
-export function render_crop(){
+export default function render_crop(){
 	/* Crop Shader */
 	const postcrop_w =
 		ctx.ch1.w - (ctx.ch1.crop.left + ctx.ch1.crop.right);

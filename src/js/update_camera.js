@@ -3,7 +3,7 @@ import ctx from './state.js';
 
 import { eulerZYX, MulRot, glmVec3RotateM4 } from './custom_vector_funcs.js'
 
-export function update_camera() {
+export default function update_camera() {
 	const basis = glm.mat4.create();
 	let view = glm.mat4.create();
 
@@ -17,7 +17,9 @@ export function update_camera() {
 	glm.mat4.invert(view, view);
 
 	const rof = glm.mat4.create();
-	glm.mat4.perspectiveNO(rof, ctx.cam.fov.cur, ctx.canvas.width / ctx.canvas.height, 0.01, 0);
+	glm.mat4.perspectiveNO(
+		rof, ctx.cam.fov.cur, ctx.canvas.width / ctx.canvas.height, 0.01, 0
+	);
 
 	// Update View-Rays
 	let distance = -0.5 / Math.tan(ctx.cam.fov.cur / 2.0);
