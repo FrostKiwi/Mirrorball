@@ -8,7 +8,8 @@ import { render_crop } from './render_crop.js'
 import { eulerZYX, MulRot, printMat4, glmVec3RotateM4 } from './custom_vector_funcs.js'
 
 const canvas = document.querySelector("canvas");
-const gl = canvas.getContext("webgl");
+/* Since we draw over the whole screen, no need to flush */
+const gl = canvas.getContext('webgl', { preserveDrawingBuffer: false });
 
 function main() {
 	if (gl)
@@ -96,7 +97,8 @@ function update_camera() {
 }
 
 function render() {
-	gl.clear(gl.COLOR_BUFFER_BIT);
+	if (!ctx.gui.crop && !ctx.gui.project)
+		gl.clear(gl.COLOR_BUFFER_BIT);
 	gl.viewport(0, 0, canvas.width, canvas.height);
 
 	update_camera();
