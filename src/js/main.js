@@ -1,7 +1,7 @@
 import ctx from './state.js';
-import { init_gui } from './gui.js';
+import init_gui from './gui.js';
 import { resizeCanvasToDisplaySize, onResize } from './resize.js'
-import { init_shaders } from './init_shaders.js'
+import init_shaders from './init_shaders.js'
 import render_crop from './render_crop.js'
 import render_project from './render_projection.js'
 import update_camera from './update_camera.js'
@@ -71,9 +71,16 @@ function render() {
 }
 
 async function load_from_url(url) {
+	ctx.dom.spinner.style.display = 'block';
 	try {
+		ctx.dom.statusMSG.innerText = "Requesting " + url;
 		const response = await fetch(url);
+		ctx.dom.statusMSG.innerText = "Downloading " + url;
+		ctx.dom.filesize.innerText = "(" +
+			((response.headers.get('Content-Length') / 1000000)).toFixed(2) +
+			" MegaByte" + ")";
 		const blob = await response.blob();
+		ctx.dom.statusMSG.innerText = "Decoding image";
 		const bitmap = await createImageBitmap(blob);
 
 		const crop = {
@@ -91,6 +98,7 @@ async function load_from_url(url) {
 }
 
 function media_setup(bitmap, crop) {
+	ctx.dom.statusMSG.innerText = "Transfering into GPU memory";
 	ctx.gui.controller.left.max(bitmap.width / 2).setValue(crop.left);
 	ctx.gui.controller.right.max(bitmap.width / 2).setValue(crop.right);
 	ctx.gui.controller.top.max(bitmap.height / 2).setValue(crop.top);
@@ -109,6 +117,9 @@ function media_setup(bitmap, crop) {
 	ctx.gl.texImage2D(ctx.gl.TEXTURE_2D, 0, ctx.gl.RGBA, ctx.gl.RGBA, ctx.gl.UNSIGNED_BYTE,
 		bitmap);
 	bitmap.close();
+	ctx.dom.spinner.style.display = 'none';
+	ctx.dom.statusMSG.innerText = "\u00A0";
+	ctx.dom.filesize.innerText = "\u00A0";
 }
 
 main();

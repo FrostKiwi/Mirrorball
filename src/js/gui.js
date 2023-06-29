@@ -1,7 +1,7 @@
 import ctx from './state.js';
-import { GUI } from 'lil-gui';
+import GUI from 'lil-gui';
 
-export function init_gui() {
+export default function init_gui() {
 	ctx.gui.handle = new GUI();
 	ctx.gui.handle.title("Controls (Show / Hide)");
 	ctx.gui.handle.add(ctx.gui, 'menu').name("Toggle Main Menu");

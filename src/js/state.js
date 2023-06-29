@@ -52,22 +52,26 @@ const ctx = {
 			max: glm.glMatrix.toRadian(140),
 			cur: glm.glMatrix.toRadian(100)
 		},
-		viewrays: new Float32Array( [
+		viewrays: new Float32Array([
 			- 1.0, 1.0, 0.0, 0.0, 0.0,
 			1.0, 1.0, 0.0, 0.0, 0.0,
 			1.0, -1.0, 0.0, 0.0, 0.0,
 			-1.0, -1.0, 0.0, 0.0, 0.0
 		])
+	},
+	dom: {
+		menu: document.getElementById('menu'),
+		spinner: document.getElementById('spinner'),
+		statusMSG: document.getElementById('statusMSG'),
+		filesize: document.getElementById('filesize')
 	}
 };
 
 export default ctx;
 
 function toggleMenu() {
-	var menu = document.querySelector('#menu');
-	if (menu.style.display === 'none') {
-		menu.style.display = 'block';
-	} else {
-		menu.style.display = 'none';
-	}
+	if (ctx.dom.menu.style.display === 'none')
+		ctx.dom.menu.style.display = 'block';
+	else
+		ctx.dom.menu.style.display = 'none';
 }

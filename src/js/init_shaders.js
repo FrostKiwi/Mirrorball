@@ -15,7 +15,7 @@ function createBufferWithData(gl, data) {
 	return buffer;
 }
 
-export function init_shaders(ctx, gl) {
+export default function init_shaders(ctx, gl) {
 	ctx.shaders.crop.handle = compile_and_link(gl, crop_vs, crop_fs);
 	ctx.shaders.border.handle = compile_and_link(gl, border_vs, border_fs);
 	ctx.shaders.project.handle = compile_and_link(gl, project_vs, project_fs);
