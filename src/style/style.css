@@ -11,14 +11,14 @@ canvas {
 
 .lil-gui {
 	--widget-color: #2d3741;
-	--background-color: #1f1f1fF1
+	--background-color: #1f1f1fF1;
 }
 
 /* Fix as per: 
    https: //github.com/georgealways/lil-gui/issues/109#issuecomment-1611658861
  */
 .lil-gui:not(.root) {
-	background-color: transparent !important;;
+	background-color: transparent !important;
 }
 
 .container {
