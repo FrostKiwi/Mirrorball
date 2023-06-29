@@ -2,6 +2,8 @@ import * as glm from 'gl-matrix';
 import Stats from 'stats.js';
 
 const ctx = {
+	canvas: null,
+	gl: null,
 	stats: new Stats(),
 	canvasToDisplaySizeMap: null,
 	shaders: {
@@ -50,12 +52,12 @@ const ctx = {
 			max: glm.glMatrix.toRadian(140),
 			cur: glm.glMatrix.toRadian(100)
 		},
-		viewrays: [
+		viewrays: new Float32Array( [
 			- 1.0, 1.0, 0.0, 0.0, 0.0,
 			1.0, 1.0, 0.0, 0.0, 0.0,
 			1.0, -1.0, 0.0, 0.0, 0.0,
 			-1.0, -1.0, 0.0, 0.0, 0.0
-		]
+		])
 	}
 };
 
