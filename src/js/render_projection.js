@@ -1,4 +1,5 @@
 import ctx from './state.js';
+import * as glm from 'gl-matrix';
 
 export default function render_project() {
 	const crop = {
@@ -30,7 +31,8 @@ export default function render_project() {
 		5 * Float32Array.BYTES_PER_ELEMENT,
 		2 * Float32Array.BYTES_PER_ELEMENT
 	);
-	ctx.gl.uniform1f(ctx.shaders.project.scaler, 1.0);
+	const scalar = 1.0 / Math.sin(glm.glMatrix.toRadian(ctx.ch1.fov_deg) / 4.0);
+	ctx.gl.uniform1f(ctx.shaders.project.scaler, scalar);
 
 	ctx.gl.drawArrays(ctx.gl.TRIANGLE_FAN, 0, 4);
 }
