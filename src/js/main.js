@@ -5,6 +5,7 @@ import init_shaders from './init_shaders.js'
 import render_crop from './render_crop.js'
 import render_project from './render_projection.js'
 import update_camera from './update_camera.js'
+import render_border from './render_border.js'
 
 ctx.canvas = document.querySelector("canvas");
 /* Since we draw over the whole screen, no need to flush */
@@ -68,6 +69,8 @@ function render() {
 		render_crop();
 	if (ctx.gui.project)
 		render_project();
+	if (ctx.gui.viz)
+		render_border();
 }
 
 async function load_from_url(url) {

@@ -29,7 +29,7 @@ const ctx = {
 			left: 0,
 			right: 0
 		},
-		rot: glm.vec3.create()
+		rot_deg: glm.vec3.create()
 	},
 	gui: {
 		handle: null,
@@ -37,6 +37,7 @@ const ctx = {
 		controller: {},
 		crop: true,
 		project: false,
+		viz: false,
 		folder: {
 			viz: null,
 			crop: null,
@@ -46,7 +47,7 @@ const ctx = {
 		showStats: false
 	},
 	cam: {
-		rot: glm.vec3.create(),
+		rot_deg: glm.vec3.create(),
 		fov: {
 			min: glm.glMatrix.toRadian(10),
 			max: glm.glMatrix.toRadian(140),

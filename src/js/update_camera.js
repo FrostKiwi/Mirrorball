@@ -7,8 +7,18 @@ export default function update_camera() {
 	const basis = glm.mat4.create();
 	let view = glm.mat4.create();
 
-	let cam_rot_matrix = eulerZYX(ctx.cam.rot);
-	const world_rot_matrix = eulerZYX(ctx.ch1.rot);
+	const cam_rot = glm.vec3.fromValues(
+		glm.glMatrix.toRadian(ctx.cam.rot_deg[0]),
+		glm.glMatrix.toRadian(ctx.cam.rot_deg[1]),
+		glm.glMatrix.toRadian(ctx.cam.rot_deg[2])
+	);
+	const ch1_rot = glm.vec3.fromValues(
+		glm.glMatrix.toRadian(ctx.ch1.rot_deg[0]),
+		glm.glMatrix.toRadian(ctx.ch1.rot_deg[1]),
+		glm.glMatrix.toRadian(ctx.ch1.rot_deg[2])
+	);
+	let cam_rot_matrix = eulerZYX(cam_rot);
+	const world_rot_matrix = eulerZYX(ch1_rot);
 	glm.mat4.mul(basis, basis, world_rot_matrix);/* Useless? */
 	glm.mat4.mul(basis, basis, cam_rot_matrix);
 
