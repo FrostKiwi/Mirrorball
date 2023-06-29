@@ -61,12 +61,6 @@ function update_camera() {
 	const basis = glm.mat4.create();
 	let view = glm.mat4.create();
 
-	ctx.cam.rot[0] = 1.1;
-	ctx.cam.rot[1] = 1.5;
-	ctx.cam.rot[2] = 0.2;
-	ctx.ch1.rot[0] = 0.44;
-	ctx.ch1.rot[1] = 0.04;
-	ctx.ch1.rot[2] = 0.02;
 	let cam_rot_matrix = eulerZYX(ctx.cam.rot);
 	const world_rot_matrix = eulerZYX(ctx.ch1.rot);
 	glm.mat4.mul(basis, basis, world_rot_matrix);/* Useless? */
