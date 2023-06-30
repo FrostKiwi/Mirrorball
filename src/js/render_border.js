@@ -27,7 +27,7 @@ export default function render_border() {
 	ctx.gl.vertexAttribPointer(ctx.shaders.border.vtx, 2, ctx.gl.FLOAT, false,
 		2 * Float32Array.BYTES_PER_ELEMENT, 0);
 
-	if (ctx.gui.project) {
+/* 	if (ctx.gui.project) {
 		const scale = 
 				vec2s scale = {POINT_SIZE / aspect, POINT_SIZE};
 		scale = vec2_scale(scale, 0.8);
@@ -36,5 +36,5 @@ export default function render_border() {
 					 scale.raw);
 	} else {
 
-	}
+	} */
 }

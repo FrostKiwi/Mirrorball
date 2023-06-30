@@ -1,3 +1,8 @@
+:root {
+	--blur: blur(calc(1vw + 1vh));
+	--bgcolor: #00000070;
+}
+
 body {
 	margin: 0;
 	background-color: black;
@@ -11,14 +16,18 @@ canvas {
 
 .lil-gui {
 	--widget-color: #2d3741;
-	--background-color: #1f1f1fF1;
+}
+
+.lil-gui.root {
+	--background-color: var(--bgcolor);
+	backdrop-filter: var(--blur);
 }
 
 /* Fix as per: 
    https: //github.com/georgealways/lil-gui/issues/109#issuecomment-1611658861
  */
 .lil-gui:not(.root) {
-	background-color: transparent !important;
+	background-color: transparent;
 }
 
 .container {
@@ -30,8 +39,8 @@ canvas {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	max-width: 75%;
-	max-height: 75%;
+	max-width: 100%;
+	max-height: 100%;
 	min-width: 25%;
 	min-height: 25%;
 	transform: translate(-50%, -50%);
@@ -55,10 +64,8 @@ canvas {
 		sans-serif;
 
 	/* Effect */
-	@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-		backdrop-filter: blur(calc(1vw + 1vh));
-		background-color: #00000022;
-	}
+	backdrop-filter: var(--blur);
+	background-color: var(--bgcolor);
 }
 
 .loader {
@@ -70,21 +77,12 @@ canvas {
 	height: 100%;
 }
 
-h1::before {
-	padding-left: 1em;
-	content: url('kiwi_happy.svg');
-	display: inline-block;
+.kiwi {
 	height: 2em;
 	width: 2em;
 	vertical-align: middle;
-	transform: scaleX(-1);
 }
 
-h1::after {
-	padding-left: 1em;
-	content: url('kiwi_love.svg');
-	display: inline-block;
-	height: 2em;
-	width: 2em;
-	vertical-align: middle;
+.flip {
+	transform: scaleX(-1);
 }

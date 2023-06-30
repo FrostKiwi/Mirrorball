@@ -9,7 +9,7 @@ export default function update_camera() {
 
 	const cam_rot = glm.vec3.fromValues(
 		glm.glMatrix.toRadian(ctx.cam.rot_deg[0]),
-		glm.glMatrix.toRadian(ctx.cam.rot_deg[1]),
+		glm.glMatrix.toRadian(ctx.cam.rot_deg[1] + 180),
 		glm.glMatrix.toRadian(ctx.cam.rot_deg[2])
 	);
 	const ch1_rot = glm.vec3.fromValues(

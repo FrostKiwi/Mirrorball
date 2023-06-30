@@ -8,7 +8,7 @@ export default function init_gui() {
 	ctx.gui.handle.add(ctx.gui, 'crop').name("Original");
 	ctx.gui.handle.add(ctx.gui, 'project').name("Projection");
 	ctx.gui.controller.img_fov =
-		ctx.gui.handle.add(ctx.ch1, 'fov_deg', -180, 360, 1);
+		ctx.gui.handle.add(ctx.ch1, 'fov_deg', 180, 360, 1);
 	ctx.gui.controller.img_fov.name("Sphere's FOV [in °]");
 
 	/* Vizualizations */
@@ -17,8 +17,8 @@ export default function init_gui() {
 	ctx.gui.folder.viz.add(ctx.gui, 'viz');
 
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera');
-	ctx.gui.folder.camera.add(ctx.cam.rot_deg, '0', -180, 180).name("Pitch");
-	ctx.gui.folder.camera.add(ctx.cam.rot_deg, '1', -180, 180).name("Yaw");
+	ctx.gui.folder.camera.add(ctx.cam.rot_deg, '0', -90, 90).name("Pitch [in °]");
+	ctx.gui.folder.camera.add(ctx.cam.rot_deg, '1', -180, 180).name("Yaw [in °]");
 
 	/* Crop */
 	ctx.gui.folder.crop = ctx.gui.handle.addFolder('Crop').close();
