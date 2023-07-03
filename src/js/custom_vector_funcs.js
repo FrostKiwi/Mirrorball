@@ -134,37 +134,44 @@ export function glmVec3RotateM4(m, v) {
 	// Return the first three components of res as a vec3
 	return glm.vec3.fromValues(res[0], res[1], res[2]);
 }
-/*
-export function mat_inv_r(){
-	const r = glm.mat3.fromValues();
 
-	glm_mat4_pick3t(mat4 mat, mat3 dest) {
-  dest[0][0] = mat[0][0];
-  dest[0][1] = mat[1][0];
-  dest[0][2] = mat[2][0];
+function mat4_pick3t(mat) {
+	let dest = glm.mat3.create();
 
-  dest[1][0] = mat[0][1];
-  dest[1][1] = mat[1][1];
-  dest[1][2] = mat[2][1];
+	dest[0] = mat[0];
+	dest[1] = mat[4];
+	dest[2] = mat[8];
 
-  dest[2][0] = mat[0][2];
-  dest[2][1] = mat[1][2];
-  dest[2][2] = mat[2][2];
+	dest[3] = mat[1];
+	dest[4] = mat[5];
+	dest[5] = mat[9];
+
+	dest[6] = mat[2];
+	dest[7] = mat[6];
+	dest[8] = mat[10];
+
+	return dest;
 }
-	glm_mat4_ins3(mat3 mat, mat4 dest) {
-		dest[0][0] = mat[0][0];
-		dest[0][1] = mat[0][1];
-		dest[0][2] = mat[0][2];
 
-		dest[1][0] = mat[1][0];
-		dest[1][1] = mat[1][1];
-		dest[1][2] = mat[1][2];
+function mat4_ins3(mat, dest) {
+	dest = glm.mat4.clone(dest);
 
-		dest[2][0] = mat[2][0];
-		dest[2][1] = mat[2][1];
-		dest[2][2] = mat[2][2];
-	}
-	glm_mat4_pick3t(mat, r);
-	glm_mat4_ins3(r, mat);
+	dest[0] = mat[0];
+	dest[4] = mat[1];
+	dest[8] = mat[2];
+
+	dest[1] = mat[3];
+	dest[5] = mat[4];
+	dest[9] = mat[5];
+
+	dest[2] = mat[6];
+	dest[6] = mat[7];
+	dest[10] = mat[8];
+
+	return dest;
 }
-*/
+
+export function mat_inv_r(mat){
+	const r = mat4_pick3t (mat);
+	return mat4_ins3(r, mat);
+}

@@ -1,7 +1,9 @@
 import * as glm from 'gl-matrix';
 import ctx from './state.js';
 
-import { eulerZYX, MulRot, glmVec3RotateM4 } from './custom_vector_funcs.js'
+import {
+	eulerZYX, MulRot, glmVec3RotateM4, mat_inv_r
+} from './custom_vector_funcs.js'
 
 export default function update_camera() {
 	const basis = glm.mat4.create();
@@ -24,7 +26,7 @@ export default function update_camera() {
 
 	glm.mat4.copy(cam_rot_matrix, basis);
 	view = MulRot(view, cam_rot_matrix); /* Just Copy basis? */
-	glm.mat4.invert(view, view);
+	view = mat_inv_r(view);
 
 	const rof = glm.mat4.create();
 	glm.mat4.perspectiveNO(
