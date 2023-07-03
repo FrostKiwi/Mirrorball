@@ -2,12 +2,11 @@ import * as glm from 'gl-matrix';
 import ctx from './state.js';
 
 import {
-	eulerZYX, MulRot, glmVec3RotateM4, mat_inv_r
+	eulerZYX, MulRot, Vec3RotateM4
 } from './custom_vector_funcs.js'
 
 export default function update_camera() {
-	const basis = glm.mat4.create();
-	let view = glm.mat4.create();
+	let basis = glm.mat4.create();
 
 	const cam_rot = glm.vec3.fromValues(
 		glm.glMatrix.toRadian(ctx.cam.rot_deg[0]),
@@ -19,21 +18,12 @@ export default function update_camera() {
 		glm.glMatrix.toRadian(ctx.ch1.rot_deg[1]),
 		glm.glMatrix.toRadian(ctx.ch1.rot_deg[2])
 	);
-	let cam_rot_matrix = eulerZYX(cam_rot);
+	const cam_rot_matrix = eulerZYX(cam_rot);
 	const world_rot_matrix = eulerZYX(ch1_rot);
-	glm.mat4.mul(basis, basis, world_rot_matrix);/* Useless? */
-	glm.mat4.mul(basis, basis, cam_rot_matrix);
+	basis = MulRot(basis, world_rot_matrix);
+	basis = MulRot(basis, cam_rot_matrix);
 
-	glm.mat4.copy(cam_rot_matrix, basis);
-	view = MulRot(view, cam_rot_matrix); /* Just Copy basis? */
-	view = mat_inv_r(view);
-
-	const rof = glm.mat4.create();
-	glm.mat4.perspectiveNO(
-		rof, ctx.cam.fov.cur, ctx.canvas.width / ctx.canvas.height, 0.01, 0
-	);
-
-	// Update View-Rays
+	/* Update View-Rays */
 	let distance = -0.5 / Math.tan(ctx.cam.fov.cur / 2.0);
 	for (let i = 0; i < 4 * 5; i += 5) {
 		ctx.cam.viewrays[i + 4] = distance;
@@ -47,8 +37,7 @@ export default function update_camera() {
 			ctx.cam.viewrays[i + 4]
 		);
 
-		// use the glmVec3RotateM4 function
-		let result = glmVec3RotateM4(cam_rot_matrix, vec);
+		let result = Vec3RotateM4(basis, vec);
 		ctx.cam.viewrays[i + 2] = result[0];
 		ctx.cam.viewrays[i + 3] = result[1];
 		ctx.cam.viewrays[i + 4] = result[2];

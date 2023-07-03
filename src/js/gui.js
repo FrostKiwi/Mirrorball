@@ -17,8 +17,16 @@ export default function init_gui() {
 	ctx.gui.folder.viz.add(ctx.gui, 'viz');
 
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera');
-	ctx.gui.folder.camera.add(ctx.cam.rot_deg, '0', -90, 90).name("Pitch [in °]");
-	ctx.gui.folder.camera.add(ctx.cam.rot_deg, '1', -180, 180).name("Yaw [in °]");
+	ctx.gui.folder.camera.add(
+		ctx.cam.rot_deg, '0', -90, 90).name("Pitch [in °]");
+	ctx.gui.folder.camera.add(
+		ctx.cam.rot_deg, '1', -180, 180).name("Yaw [in °]");
+
+	/* World rotation */
+	ctx.gui.folder.world = ctx.gui.handle.addFolder('World Rotation').close();
+	ctx.gui.folder.world.add(ctx.ch1.rot_deg, '0', -180, 180).name("Pitch [in °]");
+	ctx.gui.folder.world.add(ctx.ch1.rot_deg, '1', -180, 180).name("Yaw [in °]");
+	ctx.gui.folder.world.add(ctx.ch1.rot_deg, '2', -180, 180).name("Roll [in °]");
 
 	/* Crop */
 	ctx.gui.folder.crop = ctx.gui.handle.addFolder('Crop').close();
@@ -33,7 +41,7 @@ export default function init_gui() {
 	ctx.gui.controller.left.name("Left [px]");
 	ctx.gui.controller.right =
 		ctx.gui.folder.crop.add(ctx.ch1.crop, 'right', 0, 1, 1);
-		ctx.gui.controller.right.name("Right [px]");
+	ctx.gui.controller.right.name("Right [px]");
 
 	ctx.gui.folder.settings = ctx.gui.handle.addFolder('Settings').close();
 	ctx.gui.folder.settings.add(ctx.gui, 'showStats').onChange(toggleStats);

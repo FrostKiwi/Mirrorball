@@ -41,6 +41,7 @@ const ctx = {
 		folder: {
 			viz: null,
 			crop: null,
+			world: null,
 			camera: null,
 			settings: null
 		},

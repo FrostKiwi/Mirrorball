@@ -1,7 +1,7 @@
 import * as glm from 'gl-matrix';
 
 export function eulerZYX(angles) {
-	let dest = glm.mat4.create();
+	const dest = glm.mat4.create();
 	let cx, cy, cz, sx, sy, sz, czsx, cxcz, sysz;
 
 	sx = Math.sin(angles[0]);
@@ -70,50 +70,7 @@ export function MulRot(m1, m2) {
 	return dest;
 }
 
-function glm_mat4_pick3t(mat) {
-	let dest = glm.mat3.create();
-
-	dest[0] = mat[0];
-	dest[1] = mat[4];
-	dest[2] = mat[8];
-
-	dest[3] = mat[1];
-	dest[4] = mat[5];
-	dest[5] = mat[9];
-
-	dest[6] = mat[2];
-	dest[7] = mat[6];
-	dest[8] = mat[10];
-
-	return dest;
-}
-
-export function glm_inv_tr(mat) {
-	let r = glm.mat3.create();
-	let t = glm.vec3.create();
-
-	/* rotate */
-	glm_mat4_pick3t(mat, r);
-	glm_mat4_ins3(r, mat);
-
-	/* translate */
-	glm_mat3_mulv(r, mat[3], t);
-	glm_vec3_negate(t);
-	glm_vec3_copy(t, mat[3]);
-}
-
-export function printMat4(matrix) {
-	let result = '';
-	for (let col = 0; col < 4; col++) {
-		for (let row = 0; row < 4; row++) {
-			result += matrix[row + col * 4].toFixed(3) + ' ';
-		}
-		result += '\n';
-	}
-	console.log(result);
-}
-
-export function glmVec3RotateM4(m, v) {
+export function Vec3RotateM4(m, v) {
 	let x = glm.vec4.create();
 	let y = glm.vec4.create();
 	let z = glm.vec4.create();
@@ -133,45 +90,4 @@ export function glmVec3RotateM4(m, v) {
 
 	// Return the first three components of res as a vec3
 	return glm.vec3.fromValues(res[0], res[1], res[2]);
-}
-
-function mat4_pick3t(mat) {
-	let dest = glm.mat3.create();
-
-	dest[0] = mat[0];
-	dest[1] = mat[4];
-	dest[2] = mat[8];
-
-	dest[3] = mat[1];
-	dest[4] = mat[5];
-	dest[5] = mat[9];
-
-	dest[6] = mat[2];
-	dest[7] = mat[6];
-	dest[8] = mat[10];
-
-	return dest;
-}
-
-function mat4_ins3(mat, dest) {
-	dest = glm.mat4.clone(dest);
-
-	dest[0] = mat[0];
-	dest[4] = mat[1];
-	dest[8] = mat[2];
-
-	dest[1] = mat[3];
-	dest[5] = mat[4];
-	dest[9] = mat[5];
-
-	dest[2] = mat[6];
-	dest[6] = mat[7];
-	dest[10] = mat[8];
-
-	return dest;
-}
-
-export function mat_inv_r(mat){
-	const r = mat4_pick3t (mat);
-	return mat4_ins3(r, mat);
 }
