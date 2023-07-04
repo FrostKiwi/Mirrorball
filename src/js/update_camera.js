@@ -9,7 +9,7 @@ export default function update_camera() {
 
 	/* Camera rotation */
 	const cam_rot_x = glm.glMatrix.toRadian(ctx.cam.rot_deg[0]);
-	const cam_rot_y = glm.glMatrix.toRadian(ctx.cam.rot_deg[0]);
+	const cam_rot_y = glm.glMatrix.toRadian(ctx.cam.rot_deg[1] + 180);
 
 	/* Channel 1 rotation */
 	const ch1_rot_x = glm.glMatrix.toRadian(ctx.ch1.rot_deg[0]);
