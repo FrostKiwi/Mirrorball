@@ -70,7 +70,7 @@ function render() {
 	if (ctx.gui.project)
 		render_project();
 	if (ctx.gui.viz)
-		render_border(ctx.gui.crop, 16);
+		render_border(ctx.gui.crop, ctx.gui.viz_subdiv);
 }
 
 async function load_from_url(url) {

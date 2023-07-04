@@ -8,6 +8,7 @@ const COLOR_BOTLEFT = glm.vec3.fromValues(0, 1, 1);
 const COLOR_BOTRIGHT = glm.vec3.fromValues(1, 1, 0);
 
 function interp_border_pts(a, b, subdiv, aspect_ratio, color_a, color_b) {
+	subdiv = Math.trunc(subdiv);
 	/* Ensure there is a point in the middle by making subdiv odd */
 	if (subdiv % 2 == 1)
 		subdiv++;
@@ -16,15 +17,18 @@ function interp_border_pts(a, b, subdiv, aspect_ratio, color_a, color_b) {
 	const color = glm.vec3.create();
 
 	for (let x = 0; x < subdiv; ++x) {
-		const mult = (1.0 / subdiv) * x;
+		let mult = (1.0 / subdiv) * x;
 		glm.vec3.lerp(ray, a, b, mult);
 		glm.vec3.lerp(color, color_a, color_b, mult);
 		glm.vec3.normalize(ray, ray);
+
 		const divider = 2.0 * Math.SQRT2 * Math.sqrt(ray[2] + 1.0);
+		const scalar = 1 / Math.sin(glm.glMatrix.toRadian(ctx.ch1.fov_deg) / 4);
+
 		glm.vec2.scale(
 			uv_proj,
 			glm.vec2.fromValues(ray[0], ray[1]),
-			glm.glMatrix.toRadian(ctx.ch1.fov_deg)
+			scalar
 		);
 		glm.vec2.scale(uv_proj, uv_proj, 1 / divider);
 		glm.vec2.scale(uv_proj, uv_proj, 2);
@@ -86,7 +90,8 @@ export default function render_border(project_points, subdiv) {
 			ctx.cam.viewrays[19],
 		);
 
-		/* TODO: Should use instanced rendering */
+		/* TODO: Should use instanced rendering, but don't wanna check for
+		   instanced rendering extension compatability just now. */
 		/* Top */
 
 		interp_border_pts(ray_topleft, ray_topright,
@@ -110,7 +115,6 @@ export default function render_border(project_points, subdiv) {
 		interp_border_pts(ray_topleft, ray_botright,
 			subdiv * aspect * Math.SQRT2, aspect_ratio,
 			COLOR_TOPLEFT, COLOR_BOTRIGHT);
-
 	} else {
 
 	}

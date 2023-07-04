@@ -38,6 +38,7 @@ const ctx = {
 		crop: true,
 		project: false,
 		viz: false,
+		viz_subdiv: 16,
 		folder: {
 			viz: null,
 			crop: null,
