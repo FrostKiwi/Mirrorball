@@ -7,19 +7,25 @@ const COLOR_TOPRIGHT = glm.vec3.fromValues(1, 1, 0);
 const COLOR_BOTLEFT = glm.vec3.fromValues(0, 1, 1);
 const COLOR_BOTRIGHT = glm.vec3.fromValues(1, 1, 0);
 
-function interp_border_pts(a, b, subdiv, aspect_ratio, color_a, color_b) {
+function interp_border_pts(a, b, subdiv, aspect_ratio, color_a, color_b, diag) {
 	subdiv = Math.trunc(subdiv);
+
 	/* Ensure there is a point in the middle by making subdiv odd */
 	if (subdiv % 2 == 1)
 		subdiv++;
 	const ray = glm.vec3.create();
 	const uv_proj = glm.vec2.create();
 	const color = glm.vec3.create();
+	const white = glm.vec3.fromValues(1, 1, 1);
 
 	for (let x = 0; x < subdiv; ++x) {
 		let mult = (1.0 / subdiv) * x;
 		glm.vec3.lerp(ray, a, b, mult);
 		glm.vec3.lerp(color, color_a, color_b, mult);
+		/* Instead of barycentric coordinates for the color, just blend with
+		   white in the diagonal case */
+		if (diag)
+			glm.vec3.lerp(color, white, color, 2 * Math.abs(0.5 - mult));
 		glm.vec3.normalize(ray, ray);
 
 		const divider = 2.0 * Math.SQRT2 * Math.sqrt(ray[2] + 1.0);
@@ -92,29 +98,29 @@ export default function render_border(project_points, subdiv) {
 
 		/* TODO: Should use instanced rendering, but don't wanna check for
 		   instanced rendering extension compatability just now. */
+		
 		/* Top */
-
 		interp_border_pts(ray_topleft, ray_topright,
 			subdiv * aspect, aspect_ratio,
-			COLOR_TOPLEFT, COLOR_TOPRIGHT);
+			COLOR_TOPLEFT, COLOR_TOPRIGHT, false);
 		/* Right */
 		interp_border_pts(ray_topright, ray_botright, subdiv, aspect_ratio,
-			COLOR_TOPRIGHT, COLOR_BOTRIGHT);
+			COLOR_TOPRIGHT, COLOR_BOTRIGHT, false);
 		/* Bottom */
 		interp_border_pts(ray_botright, ray_botleft,
 			subdiv * aspect, aspect_ratio,
-			COLOR_BOTRIGHT, COLOR_BOTLEFT);
+			COLOR_BOTRIGHT, COLOR_BOTLEFT, false);
 		/* Left */
 		interp_border_pts(ray_botleft, ray_topleft, subdiv, aspect_ratio,
-			COLOR_BOTLEFT, COLOR_TOPLEFT);
+			COLOR_BOTLEFT, COLOR_TOPLEFT, false);
 		/* Diagonal, Bottom-left -> Top-right */
 		interp_border_pts(ray_botleft, ray_topright,
 			subdiv * aspect * Math.SQRT2, aspect_ratio,
-			COLOR_BOTLEFT, COLOR_TOPRIGHT);
+			COLOR_BOTLEFT, COLOR_TOPRIGHT, true);
 		/* Diagonal, Top-left -> Bottom-right */
 		interp_border_pts(ray_topleft, ray_botright,
 			subdiv * aspect * Math.SQRT2, aspect_ratio,
-			COLOR_TOPLEFT, COLOR_BOTRIGHT);
+			COLOR_TOPLEFT, COLOR_BOTRIGHT, true);
 	} else {
 
 	}
