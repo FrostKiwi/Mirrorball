@@ -1,52 +1,20 @@
 import * as glm from 'gl-matrix';
 import ctx from './state.js';
 
-function eulerZYX(x, y, z) {
-	const dest = glm.mat3.create();
-
-	const sx = Math.sin(x);
-	const cx = Math.cos(x);
-	const sy = Math.sin(y);
-	const cy = Math.cos(y);
-	const sz = Math.sin(z);
-	const cz = Math.cos(z);
-
-	const czsx = cz * sx;
-	const cxcz = cx * cz;
-	const sysz = sy * sz;
-
-	dest[0] = cy * cz;
-	dest[1] = cy * sz;
-	dest[2] = -sy;
-	dest[3] = czsx * sy - cx * sz;
-	dest[4] = cxcz + sx * sysz;
-	dest[5] = cy * sx;
-	dest[6] = cxcz * sy + sx * sz;
-	dest[7] = -czsx + cx * sysz;
-	dest[8] = cx * cy;
-
-	return dest;
-}
-
 export default function update_camera() {
-	let rot_matrix = glm.mat3.create();
-
-	const cam_rot_matrix = eulerZYX(
-		glm.glMatrix.toRadian(ctx.cam.rot_deg[0]),
-		glm.glMatrix.toRadian(ctx.cam.rot_deg[1] + 180),
-		glm.glMatrix.toRadian(ctx.cam.rot_deg[2])
-	);
-	const world_rot_matrix = eulerZYX(
-		glm.glMatrix.toRadian(ctx.ch1.rot_deg[0]),
-		glm.glMatrix.toRadian(ctx.ch1.rot_deg[1]),
-		glm.glMatrix.toRadian(ctx.ch1.rot_deg[2])
-	);
-	glm.mat3.mul(rot_matrix, rot_matrix, world_rot_matrix);
-	glm.mat3.mul(rot_matrix, rot_matrix, cam_rot_matrix);
-
 	/* Precalc some stuff */
 	const distance = -0.5 / Math.tan(ctx.cam.fov.cur / 2.0);
 	const half_aspect = 0.5 * ctx.canvas.width / ctx.canvas.height;
+	const zero = glm.vec3.fromValues(0, 0, 0);
+
+	/* Camera rotation */
+	const cam_rot_x = glm.glMatrix.toRadian(ctx.cam.rot_deg[0]);
+	const cam_rot_y = glm.glMatrix.toRadian(ctx.cam.rot_deg[0]);
+
+	/* Channel 1 rotation */
+	const ch1_rot_x = glm.glMatrix.toRadian(ctx.ch1.rot_deg[0]);
+	const ch1_rot_y = glm.glMatrix.toRadian(ctx.ch1.rot_deg[1]);
+	const ch1_rot_z = glm.glMatrix.toRadian(ctx.ch1.rot_deg[2]);
 
 	/* Update View-Rays */
 	for (let i = 0; i < 4 * 5; i += 5) {
@@ -56,7 +24,16 @@ export default function update_camera() {
 			distance
 		);
 
-		glm.vec3.transformMat3(vec, vec, rot_matrix);
+		/* Camera rotation */
+		glm.vec3.rotateX(vec, vec, zero, cam_rot_x);
+		glm.vec3.rotateY(vec, vec, zero, cam_rot_y);
+
+		/* World rotation */
+		glm.vec3.rotateX(vec, vec, zero, ch1_rot_x);
+		glm.vec3.rotateY(vec, vec, zero, ch1_rot_y);
+		glm.vec3.rotateZ(vec, vec, zero, ch1_rot_z);
+
+		/* Assign to the buffer */
 		ctx.cam.viewrays[i + 2] = vec[0];
 		ctx.cam.viewrays[i + 3] = vec[1];
 		ctx.cam.viewrays[i + 4] = vec[2];
