@@ -41,14 +41,16 @@ export default function init_shaders(ctx, gl) {
 		aspect_w: gl.getUniformLocation(ctx.shaders.crop.handle, "aspect_w"),
 		aspect_h: gl.getUniformLocation(ctx.shaders.crop.handle, "aspect_h"),
 		crop: gl.getUniformLocation(ctx.shaders.crop.handle, "crop"),
-		mask_toggle: gl.getUniformLocation(ctx.shaders.crop.handle, "mask_toggle"),
+		mask_toggle:
+			gl.getUniformLocation(ctx.shaders.crop.handle, "mask_toggle"),
 		bgvbo: createBufferWithData(gl, unitquadtex)
 	});
 
 	Object.assign(ctx.shaders.border, {
 		vtx: gl.getAttribLocation(ctx.shaders.border.handle, "vtx"),
 		scale: gl.getUniformLocation(ctx.shaders.border.handle, "scale"),
-		transform: gl.getUniformLocation(ctx.shaders.border.handle, "transform"),
+		transform:
+			gl.getUniformLocation(ctx.shaders.border.handle, "transform"),
 		color: gl.getUniformLocation(ctx.shaders.border.handle, "color"),
 		quadvbo: createBufferWithData(gl, unitquad_small)
 	});

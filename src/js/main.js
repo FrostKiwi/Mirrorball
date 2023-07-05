@@ -110,15 +110,19 @@ function media_setup(bitmap, crop) {
 	ctx.gl.deleteTexture(ctx.ch1.tex);
 	ctx.ch1.tex = ctx.gl.createTexture();
 	ctx.gl.bindTexture(ctx.gl.TEXTURE_2D, ctx.ch1.tex);
-	ctx.gl.texParameteri(ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_WRAP_S, ctx.gl.CLAMP_TO_EDGE);
-	ctx.gl.texParameteri(ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_WRAP_T, ctx.gl.CLAMP_TO_EDGE);
-	ctx.gl.texParameteri(ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_MIN_FILTER, ctx.gl.LINEAR);
-	ctx.gl.texParameteri(ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_MAG_FILTER, ctx.gl.LINEAR);
+	ctx.gl.texParameteri(
+		ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_WRAP_S, ctx.gl.CLAMP_TO_EDGE);
+	ctx.gl.texParameteri(
+		ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_WRAP_T, ctx.gl.CLAMP_TO_EDGE);
+	ctx.gl.texParameteri(
+		ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_MIN_FILTER, ctx.gl.LINEAR);
+	ctx.gl.texParameteri(
+		ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_MAG_FILTER, ctx.gl.LINEAR);
 
 	ctx.ch1.w = bitmap.width;
 	ctx.ch1.h = bitmap.height;
-	ctx.gl.texImage2D(ctx.gl.TEXTURE_2D, 0, ctx.gl.RGBA, ctx.gl.RGBA, ctx.gl.UNSIGNED_BYTE,
-		bitmap);
+	ctx.gl.texImage2D(ctx.gl.TEXTURE_2D, 0, ctx.gl.RGBA, ctx.gl.RGBA,
+		ctx.gl.UNSIGNED_BYTE, bitmap);
 	bitmap.close();
 	ctx.dom.spinner.style.display = 'none';
 	ctx.dom.statusMSG.innerText = "\u00A0";

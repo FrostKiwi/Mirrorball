@@ -3,12 +3,14 @@ import ctx from './state.js';
 
 export default function update_camera() {
 	/* Precalc some stuff */
-	const distance = -0.5 / Math.tan(ctx.cam.fov.cur / 2.0);
+	const distance =
+		-0.5 / Math.tan(glm.glMatrix.toRadian(ctx.cam.fov.cur) / 2);
 	const half_aspect = 0.5 * ctx.canvas.width / ctx.canvas.height;
 	const zero = glm.vec3.fromValues(0, 0, 0);
 
 	/* Camera rotation */
 	const cam_rot_x = glm.glMatrix.toRadian(ctx.cam.rot_deg[0]);
+	/* Flip 180 degrees to show the camera at zero rotation */
 	const cam_rot_y = glm.glMatrix.toRadian(ctx.cam.rot_deg[1] + 180);
 
 	/* Channel 1 rotation */

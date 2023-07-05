@@ -15,17 +15,17 @@ function interp_border_pts(a, b, subdiv, aspect_ratio, color_a, color_b, diag) {
 		subdiv++;
 	const ray = glm.vec3.create();
 	const uv_proj = glm.vec2.create();
-	const color = glm.vec3.create();
+	const col = glm.vec3.create();
 	const white = glm.vec3.fromValues(1, 1, 1);
 
 	for (let x = 0; x < subdiv; ++x) {
 		let mult = (1.0 / subdiv) * x;
 		glm.vec3.lerp(ray, a, b, mult);
-		glm.vec3.lerp(color, color_a, color_b, mult);
+		glm.vec3.lerp(col, color_a, color_b, mult);
 		/* Instead of barycentric coordinates for the color, just blend with
 		   white in the diagonal case */
 		if (diag)
-			glm.vec3.lerp(color, white, color, 2 * Math.abs(0.5 - mult));
+			glm.vec3.lerp(col, white, col, 2 * Math.abs(0.5 - mult));
 		glm.vec3.normalize(ray, ray);
 
 		const divider = 2.0 * Math.SQRT2 * Math.sqrt(ray[2] + 1.0);
@@ -41,7 +41,7 @@ function interp_border_pts(a, b, subdiv, aspect_ratio, color_a, color_b, diag) {
 		glm.vec2.mul(uv_proj, uv_proj, aspect_ratio);
 
 		ctx.gl.uniform2f(ctx.shaders.border.transform, uv_proj[0], uv_proj[1]);
-		ctx.gl.uniform3f(ctx.shaders.border.color, color[0], color[1], color[2]);
+		ctx.gl.uniform3f(ctx.shaders.border.color, col[0], col[1], col[2]);
 		/* Draw small quad */
 		ctx.gl.drawArrays(ctx.gl.TRIANGLE_FAN, 0, 4);
 	}
@@ -55,21 +55,21 @@ function interp_border_pts_smp(a, b, subdiv, color_a, color_b, diag) {
 	if (subdiv % 2 == 1)
 		subdiv++;
 	const uv_proj = glm.vec2.create();
-	const color = glm.vec3.create();
+	const col = glm.vec3.create();
 	const white = glm.vec3.fromValues(1, 1, 1);
 
 	for (let x = 0; x < subdiv; ++x) {
 		let mult = (1.0 / subdiv) * x;
-		glm.vec3.lerp(color, color_a, color_b, mult);
+		glm.vec3.lerp(col, color_a, color_b, mult);
 		/* Instead of barycentric coordinates for the color, just blend with
 		   white in the diagonal case */
 		if (diag)
-			glm.vec3.lerp(color, white, color, 2 * Math.abs(0.5 - mult));
+			glm.vec3.lerp(col, white, col, 2 * Math.abs(0.5 - mult));
 
 		glm.vec2.lerp(uv_proj, a, b, mult);
 
 		ctx.gl.uniform2f(ctx.shaders.border.transform, uv_proj[0], uv_proj[1]);
-		ctx.gl.uniform3f(ctx.shaders.border.color, color[0], color[1], color[2]);
+		ctx.gl.uniform3f(ctx.shaders.border.color, col[0], col[1], col[2]);
 		/* Draw small quad */
 		ctx.gl.drawArrays(ctx.gl.TRIANGLE_FAN, 0, 4);
 	}
@@ -128,16 +128,14 @@ export default function render_border(project_points, subdiv) {
 		   instanced rendering extension compatability just now. */
 
 		/* Top */
-		interp_border_pts(ray_topleft, ray_topright,
-			subdiv * aspect, aspect_ratio,
-			COLOR_TOPLEFT, COLOR_TOPRIGHT, false);
+		interp_border_pts(ray_topleft, ray_topright, subdiv * aspect,
+			aspect_ratio, COLOR_TOPLEFT, COLOR_TOPRIGHT, false);
 		/* Right */
 		interp_border_pts(ray_topright, ray_botright, subdiv, aspect_ratio,
 			COLOR_TOPRIGHT, COLOR_BOTRIGHT, false);
 		/* Bottom */
-		interp_border_pts(ray_botright, ray_botleft,
-			subdiv * aspect, aspect_ratio,
-			COLOR_BOTRIGHT, COLOR_BOTLEFT, false);
+		interp_border_pts(ray_botright, ray_botleft, subdiv * aspect,
+			aspect_ratio, COLOR_BOTRIGHT, COLOR_BOTLEFT, false);
 		/* Left */
 		interp_border_pts(ray_botleft, ray_topleft, subdiv, aspect_ratio,
 			COLOR_BOTLEFT, COLOR_TOPLEFT, false);

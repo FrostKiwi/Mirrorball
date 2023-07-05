@@ -20,7 +20,8 @@ export default function render_project() {
 	ctx.gl.enableVertexAttribArray(ctx.shaders.project.viewray);
 
 	ctx.gl.bindBuffer(ctx.gl.ARRAY_BUFFER, ctx.shaders.project.rayvbo);
-	ctx.gl.bufferData(ctx.gl.ARRAY_BUFFER, ctx.cam.viewrays, ctx.gl.DYNAMIC_DRAW);
+	ctx.gl.bufferData(ctx.gl.ARRAY_BUFFER, ctx.cam.viewrays,
+		ctx.gl.DYNAMIC_DRAW);
 
 	ctx.gl.vertexAttribPointer(
 		ctx.shaders.project.pos, 2, ctx.gl.FLOAT, false,

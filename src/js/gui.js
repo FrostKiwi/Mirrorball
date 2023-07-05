@@ -18,6 +18,10 @@ export default function init_gui() {
 
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera');
 	ctx.gui.folder.camera.add(
+		ctx.cam.fov, 'cur', ctx.cam.fov.min, ctx.cam.fov.max, 1).name(
+			"FOV / Zoom [in °]"
+		);
+	ctx.gui.folder.camera.add(
 		ctx.cam.rot_deg, '0', -90, 90).name("Pitch [in °]");
 	ctx.gui.folder.camera.add(
 		ctx.cam.rot_deg, '1', -180, 180).name("Yaw [in °]");
@@ -48,12 +52,14 @@ export default function init_gui() {
 	ctx.gui.controller.right =
 		ctx.gui.folder.crop.add(ctx.ch1.crop, 'right', 0, 1, 1);
 	ctx.gui.controller.right.name("Right [px]");
+	ctx.gui.folder.crop.add(ctx.gui, 'crop_negative').onChange(
+		toggle_crop_negative).name("Allow negative");
 
 	ctx.gui.folder.settings = ctx.gui.handle.addFolder('Settings').close();
 	ctx.gui.folder.settings.add(ctx.gui, 'viz_subdiv', 1, 256, 1).name(
 		"Visualization subdivisions"
 	);
-	ctx.gui.folder.settings.add(ctx.gui, 'showStats').onChange(toggleStats);
+	ctx.gui.folder.settings.add(ctx.gui, 'crop_negative').onChange(toggleStats);
 	/* Trigger the function to apply the defaults stats value */
 	/* Commented out during DEBUG! */
 	/* toggleStats(); */
@@ -61,4 +67,22 @@ export default function init_gui() {
 
 function toggleStats(value) {
 	ctx.stats.dom.style.display = value ? 'block' : 'none';
+}
+
+function toggle_crop_negative(value) {
+	if (value) {
+		ctx.gui.controller.left.min(ctx.ch1.w * -2);
+		ctx.gui.controller.right.min(ctx.ch1.w * -2);
+		ctx.gui.controller.top.min(ctx.ch1.h * -2);
+		ctx.gui.controller.bot.min(ctx.ch1.h * -2);
+	} else {
+		ctx.gui.controller.left.min(0);
+		ctx.gui.controller.right.min(0);
+		ctx.gui.controller.top.min(0);
+		ctx.gui.controller.bot.min(0);
+	}
+	ctx.gui.controller.left.updateDisplay();
+	ctx.gui.controller.right.updateDisplay();
+	ctx.gui.controller.top.updateDisplay();
+	ctx.gui.controller.bot.updateDisplay();
 }

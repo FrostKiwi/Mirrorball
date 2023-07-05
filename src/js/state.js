@@ -36,6 +36,7 @@ const ctx = {
 		menu: toggleMenu,
 		controller: {},
 		crop: true,
+		crop_negative: false,
 		project: false,
 		viz: false,
 		viz_subdiv: 16,
@@ -51,9 +52,9 @@ const ctx = {
 	cam: {
 		rot_deg: glm.vec3.create(),
 		fov: {
-			min: glm.glMatrix.toRadian(10),
-			max: glm.glMatrix.toRadian(140),
-			cur: glm.glMatrix.toRadian(100)
+			min: 10,
+			max: 140,
+			cur: 100
 		},
 		viewrays: new Float32Array([
 			- 1.0, 1.0, 0.0, 0.0, 0.0,
