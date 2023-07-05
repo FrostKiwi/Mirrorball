@@ -5,7 +5,7 @@ import init_shaders from './init_shaders.js'
 import render_crop from './render_crop.js'
 import render_project from './render_projection.js'
 import update_camera from './update_camera.js'
-import render_border from './render_border.js'
+import { key_input, setup_input } from './input.js'
 
 ctx.canvas = document.querySelector("canvas");
 /* Since we draw over the whole screen, no need to flush */
@@ -35,6 +35,8 @@ function init() {
 	const resizeObserver = new ResizeObserver(onResize);
 	resizeObserver.observe(ctx.canvas, { box: 'content-box' });
 
+	/* Input handlers */
+
 	init_gui();
 	init_shaders(ctx, ctx.gl);
 	/* Add the stats */
@@ -48,12 +50,15 @@ function init() {
 
 	/* DEBUG */
 	ctx.gui.menu();
+
+	setup_input();
 }
 
-function animate() {
+function animate(time) {
 	requestAnimationFrame(animate);
 	resizeCanvasToDisplaySize();
 
+	key_input(time);
 	render();
 
 	ctx.stats.update();
