@@ -64,6 +64,7 @@ function animate(time) {
 
 async function load_from_url(url) {
 	ctx.dom.spinner.style.display = 'block';
+	ctx.gui.handle.hide();
 	try {
 		ctx.dom.statusMSG.innerText = "Requesting " + url;
 		const response = await fetch(url);
@@ -115,6 +116,7 @@ function media_setup(bitmap, crop) {
 	ctx.gl.texImage2D(ctx.gl.TEXTURE_2D, 0, ctx.gl.RGBA, ctx.gl.RGBA,
 		ctx.gl.UNSIGNED_BYTE, bitmap);
 	bitmap.close();
+	ctx.gui.handle.show();
 	ctx.dom.spinner.style.display = 'none';
 	ctx.dom.statusMSG.innerText = "\u00A0";
 	ctx.dom.filesize.innerText = "\u00A0";
