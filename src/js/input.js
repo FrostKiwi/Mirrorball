@@ -17,6 +17,14 @@ window.addEventListener('blur', function () {
 
 let lastTime = 0;
 
+function update_degrees(){
+	if (ctx.cam.rot_deg[1] > 180) ctx.cam.rot_deg[1] -= 360;
+	if (ctx.cam.rot_deg[1] < -180) ctx.cam.rot_deg[1] += 360;
+	ctx.gui.controller.pitch.updateDisplay();
+	ctx.gui.controller.yaw.updateDisplay();
+	ctx.gui.controller.cam_fov.updateDisplay();
+}
+
 export function key_input(time) {
 	const rotationSpeed = 0.15;
 	const zoomSpeed = 0.2;
@@ -45,6 +53,7 @@ export function key_input(time) {
 		ctx.cam.fov.cur = ctx.cam.fov.min;
 	if (ctx.cam.rot_deg[0] > 90) ctx.cam.rot_deg[0] = 90;
 	if (ctx.cam.rot_deg[0] < -90) ctx.cam.rot_deg[0] = -90;
+	update_degrees();
 }
 
 export function setup_input() {
@@ -52,7 +61,7 @@ export function setup_input() {
 	let lastMouse = null;
 	const mouseSpeed = 0.2;
 	const fingerSpeed = 0.2;
-	const zoomSpeed = 0.2;
+	const wheelSpeed = 0.05;
 
 	/* Touch */
 	ctx.canvas.addEventListener('touchstart', e => {
@@ -71,7 +80,8 @@ export function setup_input() {
 			ctx.cam.rot_deg[0] += dy;
 			ctx.cam.rot_deg[1] += dx;
 			lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-		} else if (lastTouch && e.touches.length === 2) {
+		}
+		if (lastTouch && e.touches.length === 2) {
 			const distance = Math.hypot(
 				e.touches[0].clientX - e.touches[1].clientX,
 				e.touches[0].clientY - e.touches[1].clientY
@@ -83,6 +93,7 @@ export function setup_input() {
 			}
 			lastTouch.distance = distance;
 		}
+		update_degrees();
 	}, { passive: false });
 
 	ctx.canvas.addEventListener('touchend', e => {
@@ -107,6 +118,7 @@ export function setup_input() {
 			ctx.cam.rot_deg[1] += dx;
 			lastMouse = { x: e.clientX, y: e.clientY };
 		}
+		update_degrees();
 	}, false);
 
 	ctx.canvas.addEventListener('mouseup', () => {
@@ -117,8 +129,9 @@ export function setup_input() {
 		let mul = (ctx.cam.fov.cur - ctx.cam.fov.min) /
 			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
 
-		const dd = e.deltaY * mul * zoomSpeed;
+		const dd = e.deltaY * mul * wheelSpeed;
 		ctx.cam.fov.cur = Math.max(ctx.cam.fov.min,
 			Math.min(ctx.cam.fov.max, ctx.cam.fov.cur + dd));
+		update_degrees();
 	}, false);
 }

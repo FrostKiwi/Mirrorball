@@ -45,6 +45,7 @@ const ctx = {
 			viz: null,
 			crop: null,
 			world: null,
+			setup: null,
 			camera: null,
 			settings: null
 		},
@@ -82,14 +83,16 @@ function toggleMenu() {
 }
 
 function toggle_fullscreen() {
-	const elem = document.documentElement;
-	if (elem.requestFullscreen) {
-		elem.requestFullscreen();
-	} else if (elem.mozRequestFullScreen) { /* Firefox */
-		elem.mozRequestFullScreen();
-	} else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-		elem.webkitRequestFullscreen();
-	} else if (elem.msRequestFullscreen) { /* IE/Edge */
-		elem.msRequestFullscreen();
+	if (document.fullscreenElement || document.webkitFullscreenElement) {
+		if (document.exitFullscreen)
+			document.exitFullscreen();
+		else if (document.webkitExitFullscreen)
+			document.webkitExitFullscreen();
+	} else {
+		const elem = document.documentElement;
+		if (elem.requestFullscreen)
+			elem.requestFullscreen();
+		else if (elem.webkitRequestFullscreen)
+			elem.webkitRequestFullscreen();
 	}
 }
