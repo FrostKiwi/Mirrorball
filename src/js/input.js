@@ -55,10 +55,12 @@ export function setup_input() {
 
 	/* Touch */
 	ctx.canvas.addEventListener('touchstart', e => {
+		e.preventDefault();
 		lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-	}, false);
+	}, { passive: false });
 
 	ctx.canvas.addEventListener('touchmove', e => {
+		e.preventDefault();
 		let mul = (ctx.cam.fov.cur - ctx.cam.fov.min) /
 			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
 
@@ -80,11 +82,13 @@ export function setup_input() {
 			}
 			lastTouch.distance = distance;
 		}
-	}, false);
+	}, { passive: false });
 
-	ctx.canvas.addEventListener('touchend', () => {
+	ctx.canvas.addEventListener('touchend', e => {
+		e.preventDefault();
 		lastTouch = null;
-	}, false);
+	}, { passive: false });
+
 
 	/* Mouse */
 	ctx.canvas.addEventListener('mousedown', e => {

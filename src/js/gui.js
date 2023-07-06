@@ -13,8 +13,8 @@ export default function init_gui() {
 
 	/* Vizualizations */
 	ctx.gui.folder.viz = ctx.gui.handle.addFolder('Vizualizations').close();
-	ctx.gui.folder.viz.add(ctx.shaders.crop, 'mask');
-	ctx.gui.folder.viz.add(ctx.gui, 'viz');
+	ctx.gui.folder.viz.add(ctx.shaders.crop, 'mask').name("Circle Mask");
+	ctx.gui.folder.viz.add(ctx.gui, 'viz').name("Project screen border");
 
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera');
 	ctx.gui.folder.camera.add(

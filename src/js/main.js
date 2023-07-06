@@ -5,6 +5,7 @@ import init_shaders from './init_shaders.js'
 import render_crop from './render_crop.js'
 import render_project from './render_projection.js'
 import update_camera from './update_camera.js'
+import render_border from './render_border.js'
 import { key_input, setup_input } from './input.js'
 
 ctx.canvas = document.querySelector("canvas");
@@ -97,6 +98,8 @@ async function load_from_url(url) {
 			left: 45,
 			right: 63
 		}
+		ctx.ch1.fov_deg = 342;
+		ctx.gui.controller.img_fov.updateDisplay();
 
 		media_setup(bitmap, crop);
 
