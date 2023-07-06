@@ -9,27 +9,36 @@ window.addEventListener('keyup', function (e) {
 	keyState[e.code] = false;
 }, true);
 
+window.addEventListener('blur', function () {
+	for (let key in keyState) {
+		keyState[key] = false;
+	}
+});
+
 let lastTime = 0;
 
 export function key_input(time) {
-	const rotationSpeed = 0.1;
-	const zoomSpeed = 0.05;
+	const rotationSpeed = 0.15;
+	const zoomSpeed = 0.2;
 
 	let deltaTime = time - lastTime;
 	lastTime = time;
 
+	let mul = (ctx.cam.fov.cur - ctx.cam.fov.min) /
+		(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
+
 	if (keyState['ArrowUp'] || keyState['KeyW']) ctx.cam.rot_deg[0] +=
-		rotationSpeed * deltaTime;
+		rotationSpeed * mul * deltaTime;
 	if (keyState['ArrowDown'] || keyState['KeyS']) ctx.cam.rot_deg[0] -=
-		rotationSpeed * deltaTime;
+		rotationSpeed * mul * deltaTime;
 	if (keyState['ArrowLeft'] || keyState['KeyA']) ctx.cam.rot_deg[1] +=
-		rotationSpeed * deltaTime;
+		rotationSpeed * mul * deltaTime;
 	if (keyState['ArrowRight'] || keyState['KeyD']) ctx.cam.rot_deg[1] -=
-		rotationSpeed * deltaTime;
+		rotationSpeed * mul * deltaTime;
 
 	/* Limits */
-	if (keyState['KeyE']) ctx.cam.fov.cur -= zoomSpeed * deltaTime;
-	if (keyState['KeyQ']) ctx.cam.fov.cur += zoomSpeed * deltaTime;
+	if (keyState['KeyE']) ctx.cam.fov.cur -= mul * zoomSpeed * deltaTime;
+	if (keyState['KeyQ']) ctx.cam.fov.cur += mul * zoomSpeed * deltaTime;
 	if (ctx.cam.fov.cur > ctx.cam.fov.max)
 		ctx.cam.fov.cur = ctx.cam.fov.max;
 	if (ctx.cam.fov.cur < ctx.cam.fov.min)
@@ -41,8 +50,8 @@ export function key_input(time) {
 export function setup_input() {
 	let lastTouch = null;
 	let lastMouse = null;
-	const rotateSpeed = 0.2;
-	const zoomSpeed = 0.1;
+	const rotateSpeed = 0.1;
+	const zoomSpeed = 0.2;
 
 	/* Touch */
 	ctx.canvas.addEventListener('touchstart', e => {
@@ -50,9 +59,12 @@ export function setup_input() {
 	}, false);
 
 	ctx.canvas.addEventListener('touchmove', e => {
+		let mul = (ctx.cam.fov.cur - ctx.cam.fov.min) /
+			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
+
 		if (lastTouch && e.touches.length === 1) {
-			const dx = (e.touches[0].clientX - lastTouch.x) * rotateSpeed;
-			const dy = (e.touches[0].clientY - lastTouch.y) * rotateSpeed;
+			const dx = (e.touches[0].clientX - lastTouch.x) * mul * rotateSpeed;
+			const dy = (e.touches[0].clientY - lastTouch.y) * mul * rotateSpeed;
 			ctx.cam.rot_deg[0] += dy;
 			ctx.cam.rot_deg[1] += dx;
 			lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
@@ -62,7 +74,7 @@ export function setup_input() {
 				e.touches[0].clientY - e.touches[1].clientY
 			);
 			if (lastTouch.distance) {
-				const dd = (distance - lastTouch.distance) * zoomSpeed;
+				const dd = (distance - lastTouch.distance) * mul * zoomSpeed;
 				ctx.cam.fov.cur = Math.max(ctx.cam.fov.min,
 					Math.min(ctx.cam.fov.max, ctx.cam.fov.cur - dd));
 			}
@@ -80,9 +92,12 @@ export function setup_input() {
 	}, false);
 
 	ctx.canvas.addEventListener('mousemove', e => {
+		let mul = (ctx.cam.fov.cur - ctx.cam.fov.min) /
+			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
+
 		if (lastMouse && e.buttons === 1) {
-			const dx = (e.clientX - lastMouse.x) * rotateSpeed;
-			const dy = (e.clientY - lastMouse.y) * rotateSpeed;
+			const dx = (e.clientX - lastMouse.x) * mul * rotateSpeed;
+			const dy = (e.clientY - lastMouse.y) * mul * rotateSpeed;
 			ctx.cam.rot_deg[0] += dy;
 			ctx.cam.rot_deg[1] += dx;
 			lastMouse = { x: e.clientX, y: e.clientY };
@@ -94,7 +109,10 @@ export function setup_input() {
 	}, false);
 
 	ctx.canvas.addEventListener('wheel', e => {
-		const dd = e.deltaY * zoomSpeed;
+		let mul = (ctx.cam.fov.cur - ctx.cam.fov.min) /
+			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
+
+		const dd = e.deltaY * mul * zoomSpeed;
 		ctx.cam.fov.cur = Math.max(ctx.cam.fov.min,
 			Math.min(ctx.cam.fov.max, ctx.cam.fov.cur + dd));
 	}, false);
