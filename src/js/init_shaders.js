@@ -41,6 +41,7 @@ export default function init_shaders(ctx, gl) {
 		aspect_w: gl.getUniformLocation(ctx.shaders.crop.handle, "aspect_w"),
 		aspect_h: gl.getUniformLocation(ctx.shaders.crop.handle, "aspect_h"),
 		crop: gl.getUniformLocation(ctx.shaders.crop.handle, "crop"),
+		split: gl.getUniformLocation(ctx.shaders.crop.handle, "split"),
 		mask_toggle:
 			gl.getUniformLocation(ctx.shaders.crop.handle, "mask_toggle"),
 		bgvbo: createBufferWithData(gl, unitquadtex)
@@ -52,6 +53,7 @@ export default function init_shaders(ctx, gl) {
 		transform:
 			gl.getUniformLocation(ctx.shaders.border.handle, "transform"),
 		color: gl.getUniformLocation(ctx.shaders.border.handle, "color"),
+		split: gl.getUniformLocation(ctx.shaders.border.handle, "split"),
 		quadvbo: createBufferWithData(gl, unitquad_small)
 	});
 
@@ -60,6 +62,7 @@ export default function init_shaders(ctx, gl) {
 		viewray: gl.getAttribLocation(ctx.shaders.project.handle, "rayvtx"),
 		scaler: gl.getUniformLocation(ctx.shaders.project.handle, "scalar"),
 		crop: gl.getUniformLocation(ctx.shaders.project.handle, "crop"),
+		split: gl.getUniformLocation(ctx.shaders.project.handle, "split"),
 		rayvbo: gl.createBuffer()
 	});
 }

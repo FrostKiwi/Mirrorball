@@ -50,7 +50,7 @@ export function key_input(time) {
 export function setup_input() {
 	let lastTouch = null;
 	let lastMouse = null;
-	const mouseSpeed = 0.1;
+	const mouseSpeed = 0.2;
 	const fingerSpeed = 0.2;
 	const zoomSpeed = 0.2;
 

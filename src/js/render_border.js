@@ -75,8 +75,8 @@ function interp_border_pts_smp(a, b, subdiv, color_a, color_b, diag) {
 	}
 }
 
-export default function render_border(project_points, subdiv) {
-	const aspect = ctx.canvas.width / ctx.canvas.height;
+export default function render_border(project_points, subdiv, width, height) {
+	const aspect = width / height;
 
 	ctx.gl.useProgram(ctx.shaders.border.handle);
 
@@ -90,18 +90,26 @@ export default function render_border(project_points, subdiv) {
 
 	const aspect_ratio = glm.vec2.fromValues(1, 1);
 
-	if (postcrop_h / postcrop_w > ctx.canvas.height / ctx.canvas.width)
+	if (postcrop_h / postcrop_w > height / width)
 		aspect_ratio[0] =
-			(postcrop_w / postcrop_h) / (ctx.canvas.width / ctx.canvas.height);
+			(postcrop_w / postcrop_h) / (width / height);
 	else
 		aspect_ratio[1] =
-			(postcrop_h / postcrop_w) / (ctx.canvas.height / ctx.canvas.width);
+			(postcrop_h / postcrop_w) / (height / width);
 
 	ctx.gl.vertexAttribPointer(ctx.shaders.border.vtx, 2, ctx.gl.FLOAT, false,
 		2 * Float32Array.BYTES_PER_ELEMENT, 0);
 	ctx.gl.uniform2f(ctx.shaders.border.scale,
 		POINT_SIZE / aspect, POINT_SIZE);
 	if (project_points) {
+		/* Split-Screen rendering */
+		if (width < ctx.canvas.width)
+			ctx.gl.uniform4f(ctx.shaders.border.split, -0.5, 0, 0.5, 1);
+		else if (height < ctx.canvas.height)
+			ctx.gl.uniform4f(ctx.shaders.border.split, 0, 0.5, 1, 0.5);
+		else
+			ctx.gl.uniform4f(ctx.shaders.border.split, 0, 0, 1, 1);
+
 		/* Each corner gets one viewray */
 		const ray_topleft = glm.vec3.fromValues(
 			ctx.cam.viewrays[2],
@@ -148,6 +156,14 @@ export default function render_border(project_points, subdiv) {
 			subdiv * aspect * Math.SQRT2, aspect_ratio,
 			COLOR_TOPLEFT, COLOR_BOTRIGHT, true);
 	} else {
+		/* Split-Screen rendering */
+		if (width < ctx.canvas.width)
+			ctx.gl.uniform4f(ctx.shaders.border.split, 0.5, 0, 0.5, 1);
+		else if (height < ctx.canvas.height)
+			ctx.gl.uniform4f(ctx.shaders.border.split, 0, -0.5, 1, 0.5);
+		else
+			ctx.gl.uniform4f(ctx.shaders.border.split, 0, 0, 1, 1);
+
 		const topleft = glm.vec2.fromValues(-1, 1);
 		const topright = glm.vec2.fromValues(1, 1);
 		const botright = glm.vec2.fromValues(1, -1);

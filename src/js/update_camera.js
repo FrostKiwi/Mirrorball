@@ -1,11 +1,11 @@
 import * as glm from 'gl-matrix';
 import ctx from './state.js';
 
-export default function update_camera() {
+export default function update_camera(width, height) {
 	/* Precalc some stuff */
 	const distance =
 		-0.5 / Math.tan(glm.glMatrix.toRadian(ctx.cam.fov.cur) / 2);
-	const half_aspect = 0.5 * ctx.canvas.width / ctx.canvas.height;
+	const half_aspect = 0.5 * width / height;
 	const zero = glm.vec3.fromValues(0, 0, 0);
 
 	/* Camera rotation */

@@ -1,7 +1,7 @@
 import ctx from './state.js';
 import * as glm from 'gl-matrix';
 
-export default function render_project() {
+export default function render_project(width, height) {
 	const crop = {
 		x: (1 / ctx.ch1.w) *
 			(ctx.ch1.w / 2 + ctx.ch1.crop.left / 2 - ctx.ch1.crop.right / 2),
@@ -14,6 +14,15 @@ export default function render_project() {
 	}
 
 	ctx.gl.useProgram(ctx.shaders.project.handle);
+
+	/* Split-screen rendering */
+	if(width < ctx.canvas.width)
+		ctx.gl.uniform4f(ctx.shaders.project.split, 0.5, 0, 0.5, 1);
+	else if(height < ctx.canvas.height)
+		ctx.gl.uniform4f(ctx.shaders.project.split, 0, -0.5, 1, 0.5);
+	else
+		ctx.gl.uniform4f(ctx.shaders.project.split, 0, 0, 1, 1);
+
 	ctx.gl.uniform4f(ctx.shaders.project.crop, crop.x, crop.y, crop.w, crop.h);
 
 	ctx.gl.enableVertexAttribArray(ctx.shaders.project.pos);

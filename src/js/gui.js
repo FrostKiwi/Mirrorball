@@ -5,7 +5,6 @@ export default function init_gui() {
 	ctx.gui.handle = new GUI();
 	ctx.gui.handle.title("Controls (Show / Hide)");
 	ctx.gui.handle.add(ctx.gui, 'menu').name("Toggle Main Menu");
-	ctx.gui.handle.add(ctx.gui, 'fullscreen').name("Fullscreen");
 	ctx.gui.handle.add(ctx.gui, 'crop').name("Original");
 	ctx.gui.handle.add(ctx.gui, 'project').name("Projection");
 	ctx.gui.controller.img_fov =
@@ -57,11 +56,12 @@ export default function init_gui() {
 		toggle_crop_negative).name("Allow negative");
 
 	ctx.gui.folder.settings = ctx.gui.handle.addFolder('Settings').close();
+	ctx.gui.folder.settings.add(ctx.gui, 'fullscreen').name("Fullscreen");
 	ctx.gui.folder.settings.add(ctx.gui, 'viz_subdiv', 1, 256, 1).name(
 		"Visualization subdivisions"
 	);
 	ctx.gui.folder.settings.add(ctx.gui, 'showStats').name(
-		"Show stats"
+		"Show performance"
 	).onChange(toggleStats);
 	/* Trigger the function to apply the defaults stats value */
 	/* Commented out during DEBUG! */
