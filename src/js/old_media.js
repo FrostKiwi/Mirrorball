@@ -1,3 +1,5 @@
+/* Old WASM Media Handler. To be removed after completing the port */
+
 function webcams_get() {
 	navigator.mediaDevices.enumerateDevices().then(devices => {
 		devices.forEach(device => {
