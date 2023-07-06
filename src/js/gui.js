@@ -62,14 +62,22 @@ export default function init_gui() {
 	);
 
 	ctx.gui.folder.settings = ctx.gui.handle.addFolder('Settings').close();
-	ctx.gui.folder.settings.add(ctx.gui, 'fullscreen').name("Fullscreen");
+
+	const elem = document.documentElement;
+	if (elem.requestFullscreen || elem.webkitRequestFullscreen)
+		ctx.gui.folder.settings.add(ctx.gui, 'fullscreen').name("Fullscreen");
+	else
+		ctx.gui.folder.settings.add(ctx.gui, 'fullscreen').name(
+			"Fullscreen not supported by browser"
+		).disable();
+
 	ctx.gui.folder.settings.add(ctx.gui, 'viz_subdiv', 1, 256, 1).name(
 		"Visualization subdivisions"
 	);
 	ctx.gui.folder.settings.add(ctx.gui, 'showStats').name(
 		"Show performance"
 	).onChange(toggleStats);
-	
+
 	/* Trigger the function to apply the defaults stats value */
 	toggleStats();
 }
