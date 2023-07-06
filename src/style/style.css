@@ -11,6 +11,9 @@ body {
 canvas {
 	width: 100vw;
 	height: 100vh;
+	/* Override if supported */
+	width: 100svw;
+	height: 100svh;
 	display: block;
 }
 

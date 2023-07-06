@@ -69,9 +69,9 @@ export default function init_gui() {
 	ctx.gui.folder.settings.add(ctx.gui, 'showStats').name(
 		"Show performance"
 	).onChange(toggleStats);
+	
 	/* Trigger the function to apply the defaults stats value */
-	/* Commented out during DEBUG! */
-	/* toggleStats(); */
+	toggleStats();
 }
 
 function toggleStats(value) {

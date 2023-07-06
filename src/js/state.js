@@ -37,8 +37,8 @@ const ctx = {
 		fullscreen: toggle_fullscreen,
 		controller: {},
 		crop: true,
+		project: true,
 		crop_negative: false,
-		project: false,
 		viz: false,
 		viz_subdiv: 16,
 		folder: {

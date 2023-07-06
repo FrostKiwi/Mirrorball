@@ -22,6 +22,7 @@ export default function render_crop(width, height){
 		ctx.gl.uniform4f(ctx.shaders.crop.split, 0, 0.5, 1, 0.5);
 	else
 		ctx.gl.uniform4f(ctx.shaders.crop.split, 0, 0, 1, 1);
+		
 	ctx.gl.uniform4f(ctx.shaders.crop.crop, crop.x, crop.y, crop.w, crop.h);
 	ctx.gl.uniform1i(ctx.shaders.crop.mask_toggle, ctx.shaders.crop.mask);
 
