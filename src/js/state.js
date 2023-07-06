@@ -34,6 +34,7 @@ const ctx = {
 	gui: {
 		handle: null,
 		menu: toggleMenu,
+		fullscreen: toggle_fullscreen,
 		controller: {},
 		crop: true,
 		crop_negative: false,
@@ -78,4 +79,17 @@ function toggleMenu() {
 		ctx.dom.menu.style.display = 'block';
 	else
 		ctx.dom.menu.style.display = 'none';
+}
+
+function toggle_fullscreen() {
+	const elem = document.documentElement;
+	if (elem.requestFullscreen) {
+		elem.requestFullscreen();
+	} else if (elem.mozRequestFullScreen) { /* Firefox */
+		elem.mozRequestFullScreen();
+	} else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+		elem.webkitRequestFullscreen();
+	} else if (elem.msRequestFullscreen) { /* IE/Edge */
+		elem.msRequestFullscreen();
+	}
 }

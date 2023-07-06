@@ -50,7 +50,8 @@ export function key_input(time) {
 export function setup_input() {
 	let lastTouch = null;
 	let lastMouse = null;
-	const rotateSpeed = 0.1;
+	const mouseSpeed = 0.1;
+	const fingerSpeed = 0.2;
 	const zoomSpeed = 0.2;
 
 	/* Touch */
@@ -65,8 +66,8 @@ export function setup_input() {
 			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
 
 		if (lastTouch && e.touches.length === 1) {
-			const dx = (e.touches[0].clientX - lastTouch.x) * mul * rotateSpeed;
-			const dy = (e.touches[0].clientY - lastTouch.y) * mul * rotateSpeed;
+			const dx = (e.touches[0].clientX - lastTouch.x) * mul * fingerSpeed;
+			const dy = (e.touches[0].clientY - lastTouch.y) * mul * fingerSpeed;
 			ctx.cam.rot_deg[0] += dy;
 			ctx.cam.rot_deg[1] += dx;
 			lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
@@ -76,7 +77,7 @@ export function setup_input() {
 				e.touches[0].clientY - e.touches[1].clientY
 			);
 			if (lastTouch.distance) {
-				const dd = (distance - lastTouch.distance) * mul * zoomSpeed;
+				const dd = (distance - lastTouch.distance) * mul * fingerSpeed;
 				ctx.cam.fov.cur = Math.max(ctx.cam.fov.min,
 					Math.min(ctx.cam.fov.max, ctx.cam.fov.cur - dd));
 			}
@@ -100,8 +101,8 @@ export function setup_input() {
 			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
 
 		if (lastMouse && e.buttons === 1) {
-			const dx = (e.clientX - lastMouse.x) * mul * rotateSpeed;
-			const dy = (e.clientY - lastMouse.y) * mul * rotateSpeed;
+			const dx = (e.clientX - lastMouse.x) * mul * mouseSpeed;
+			const dy = (e.clientY - lastMouse.y) * mul * mouseSpeed;
 			ctx.cam.rot_deg[0] += dy;
 			ctx.cam.rot_deg[1] += dx;
 			lastMouse = { x: e.clientX, y: e.clientY };
