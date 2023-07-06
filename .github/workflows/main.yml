@@ -1,4 +1,4 @@
-name: Compile with emscripten and deploy to Github Pages
+name: Deploy with vite
 
 on:
   # Runs on pushes targeting the default branch
@@ -37,16 +37,16 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
-      - name: Setup Emscripten toolchain
-        uses: mymindstorm/setup-emsdk@v12
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
 
-      - name: CPU Core Count
-        uses: SimenB/github-actions-cpu-cores@v1.1.0
-        id: cpu-cores
-
-      # Run the Makefile
-      - name: Compile
-        run: emmake make -j ${{ steps.cpu-cores.outputs.count }}
+      - name: Pull dependencies
+        run: npm install
+      
+      - name: Build with Vite
+        run: npx vite build
 
       # Upload out folder
       - name: Upload artifact

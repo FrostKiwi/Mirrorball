@@ -1,6 +1,6 @@
-# Frostorama WIP
+# Actively WIP
+# Frostorama
 https://frostkiwi.github.io/frostorama/
-WebApp does not support Video or WebCam playback at the moment.
 
 https://user-images.githubusercontent.com/60887273/184802013-3c3d7848-9189-4c2a-a5ab-f31a1001bd7f.mp4
 
