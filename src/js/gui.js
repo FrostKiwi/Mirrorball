@@ -1,31 +1,31 @@
-import { ctx, redraw } from './state.js';
+import { ctx, ctr, redraw } from './state.js';
 import GUI from 'lil-gui';
 
 export default function init_gui() {
 	ctx.gui.handle = new GUI().hide();
 	ctx.gui.handle.title("Controls (Show / Hide)");
 	ctx.gui.handle.add(ctx.gui, 'menu').name("Toggle Main Menu");
-	ctx.gui.handle.add(ctx.gui, 'crop').name("Original").onChange(redraw);
-	ctx.gui.handle.add(ctx.gui, 'project').name("Projection").onChange(redraw);
+	ctx.gui.handle.add(ctr.tog, 'crop').name("Original").onChange(redraw);
+	ctx.gui.handle.add(ctr.tog, 'project').name("Projection").onChange(redraw);
 
 	/* Visualizations */
 	ctx.gui.folder.viz = ctx.gui.handle.addFolder('Visualizations').open();
-	ctx.gui.folder.viz.add(ctx.shaders.crop, 'mask').name(
+	ctx.gui.folder.viz.add(ctr.tog, 'mask').name(
 		"Circle Mask"
 	).onChange(redraw);
-	ctx.gui.folder.viz.add(ctx.gui, 'viz').name(
+	ctx.gui.folder.viz.add(ctr.tog, 'viz').name(
 		"Project screen border"
 	).onChange(redraw);
 
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera').close();
 	ctx.gui.controller.cam_fov = ctx.gui.folder.camera.add(
-		ctx.cam.fov, 'cur', ctx.cam.fov.min, ctx.cam.fov.max, 1).name(
+		ctr.cam.fov, 'cur', ctx.cam.fov.min, ctx.cam.fov.max, 1).name(
 			"Vertical FOV [in °]"
 		).onChange(redraw);
 	ctx.gui.controller.pitch = ctx.gui.folder.camera.add(
-		ctx.cam.rot_deg, '0', -90, 90).name("Pitch [in °]").onChange(redraw);
+		ctr.cam.rot_deg, '0', -90, 90).name("Pitch [in °]").onChange(redraw);
 	ctx.gui.controller.yaw = ctx.gui.folder.camera.add(
-		ctx.cam.rot_deg, '1', -180, 180).name("Yaw [in °]").onChange(redraw);
+		ctr.cam.rot_deg, '1', -180, 180).name("Yaw [in °]").onChange(redraw);
 
 	/* Projection Controls */
 	ctx.gui.folder.setup =
@@ -33,37 +33,37 @@ export default function init_gui() {
 
 	/* Sphere's FOV / Distortion correction */
 	ctx.gui.controller.img_fov =
-		ctx.gui.folder.setup.add(ctx.ch1, 'fov_deg', 180, 360, 1).name(
+		ctx.gui.folder.setup.add(ctr.ch1, 'fov_deg', 180, 360, 1).name(
 			"Sphere's FOV [in °]"
 	).onChange(redraw);
 
 	/* Crop */
 	ctx.gui.folder.crop = ctx.gui.folder.setup.addFolder('Image crop');
 	ctx.gui.controller.top =
-		ctx.gui.folder.crop.add(ctx.ch1.crop, 'top', 0, 1, 1).onChange(redraw);
+		ctx.gui.folder.crop.add(ctr.ch1.crop, 'top', 0, 1, 1).onChange(redraw);
 	ctx.gui.controller.top.name("Top [px]");
 	ctx.gui.controller.bot =
-		ctx.gui.folder.crop.add(ctx.ch1.crop, 'bot', 0, 1, 1).onChange(redraw);
+		ctx.gui.folder.crop.add(ctr.ch1.crop, 'bot', 0, 1, 1).onChange(redraw);
 	ctx.gui.controller.bot.name("Bottom [px]");
 	ctx.gui.controller.left =
-		ctx.gui.folder.crop.add(ctx.ch1.crop, 'left', 0, 1, 1).onChange(redraw);
+		ctx.gui.folder.crop.add(ctr.ch1.crop, 'left', 0, 1, 1).onChange(redraw);
 	ctx.gui.controller.left.name("Left [px]");
 	ctx.gui.controller.right =
 		ctx.gui.folder.crop.add(
-			ctx.ch1.crop, 'right', 0, 1, 1).onChange(redraw);
+			ctr.ch1.crop, 'right', 0, 1, 1).onChange(redraw);
 	ctx.gui.controller.right.name("Right [px]");
 	ctx.gui.folder.crop.add(ctx.gui, 'crop_negative').onChange(
 		toggle_crop_negative).name("Allow negative");
 
 	/* World rotation */
 	ctx.gui.folder.world = ctx.gui.folder.setup.addFolder('World Rotation');
-	ctx.gui.folder.world.add(ctx.ch1.rot_deg, '0', -180, 180).name(
+	ctx.gui.folder.world.add(ctr.ch1.rot_deg, '0', -180, 180).name(
 		"Pitch [in °]"
 	).onChange(redraw);
-	ctx.gui.folder.world.add(ctx.ch1.rot_deg, '1', -180, 180).name(
+	ctx.gui.folder.world.add(ctr.ch1.rot_deg, '1', -180, 180).name(
 		"Yaw [in °]"
 	).onChange(redraw);
-	ctx.gui.folder.world.add(ctx.ch1.rot_deg, '2', -180, 180).name(
+	ctx.gui.folder.world.add(ctr.ch1.rot_deg, '2', -180, 180).name(
 		"Roll [in °]"
 	).onChange(redraw);
 
@@ -77,7 +77,7 @@ export default function init_gui() {
 			"Fullscreen not supported by browser"
 		).disable();
 
-	ctx.gui.folder.settings.add(ctx.gui, 'viz_subdiv', 1, 256, 1).name(
+	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 1, 256, 1).name(
 		"Visualization subdivisions"
 	);
 	ctx.gui.folder.debug = ctx.gui.folder.settings.addFolder('Debug').close();
@@ -98,10 +98,10 @@ function toggleEventsStats(value) {
 
 function toggle_crop_negative(value) {
 	if (value) {
-		ctx.gui.controller.left.min(ctx.ch1.w * -2);
-		ctx.gui.controller.right.min(ctx.ch1.w * -2);
-		ctx.gui.controller.top.min(ctx.ch1.h * -2);
-		ctx.gui.controller.bot.min(ctx.ch1.h * -2);
+		ctx.gui.controller.left.min(ctx.shaders.ch1.w * -2);
+		ctx.gui.controller.right.min(ctx.shaders.ch1.w * -2);
+		ctx.gui.controller.top.min(ctx.shaders.ch1.h * -2);
+		ctx.gui.controller.bot.min(ctx.shaders.ch1.h * -2);
 	} else {
 		ctx.gui.controller.left.min(0);
 		ctx.gui.controller.right.min(0);

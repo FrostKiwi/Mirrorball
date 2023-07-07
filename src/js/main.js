@@ -1,6 +1,6 @@
-import { ctx, redraw } from './state.js';
+import { ctx, ctr, redraw } from './state.js';
 import init_gui from './gui.js';
-import { resizeCanvasToDisplaySize, onResize } from './resize.js'
+import { onResize } from './resize.js'
 import init_shaders from './init_shaders.js'
 import render from './render.js'
 import { key_input, setup_input } from './input.js'
@@ -108,7 +108,7 @@ async function load_from_url(url) {
 			left: 45,
 			right: 63
 		}
-		ctx.ch1.fov_deg = 342;
+		ctr.ch1.fov_deg = 342;
 		ctx.gui.controller.img_fov.updateDisplay();
 
 		media_setup(bitmap, crop);
@@ -125,9 +125,9 @@ function media_setup(bitmap, crop) {
 	ctx.gui.controller.top.max(bitmap.height / 2).setValue(crop.top);
 	ctx.gui.controller.bot.max(bitmap.height / 2).setValue(crop.bot);
 
-	ctx.gl.deleteTexture(ctx.ch1.tex);
-	ctx.ch1.tex = ctx.gl.createTexture();
-	ctx.gl.bindTexture(ctx.gl.TEXTURE_2D, ctx.ch1.tex);
+	ctx.gl.deleteTexture(ctx.shaders.ch1.tex);
+	ctx.shaders.ch1.tex = ctx.gl.createTexture();
+	ctx.gl.bindTexture(ctx.gl.TEXTURE_2D, ctx.shaders.ch1.tex);
 	ctx.gl.texParameteri(
 		ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_WRAP_S, ctx.gl.CLAMP_TO_EDGE);
 	ctx.gl.texParameteri(
@@ -137,8 +137,8 @@ function media_setup(bitmap, crop) {
 	ctx.gl.texParameteri(
 		ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_MAG_FILTER, ctx.gl.LINEAR);
 
-	ctx.ch1.w = bitmap.width;
-	ctx.ch1.h = bitmap.height;
+	ctx.shaders.ch1.w = bitmap.width;
+	ctx.shaders.ch1.h = bitmap.height;
 	ctx.gl.texImage2D(ctx.gl.TEXTURE_2D, 0, ctx.gl.RGBA, ctx.gl.RGBA,
 		ctx.gl.UNSIGNED_BYTE, bitmap);
 	bitmap.close();

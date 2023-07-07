@@ -1,8 +1,8 @@
 import * as glm from 'gl-matrix';
 import Stats from 'stats.js';
-import { resizeCanvasToDisplaySize } from './resize.js'
 
-export const ctx = {
+/* State, which does not determine to redraws */
+export let ctx = {
 	canvas: null,
 	gl: null,
 	stats: new Stats(),
@@ -14,6 +14,17 @@ export const ctx = {
 	drawing: false,
 	canvasToDisplaySizeMap: null,
 	shaders: {
+		ch1: {
+			tex: null,
+			w: 0,
+			h: 0,
+		},
+		viewrays: new Float32Array([
+			- 1.0, 1.0, 0.0, 0.0, 0.0,
+			1.0, 1.0, 0.0, 0.0, 0.0,
+			1.0, -1.0, 0.0, 0.0, 0.0,
+			-1.0, -1.0, 0.0, 0.0, 0.0
+		]),
 		border: {
 			handle: null
 		},
@@ -25,29 +36,12 @@ export const ctx = {
 			handle: null
 		}
 	},
-	ch1: {
-		tex: null,
-		w: 0,
-		h: 0,
-		fov_deg: 360,
-		crop: {
-			top: 0,
-			bot: 0,
-			left: 0,
-			right: 0
-		},
-		rot_deg: glm.vec3.create()
-	},
 	gui: {
 		handle: null,
 		menu: toggleMenu,
 		fullscreen: toggle_fullscreen,
 		controller: {},
-		crop: true,
-		project: true,
 		crop_negative: false,
-		viz: false,
-		viz_subdiv: 16,
 		folder: {
 			viz: null,
 			crop: null,
@@ -61,18 +55,10 @@ export const ctx = {
 		showEventStats: false
 	},
 	cam: {
-		rot_deg: glm.vec3.create(),
 		fov: {
 			min: 10,
-			max: 140,
-			cur: 100
-		},
-		viewrays: new Float32Array([
-			- 1.0, 1.0, 0.0, 0.0, 0.0,
-			1.0, 1.0, 0.0, 0.0, 0.0,
-			1.0, -1.0, 0.0, 0.0, 0.0,
-			-1.0, -1.0, 0.0, 0.0, 0.0
-		])
+			max: 140
+		}
 	},
 	dom: {
 		menu: document.getElementById('menu'),
@@ -81,6 +67,124 @@ export const ctx = {
 		filesize: document.getElementById('filesize')
 	}
 };
+
+/* State, which results in a redraw upon change */
+export let ctr = {
+	/* Toggles */
+	tog: {
+		crop: true,
+		project: true,
+		viz: false,
+		viz_subdiv: 16,
+		mask: false
+	},
+	/* Media channels */
+	ch1: {
+		fov_deg: 360,
+		crop: {
+			top: 0,
+			bot: 0,
+			left: 0,
+			right: 0
+		},
+		rot_deg: glm.vec3.create()
+	},
+	/* Camera */
+	cam: {
+		rot_deg: glm.vec3.create(),
+		fov: {
+			cur: 100
+		}
+	}
+}
+
+/* Ugly copy pasted. Maybe should use structured clone */
+let prev = {
+	/* Toggles */
+	tog: {
+		crop: true,
+		project: true,
+		viz: false,
+		viz_subdiv: 16,
+		mask: false
+	},
+	/* Media channels */
+	ch1: {
+		fov_deg: 360,
+		crop: {
+			top: 0,
+			bot: 0,
+			left: 0,
+			right: 0
+		},
+		rot_deg: glm.vec3.create()
+	},
+	/* Camera */
+	cam: {
+		rot_deg: glm.vec3.create(),
+		fov: {
+			cur: 100
+		}
+	}
+}
+
+/* Manual tree of comparison is bad, but works for now. Should maybe do a
+   structured clone, but maybe overkill? */
+export function redraw() {
+	if (!glm.vec3.equals(prev.cam.rot_deg, ctr.cam.rot_deg)) {
+		ctx.redraw = true;
+		glm.vec3.copy(prev.cam.rot_deg, ctr.cam.rot_deg);
+	}
+	else if (prev.tog.crop !== ctr.tog.crop) {
+		ctx.redraw = true;
+		prev.tog.crop = ctr.tog.crop;
+	}
+	else if (prev.tog.project !== ctr.tog.project) {
+		ctx.redraw = true;
+		prev.tog.project = ctr.tog.project;
+	}
+	else if (prev.tog.mask !== ctr.tog.mask) {
+		ctx.redraw = true;
+		prev.tog.mask = ctr.tog.mask;
+	}
+	else if (prev.tog.viz !== ctr.tog.viz) {
+		ctx.redraw = true;
+		prev.tog.viz = ctr.tog.viz;
+	}
+	else if (prev.ch1.fov_deg !== ctr.ch1.fov_deg) {
+		ctx.redraw = true;
+		prev.ch1.fov_deg = ctr.ch1.fov_deg;
+	}
+	else if (prev.ch1.crop.top !== ctr.ch1.crop.top) {
+		ctx.redraw = true;
+		prev.ch1.crop.top = ctr.ch1.crop.top;
+	}
+	else if (prev.ch1.crop.bot !== ctr.ch1.crop.bot) {
+		ctx.redraw = true;
+		prev.ch1.crop.bot = ctr.ch1.crop.bot;
+	}
+	else if (prev.ch1.crop.left !== ctr.ch1.crop.left) {
+		ctx.redraw = true;
+		prev.ch1.crop.left = ctr.ch1.crop.left;
+	}
+	else if (prev.ch1.crop.right !== ctr.ch1.crop.right) {
+		ctx.redraw = true;
+		prev.ch1.crop.right = ctr.ch1.crop.right;
+	}
+	else if (!glm.vec3.equals(prev.ch1.rot_deg, ctr.ch1.rot_deg)) {
+		ctx.redraw = true;
+		glm.vec3.copy(prev.ch1.rot_deg, ctr.ch1.rot_deg);
+	}
+	else if (prev.tog.viz_subdiv !== ctr.tog.viz_subdiv) {
+		ctx.redraw = true;
+		prev.tog.viz_subdiv = ctr.tog.viz_subdiv;
+	}
+	else if (prev.cam.fov.cur !== ctr.cam.fov.cur) {
+		ctx.redraw = true;
+		prev.cam.fov.cur = ctr.cam.fov.cur;
+	}
+	requestAnimationFrame(ctx.animate);
+}
 
 function toggleMenu() {
 	if (ctx.dom.menu.style.display === 'none')
@@ -102,117 +206,4 @@ function toggle_fullscreen() {
 		else if (elem.webkitRequestFullscreen)
 			elem.webkitRequestFullscreen();
 	}
-}
-
-let prev = {
-	shaders: {
-		crop: {
-			mask: false
-		}
-	},
-	ch1: {
-		w: null,
-		h: null,
-		fov_deg: null,
-		crop: {
-			top: null,
-			bot: null,
-			left: null,
-			right: null
-		},
-		rot_deg: glm.vec3.create()
-	},
-	gui: {
-		crop: null,
-		project: null,
-		viz: null,
-		viz_subdiv: null
-	},
-	cam: {
-		rot_deg: glm.vec3.create(),
-		fov: {
-			min: null,
-			max: null,
-			cur: null
-		}
-	}
-}
-
-/* Manual tree of comparison is bad, but works for now. Should restructure ctx
-   to seperate out the state that can cause a redraw, so I can just copy the
-   whole object. */
-export function redraw() {
-	if (prev.shaders.crop.mask !== ctx.shaders.crop.mask) {
-		prev.shaders.crop.mask = ctx.shaders.crop.mask;
-		ctx.redraw = true;
-	}
-	if (prev.ch1.w !== ctx.ch1.w) {
-		prev.ch1.w = ctx.ch1.w;
-		ctx.redraw = true;
-	}
-	if (prev.ch1.h !== ctx.ch1.h) {
-		prev.ch1.h = ctx.ch1.h;
-		ctx.redraw = true;
-	}
-	if (prev.ch1.fov_deg !== ctx.ch1.fov_deg) {
-		prev.ch1.fov_deg = ctx.ch1.fov_deg;
-		ctx.redraw = true;
-	}
-	if (prev.ch1.crop.top !== ctx.ch1.crop.top) {
-		prev.ch1.crop.top = ctx.ch1.crop.top;
-		ctx.redraw = true;
-	}
-	if (prev.ch1.crop.bot !== ctx.ch1.crop.bot) {
-		prev.ch1.crop.bot = ctx.ch1.crop.bot;
-		ctx.redraw = true;
-	}
-	if (prev.ch1.crop.left !== ctx.ch1.crop.left) {
-		prev.ch1.crop.left = ctx.ch1.crop.left;
-		ctx.redraw = true;
-	}
-	if (prev.ch1.crop.right !== ctx.ch1.crop.right) {
-		prev.ch1.crop.right = ctx.ch1.crop.right;
-		ctx.redraw = true;
-	}
-	if (!glm.vec3.equals(prev.ch1.rot_deg, ctx.ch1.rot_deg)) {
-		glm.vec3.copy(prev.ch1.rot_deg, ctx.ch1.rot_deg);
-		ctx.redraw = true;
-	}
-	if (prev.gui.crop !== ctx.gui.crop) {
-		prev.gui.crop = ctx.gui.crop;
-		ctx.redraw = true;
-	}
-	if (prev.gui.project !== ctx.gui.project) {
-		prev.gui.project = ctx.gui.project;
-		ctx.redraw = true;
-	}
-	if (prev.gui.viz !== ctx.gui.viz) {
-		prev.gui.viz = ctx.gui.viz;
-		ctx.redraw = true;
-	}
-	if (prev.gui.viz_subdiv !== ctx.gui.viz_subdiv) {
-		prev.gui.viz_subdiv = ctx.gui.viz_subdiv;
-		ctx.redraw = true;
-	}
-	if (!glm.vec3.equals(prev.cam.rot_deg, ctx.cam.rot_deg)) {
-		glm.vec3.copy(prev.cam.rot_deg, ctx.cam.rot_deg);
-		ctx.redraw = true;
-	}
-	if (prev.cam.fov.min !== ctx.cam.fov.min) {
-		prev.cam.fov.min = ctx.cam.fov.min;
-		ctx.redraw = true;
-	}
-	if (prev.cam.fov.max !== ctx.cam.fov.max) {
-		prev.cam.fov.max = ctx.cam.fov.max;
-		ctx.redraw = true;
-	}
-	if (prev.cam.fov.cur !== ctx.cam.fov.cur) {
-		prev.cam.fov.cur = ctx.cam.fov.cur;
-		ctx.redraw = true;
-	}
-	if (resizeCanvasToDisplaySize())
-		ctx.redraw = true;
-
-	
-	requestAnimationFrame(ctx.animate);
 }

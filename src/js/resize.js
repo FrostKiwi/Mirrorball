@@ -35,7 +35,10 @@ export function onResize(entries) {
 		ctx.canvasToDisplaySizeMap.set(entry.target,
 			[displayWidth, displayHeight]);
 	}
-	redraw();
+	if (resizeCanvasToDisplaySize()) {
+		ctx.redraw = true;
+		redraw();
+	}
 }
 
 export function resizeCanvasToDisplaySize() {

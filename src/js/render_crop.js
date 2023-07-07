@@ -1,16 +1,16 @@
-import { ctx } from './state.js';
+import { ctx, ctr } from './state.js';
 
 export default function render_crop(width, height){
 	/* Crop Shader */
 	const postcrop_w =
-		ctx.ch1.w - (ctx.ch1.crop.left + ctx.ch1.crop.right);
+		ctx.shaders.ch1.w - (ctr.ch1.crop.left + ctr.ch1.crop.right);
 	const postcrop_h =
-		ctx.ch1.h - (ctx.ch1.crop.top + ctx.ch1.crop.bot);
+		ctx.shaders.ch1.h - (ctr.ch1.crop.top + ctr.ch1.crop.bot);
 	const crop = {
-		x: (1 / ctx.ch1.w) * ctx.ch1.crop.left,
-		y: (1 / ctx.ch1.h) * ctx.ch1.crop.top,
-		w: (1 / ctx.ch1.w) * postcrop_w,
-		h: (1 / ctx.ch1.h) * postcrop_h
+		x: (1 / ctx.shaders.ch1.w) * ctr.ch1.crop.left,
+		y: (1 / ctx.shaders.ch1.h) * ctr.ch1.crop.top,
+		w: (1 / ctx.shaders.ch1.w) * postcrop_w,
+		h: (1 / ctx.shaders.ch1.h) * postcrop_h
 	}
 
 	ctx.gl.useProgram(ctx.shaders.crop.handle);
@@ -24,7 +24,7 @@ export default function render_crop(width, height){
 		ctx.gl.uniform4f(ctx.shaders.crop.split, 0, 0, 1, 1);
 		
 	ctx.gl.uniform4f(ctx.shaders.crop.crop, crop.x, crop.y, crop.w, crop.h);
-	ctx.gl.uniform1i(ctx.shaders.crop.mask_toggle, ctx.shaders.crop.mask);
+	ctx.gl.uniform1i(ctx.shaders.crop.mask_toggle, ctr.tog.mask);
 
 	if (postcrop_h / postcrop_w > height / width) {
 		ctx.gl.uniform1f(ctx.shaders.crop.aspect_h, 1.0);

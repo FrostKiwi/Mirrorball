@@ -1,4 +1,4 @@
-import { ctx } from './state.js';
+import { ctx, ctr } from './state.js';
 import * as glm from 'gl-matrix';
 
 const POINT_SIZE = 0.02;
@@ -29,7 +29,7 @@ function interp_border_pts(a, b, subdiv, aspect_ratio, color_a, color_b, diag) {
 		glm.vec3.normalize(ray, ray);
 
 		const divider = 2.0 * Math.SQRT2 * Math.sqrt(ray[2] + 1.0);
-		const scalar = 1 / Math.sin(glm.glMatrix.toRadian(ctx.ch1.fov_deg) / 4);
+		const scalar = 1 / Math.sin(glm.glMatrix.toRadian(ctr.ch1.fov_deg) / 4);
 
 		glm.vec2.scale(
 			uv_proj,
@@ -84,9 +84,9 @@ export default function render_border(project_points, subdiv, width, height) {
 	ctx.gl.enableVertexAttribArray(ctx.shaders.border.vtx);
 
 	const postcrop_w =
-		ctx.ch1.w - (ctx.ch1.crop.left + ctx.ch1.crop.right);
+		ctx.shaders.ch1.w - (ctr.ch1.crop.left + ctr.ch1.crop.right);
 	const postcrop_h =
-		ctx.ch1.h - (ctx.ch1.crop.top + ctx.ch1.crop.bot);
+		ctx.shaders.ch1.h - (ctr.ch1.crop.top + ctr.ch1.crop.bot);
 
 	const aspect_ratio = glm.vec2.fromValues(1, 1);
 
@@ -112,24 +112,24 @@ export default function render_border(project_points, subdiv, width, height) {
 
 		/* Each corner gets one viewray */
 		const ray_topleft = glm.vec3.fromValues(
-			ctx.cam.viewrays[2],
-			ctx.cam.viewrays[3],
-			ctx.cam.viewrays[4],
+			ctx.shaders.viewrays[2],
+			ctx.shaders.viewrays[3],
+			ctx.shaders.viewrays[4],
 		);
 		const ray_topright = glm.vec3.fromValues(
-			ctx.cam.viewrays[7],
-			ctx.cam.viewrays[8],
-			ctx.cam.viewrays[9],
+			ctx.shaders.viewrays[7],
+			ctx.shaders.viewrays[8],
+			ctx.shaders.viewrays[9],
 		);
 		const ray_botright = glm.vec3.fromValues(
-			ctx.cam.viewrays[12],
-			ctx.cam.viewrays[13],
-			ctx.cam.viewrays[14],
+			ctx.shaders.viewrays[12],
+			ctx.shaders.viewrays[13],
+			ctx.shaders.viewrays[14],
 		);
 		const ray_botleft = glm.vec3.fromValues(
-			ctx.cam.viewrays[17],
-			ctx.cam.viewrays[18],
-			ctx.cam.viewrays[19],
+			ctx.shaders.viewrays[17],
+			ctx.shaders.viewrays[18],
+			ctx.shaders.viewrays[19],
 		);
 
 		/* TODO: Should use instanced rendering, but don't wanna check for
