@@ -79,7 +79,7 @@ export function setup_input() {
 	let lastTouch = null;
 	let lastMouse = null;
 	const mouseSpeed = 0.2;
-	const fingerSpeed = 0.2;
+	const fingerSpeed = 0.4;
 	const wheelSpeed = 0.05;
 
 	/* Touch */
