@@ -1,4 +1,4 @@
-import ctx from './state.js';
+import { ctx } from './state.js';
 
 let keyState = {};
 window.addEventListener('keydown', function (e) {

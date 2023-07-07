@@ -1,4 +1,4 @@
-import ctx from './state.js';
+import { ctx } from './state.js';
 
 export default function render_crop(width, height){
 	/* Crop Shader */

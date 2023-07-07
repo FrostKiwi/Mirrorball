@@ -1,4 +1,4 @@
-import ctx from './state.js';
+import { ctx } from './state.js';
 import * as glm from 'gl-matrix';
 
 const POINT_SIZE = 0.02;

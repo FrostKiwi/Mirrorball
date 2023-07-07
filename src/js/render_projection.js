@@ -1,4 +1,4 @@
-import ctx from './state.js';
+import { ctx } from './state.js';
 import * as glm from 'gl-matrix';
 
 export default function render_project(width, height) {

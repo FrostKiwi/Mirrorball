@@ -1,5 +1,5 @@
 import * as glm from 'gl-matrix';
-import ctx from './state.js';
+import { ctx } from './state.js';
 
 export default function update_camera(width, height) {
 	/* Precalc some stuff */

@@ -1,4 +1,4 @@
-import ctx from './state.js';
+import { ctx, redraw } from './state.js';
 import init_gui from './gui.js';
 import { resizeCanvasToDisplaySize, onResize } from './resize.js'
 import init_shaders from './init_shaders.js'
@@ -57,7 +57,11 @@ function animate(time) {
 	resizeCanvasToDisplaySize();
 
 	key_input(time);
-	render();
+	/* Redraw check */
+	if (redraw()) {
+		render();
+		ctx.redraw = false;
+	}
 
 	ctx.stats.update();
 }

@@ -1,4 +1,4 @@
-import ctx from './state.js';
+import { ctx } from './state.js';
 import update_camera from './update_camera.js'
 import render_crop from './render_crop.js'
 import render_border from './render_border.js'

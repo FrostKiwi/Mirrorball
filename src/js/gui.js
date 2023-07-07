@@ -1,4 +1,4 @@
-import ctx from './state.js';
+import { ctx } from './state.js';
 import GUI from 'lil-gui';
 
 export default function init_gui() {
