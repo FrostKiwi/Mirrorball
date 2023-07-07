@@ -51,4 +51,5 @@ export default function render() {
 					ctx.canvas.width, ctx.canvas.height);
 		}
 	}
+	ctx.stats.update();
 }

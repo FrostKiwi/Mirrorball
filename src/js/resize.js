@@ -1,7 +1,7 @@
 /* Proper resize handling for native resolution canvases, provided by the
    brilliant blog post:
    https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html */
-import { ctx } from './state.js';
+import { ctx, redraw } from './state.js';
 
 export function onResize(entries) {
 	for (const entry of entries) {
@@ -35,6 +35,7 @@ export function onResize(entries) {
 		ctx.canvasToDisplaySizeMap.set(entry.target,
 			[displayWidth, displayHeight]);
 	}
+	redraw();
 }
 
 export function resizeCanvasToDisplaySize() {
@@ -50,7 +51,6 @@ export function resizeCanvasToDisplaySize() {
 		// Make the canvas the same size
 		ctx.canvas.width = displayWidth;
 		ctx.canvas.height = displayHeight;
-		ctx.redraw = true;
 	}
 	return needResize;
 }

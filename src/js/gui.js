@@ -74,16 +74,20 @@ export default function init_gui() {
 	ctx.gui.folder.settings.add(ctx.gui, 'viz_subdiv', 1, 256, 1).name(
 		"Visualization subdivisions"
 	);
-	ctx.gui.folder.settings.add(ctx.gui, 'showStats').name(
+	ctx.gui.folder.debug = ctx.gui.folder.settings.addFolder('Debug').close();
+	ctx.gui.folder.debug.add(ctx.gui, 'showStats').name(
 		"Show performance"
 	).onChange(toggleStats);
-
-	/* Trigger the function to apply the defaults stats value */
-	toggleStats();
+	ctx.gui.folder.debug.add(ctx.gui, 'showEventStats').name(
+		"Show rejected redraws"
+	).onChange(toggleEventsStats);
 }
 
 function toggleStats(value) {
 	ctx.stats.dom.style.display = value ? 'block' : 'none';
+}
+function toggleEventsStats(value) {
+	ctx.stats_events.dom.style.display = value ? 'block' : 'none';
 }
 
 function toggle_crop_negative(value) {

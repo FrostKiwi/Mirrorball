@@ -25,7 +25,6 @@ function main() {
 	}
 
 	init();
-	requestAnimationFrame(animate);
 }
 
 function init() {
@@ -39,6 +38,12 @@ function init() {
 	init_shaders(ctx, ctx.gl);
 	/* Add the stats */
 	document.body.appendChild(ctx.stats.dom);
+	document.body.appendChild(ctx.stats_events.dom);
+	ctx.stats_events.dom.style.position = 'absolute';
+	ctx.stats_events.dom.style.left = ctx.stats_events.dom.offsetWidth + 'px';
+	/* ctx.stats.dom.style.display = ctx.gui.showStats ? 'block' : 'none';
+	ctx.stats_events.dom.style.display =
+		ctx.gui.showEventStats ? 'block' : 'none'; */
 
 	ctx.gl.clearColor(0, 0, 0, 1);
 	/* Prevents headaches when loading NPOT textures */
@@ -52,18 +57,35 @@ function init() {
 	setup_input();
 }
 
-function animate(time) {
-	requestAnimationFrame(animate);
-	resizeCanvasToDisplaySize();
+/* Loop for animation only needs to happen event based. Aka photo mode with
+   mouse or touch */
+ctx.animate = function animate(time) {
+	/* Will always redraw in WebCam or Video mode, but not in photo mode */
+	if (!ctx.redraw || ctx.continous) {
+		/* Stats for rejected events */
+		ctx.stats_events.update();
+		return;
+	}
+	ctx.redraw = false;
 
-	key_input(time);
-	/* Redraw check */
-	if (redraw()) {
-		render();
-		ctx.redraw = false;
+	/* Keys have to be polled for smooth operation */
+	if (ctx.continous) {
+		key_input(time);
 	}
 
-	ctx.stats.update();
+	render();
+	requestAnimationFrame(animate);
+}
+
+/* Loop for constant rendering, like when video or webcams are viewer. Also
+   needed for smooth keyboard usage */
+ctx.animate_cont = function animate(time) {
+	/* Keys have to be polled for smooth operation */
+	key_input(time);
+
+	render();
+	if (ctx.continous)
+		requestAnimationFrame(animate);
 }
 
 async function load_from_url(url) {
@@ -124,6 +146,10 @@ function media_setup(bitmap, crop) {
 	ctx.dom.spinner.style.display = 'none';
 	ctx.dom.statusMSG.innerText = "\u00A0";
 	ctx.dom.filesize.innerText = "\u00A0";
+
+	/* Have to call a redraw here, since this function is called async */
+	ctx.redraw = true;
+	redraw();
 }
 
 main();

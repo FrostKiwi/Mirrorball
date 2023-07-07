@@ -1,23 +1,39 @@
-import { ctx } from './state.js';
+import { ctx, redraw } from './state.js';
 
 let keyState = {};
+const usedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW',
+	'KeyA', 'KeyS', 'KeyD', 'KeyQ', 'KeyE'
+];
+
 window.addEventListener('keydown', function (e) {
 	keyState[e.code] = true;
+	if (usedKeys.includes(e.code))
+		/* continous redraws, if keys used keys are pressed */
+		if (!ctx.continous) {
+			ctx.continous = true;
+			lastKeyUpdate = 0;
+			requestAnimationFrame(ctx.animate_cont);
+		}
 }, true);
 
 window.addEventListener('keyup', function (e) {
 	keyState[e.code] = false;
+	if (usedKeys.every(key => !keyState[key]))
+		/* Stop continous redraws, if keys are released */
+		ctx.continous = false;
 }, true);
 
 window.addEventListener('blur', function () {
 	for (let key in keyState) {
 		keyState[key] = false;
 	}
+	/* Stop continous redraws, if keys are released */
+	ctx.continous = false;
 });
 
-let lastTime = 0;
+let lastKeyUpdate = 0;
 
-function update_degrees(){
+function update_degrees() {
 	if (ctx.cam.rot_deg[1] > 180) ctx.cam.rot_deg[1] -= 360;
 	if (ctx.cam.rot_deg[1] < -180) ctx.cam.rot_deg[1] += 360;
 	ctx.gui.controller.pitch.updateDisplay();
@@ -25,12 +41,15 @@ function update_degrees(){
 	ctx.gui.controller.cam_fov.updateDisplay();
 }
 
+/* Keys have to be polled for smooth operation */
 export function key_input(time) {
 	const rotationSpeed = 0.15;
 	const zoomSpeed = 0.2;
 
-	let deltaTime = time - lastTime;
-	lastTime = time;
+	let deltaTime;
+	deltaTime = time - lastKeyUpdate;
+	if(lastKeyUpdate == 0) deltaTime = 16.6;
+	lastKeyUpdate = time;
 
 	let mul = (ctx.cam.fov.cur - ctx.cam.fov.min) /
 		(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
@@ -74,12 +93,16 @@ export function setup_input() {
 		let mul = (ctx.cam.fov.cur - ctx.cam.fov.min) /
 			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
 
+		/* Not good enough, second touch disables disables camera rotation,
+		   needs fixing. */
 		if (lastTouch && e.touches.length === 1) {
 			const dx = (e.touches[0].clientX - lastTouch.x) * mul * fingerSpeed;
 			const dy = (e.touches[0].clientY - lastTouch.y) * mul * fingerSpeed;
 			ctx.cam.rot_deg[0] += dy;
 			ctx.cam.rot_deg[1] += dx;
 			lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+			update_degrees();
+			redraw();
 		}
 		if (lastTouch && e.touches.length === 2) {
 			const distance = Math.hypot(
@@ -92,8 +115,9 @@ export function setup_input() {
 					Math.min(ctx.cam.fov.max, ctx.cam.fov.cur - dd));
 			}
 			lastTouch.distance = distance;
+			update_degrees();
+			redraw();
 		}
-		update_degrees();
 	}, { passive: false });
 
 	ctx.canvas.addEventListener('touchend', e => {
@@ -117,8 +141,9 @@ export function setup_input() {
 			ctx.cam.rot_deg[0] += dy;
 			ctx.cam.rot_deg[1] += dx;
 			lastMouse = { x: e.clientX, y: e.clientY };
+			update_degrees();
+			redraw();
 		}
-		update_degrees();
 	}, false);
 
 	ctx.canvas.addEventListener('mouseup', () => {
@@ -133,5 +158,6 @@ export function setup_input() {
 		ctx.cam.fov.cur = Math.max(ctx.cam.fov.min,
 			Math.min(ctx.cam.fov.max, ctx.cam.fov.cur + dd));
 		update_degrees();
+		redraw();
 	}, false);
 }

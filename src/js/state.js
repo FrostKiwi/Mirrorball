@@ -1,11 +1,17 @@
 import * as glm from 'gl-matrix';
 import Stats from 'stats.js';
+import { resizeCanvasToDisplaySize } from './resize.js'
 
 export const ctx = {
 	canvas: null,
 	gl: null,
 	stats: new Stats(),
+	stats_events: new Stats(),
 	redraw: false,
+	continous: false,
+	animate: null,
+	animate_cont: null,
+	drawing: false,
 	canvasToDisplaySizeMap: null,
 	shaders: {
 		border: {
@@ -47,10 +53,12 @@ export const ctx = {
 			crop: null,
 			world: null,
 			setup: null,
+			debug: null,
 			camera: null,
 			settings: null
 		},
-		showStats: false
+		showStats: false,
+		showEventStats: false
 	},
 	cam: {
 		rot_deg: glm.vec3.create(),
@@ -130,6 +138,9 @@ let prev = {
 	}
 }
 
+/* Manual tree of comparison is bad, but works for now. Should restructure ctx
+   to seperate out the state that can cause a redraw, so I can just copy the
+   whole object. */
 export function redraw() {
 	if (prev.shaders.crop.mask !== ctx.shaders.crop.mask) {
 		prev.shaders.crop.mask = ctx.shaders.crop.mask;
@@ -199,6 +210,9 @@ export function redraw() {
 		prev.cam.fov.cur = ctx.cam.fov.cur;
 		ctx.redraw = true;
 	}
+	if (resizeCanvasToDisplaySize())
+		ctx.redraw = true;
 
-	return ctx.redraw;
+	
+	requestAnimationFrame(ctx.animate);
 }
