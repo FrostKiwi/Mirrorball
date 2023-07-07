@@ -41,9 +41,9 @@ function init() {
 	document.body.appendChild(ctx.stats_events.dom);
 	ctx.stats_events.dom.style.position = 'absolute';
 	ctx.stats_events.dom.style.left = ctx.stats_events.dom.offsetWidth + 'px';
-	/* ctx.stats.dom.style.display = ctx.gui.showStats ? 'block' : 'none';
+	ctx.stats.dom.style.display = ctx.gui.showStats ? 'block' : 'none';
 	ctx.stats_events.dom.style.display =
-		ctx.gui.showEventStats ? 'block' : 'none'; */
+		ctx.gui.showEventStats ? 'block' : 'none';
 
 	ctx.gl.clearColor(0, 0, 0, 1);
 	/* Prevents headaches when loading NPOT textures */
