@@ -77,9 +77,9 @@ export default function init_gui() {
 			"Fullscreen not supported by browser"
 		).disable();
 
-	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 1, 256, 1).name(
+	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 2, 256, 1).name(
 		"Visualization subdivisions"
-	);
+	).onChange(redraw);
 	ctx.gui.folder.debug = ctx.gui.folder.settings.addFolder('Debug').close();
 	ctx.gui.folder.debug.add(ctx.gui, 'showStats').name(
 		"Show performance"

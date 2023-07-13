@@ -183,7 +183,9 @@ export function redraw() {
 		ctx.redraw = true;
 		prev.cam.fov.cur = ctr.cam.fov.cur;
 	}
-	requestAnimationFrame(ctx.animate);
+
+	if (ctx.redraw)
+		requestAnimationFrame(ctx.animate);
 }
 
 function toggleMenu() {

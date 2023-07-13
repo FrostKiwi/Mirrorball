@@ -36,6 +36,12 @@ let lastKeyUpdate = 0;
 function update_degrees() {
 	if (ctr.cam.rot_deg[1] > 180) ctr.cam.rot_deg[1] -= 360;
 	if (ctr.cam.rot_deg[1] < -180) ctr.cam.rot_deg[1] += 360;
+	if (ctr.cam.fov.cur > ctx.cam.fov.max)
+		ctr.cam.fov.cur = ctx.cam.fov.max;
+	if (ctr.cam.fov.cur < ctx.cam.fov.min)
+		ctr.cam.fov.cur = ctx.cam.fov.min;
+	if (ctr.cam.rot_deg[0] > 90) ctr.cam.rot_deg[0] = 90;
+	if (ctr.cam.rot_deg[0] < -90) ctr.cam.rot_deg[0] = -90;
 	ctx.gui.controller.pitch.updateDisplay();
 	ctx.gui.controller.yaw.updateDisplay();
 	ctx.gui.controller.cam_fov.updateDisplay();
@@ -48,7 +54,7 @@ export function key_input(time) {
 
 	let deltaTime;
 	deltaTime = time - lastKeyUpdate;
-	if(lastKeyUpdate == 0) deltaTime = 16.6;
+	if (lastKeyUpdate == 0) deltaTime = 16.6;
 	lastKeyUpdate = time;
 
 	let mul = (ctr.cam.fov.cur - ctx.cam.fov.min) /
@@ -66,12 +72,6 @@ export function key_input(time) {
 	/* Limits */
 	if (keyState['KeyE']) ctr.cam.fov.cur -= mul * zoomSpeed * deltaTime;
 	if (keyState['KeyQ']) ctr.cam.fov.cur += mul * zoomSpeed * deltaTime;
-	if (ctr.cam.fov.cur > ctx.cam.fov.max)
-		ctr.cam.fov.cur = ctx.cam.fov.max;
-	if (ctr.cam.fov.cur < ctx.cam.fov.min)
-		ctr.cam.fov.cur = ctx.cam.fov.min;
-	if (ctr.cam.rot_deg[0] > 90) ctr.cam.rot_deg[0] = 90;
-	if (ctr.cam.rot_deg[0] < -90) ctr.cam.rot_deg[0] = -90;
 	update_degrees();
 }
 
