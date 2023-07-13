@@ -35,7 +35,7 @@ export default function init_gui() {
 	ctx.gui.controller.img_fov =
 		ctx.gui.folder.setup.add(ctr.ch1, 'fov_deg', 180, 360, 1).name(
 			"Sphere's FOV [in °]"
-	).onChange(redraw);
+		).onChange(redraw);
 
 	/* Crop */
 	ctx.gui.folder.crop = ctx.gui.folder.setup.addFolder('Image crop');
@@ -87,6 +87,9 @@ export default function init_gui() {
 	ctx.gui.folder.debug.add(ctx.gui, 'showEventStats').name(
 		"Show rejected redraws"
 	).onChange(toggleEventsStats);
+	ctx.gui.folder.debug.add(ctx.gui, 'eruda').name(
+		"Eruda debug console"
+	).onChange(eruda_toggle);
 }
 
 function toggleStats(value) {
@@ -112,4 +115,23 @@ function toggle_crop_negative(value) {
 	ctx.gui.controller.right.updateDisplay();
 	ctx.gui.controller.top.updateDisplay();
 	ctx.gui.controller.bot.updateDisplay();
+}
+
+function eruda_toggle(value) {
+	if (value) {  // If the checkbox is checked
+		if (window.eruda) {  // If Eruda is already loaded
+			eruda.init();
+		} else {  // If Eruda is not loaded
+			let script = document.createElement('script');
+			script.src = "//cdn.jsdelivr.net/npm/eruda";
+			script.onload = function () {
+				eruda.init();
+			};
+			document.body.appendChild(script);
+		}
+	} else {  // If the checkbox is unchecked
+		if (window.eruda) {  // If Eruda is already loaded
+			eruda.destroy();
+		}
+	}
 }

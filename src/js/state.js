@@ -42,6 +42,7 @@ export let ctx = {
 		fullscreen: toggle_fullscreen,
 		controller: {},
 		crop_negative: false,
+		eruda: false,
 		folder: {
 			viz: null,
 			crop: null,
