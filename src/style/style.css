@@ -24,6 +24,7 @@ canvas {
 .lil-gui.root {
 	--background-color: var(--bgcolor);
 	backdrop-filter: var(--blur);
+	-webkit-backdrop-filter: var(--blur);
 }
 
 /* Fix as per: 
@@ -68,6 +69,7 @@ canvas {
 
 	/* Effect */
 	backdrop-filter: var(--blur);
+	-webkit-backdrop-filter: var(--blur);
 	background-color: var(--bgcolor);
 }
 
