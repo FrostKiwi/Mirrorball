@@ -59,7 +59,7 @@ function init() {
 
 /* Loop for animation only needs to happen event based. Aka photo mode with
    mouse or touch */
-ctx.animate = function animate(time) {
+ctx.animate = function animate() {
 	/* Will always redraw in WebCam or Video mode, but not in photo mode */
 	if (!ctx.redraw || ctx.continous) {
 		/* Stats for rejected events */
@@ -67,11 +67,6 @@ ctx.animate = function animate(time) {
 		return;
 	}
 	ctx.redraw = false;
-
-	/* Keys have to be polled for smooth operation */
-	if (ctx.continous) {
-		key_input(time);
-	}
 
 	render();
 	requestAnimationFrame(animate);

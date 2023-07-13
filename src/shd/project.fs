@@ -11,6 +11,7 @@ uniform sampler2D sample_projection;
 void main()
 {
 	vec3 R = normalize(Ray);
+	/* Scalar precalculated on CPU */
 	vec2 uv = scalar * R.xy / (M_2xSQRT2 * sqrt(R.z + 1.0));
 	/* Extra scalar branch to prevent artifacts from bad GPU float precision */
 	/* Should switch to using multiple shaders instead of branching */

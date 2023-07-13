@@ -45,6 +45,8 @@ export default function render_project(width, height) {
 		5 * Float32Array.BYTES_PER_ELEMENT,
 		2 * Float32Array.BYTES_PER_ELEMENT
 	);
+	
+	/* As per formula */
 	const scalar = 1.0 / Math.sin(glm.glMatrix.toRadian(ctr.ch1.fov_deg) / 4.0);
 	ctx.gl.uniform1f(ctx.shaders.project.scaler, scalar);
 

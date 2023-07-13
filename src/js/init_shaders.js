@@ -20,7 +20,6 @@ export default function init_shaders(ctx, gl) {
 	ctx.shaders.border.handle = compile_and_link(gl, border_vs, border_fs);
 	ctx.shaders.project.handle = compile_and_link(gl, project_vs, project_fs);
 
-
 	const unitquadtex = new Float32Array([
 		-1.0, 1.0, 0.0, 0.0,
 		1.0, 1.0, 1.0, 0.0,

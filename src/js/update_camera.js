@@ -10,7 +10,8 @@ export default function update_camera(width, height) {
 
 	/* Camera rotation */
 	const cam_rot_x = glm.glMatrix.toRadian(ctr.cam.rot_deg[0]);
-	/* Flip 180 degrees to show the camera at zero rotation */
+	/* Flip 180 degrees to show the camera at zero rotation in respect to the
+	   mirror image. */
 	const cam_rot_y = glm.glMatrix.toRadian(ctr.cam.rot_deg[1] + 180);
 
 	/* Channel 1 rotation */
@@ -29,6 +30,7 @@ export default function update_camera(width, height) {
 		/* Camera rotation */
 		glm.vec3.rotateX(vec, vec, zero, cam_rot_x);
 		glm.vec3.rotateY(vec, vec, zero, cam_rot_y);
+		/* User doesn't get to control roll */
 
 		/* World rotation */
 		glm.vec3.rotateX(vec, vec, zero, ch1_rot_x);

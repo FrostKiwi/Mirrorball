@@ -6,6 +6,11 @@ const usedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW',
 ];
 
 window.addEventListener('keydown', function (e) {
+	/* No camera controls, when user interacting with gui */
+	if (e.target.tagName.toLowerCase() === 'input') {
+		return;
+	}
+
 	keyState[e.code] = true;
 	if (usedKeys.includes(e.code))
 		/* continous redraws, if keys used keys are pressed */
