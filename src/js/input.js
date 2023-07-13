@@ -100,12 +100,14 @@ export function setup_input() {
 		let mul = (ctr.cam.fov.cur - ctx.cam.fov.min) /
 			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
 
-		if (lastTouch && e.touches.length >= 1) {
+		if (lastTouch && e.touches.length === 1) {
 			const dx = (e.touches[0].clientX - lastTouch.x) * mul * fingerSpeed;
 			const dy = (e.touches[0].clientY - lastTouch.y) * mul * fingerSpeed;
 			ctr.cam.rot_deg[0] += dy;
 			ctr.cam.rot_deg[1] += dx;
 			lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+			update_degrees();
+			redraw();
 		}
 
 		if (lastTouch && e.touches.length === 2) {
@@ -119,9 +121,9 @@ export function setup_input() {
 					Math.min(ctx.cam.fov.max, ctr.cam.fov.cur - dd));
 			}
 			lastTouch.distance = distance;
+			update_degrees();
+			redraw();
 		}
-		update_degrees();
-		redraw();
 	}, { passive: false });
 
 	ctx.canvas.addEventListener('touchend', e => {
