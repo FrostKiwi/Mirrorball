@@ -1,4 +1,6 @@
-import { ctx, ctr, redraw } from './state.js';
+import { ctx } from './state.js';
+import { load_from_url, media_populate } from './media.js';
+import media from './mediaData.js';
 import init_gui from './gui.js';
 import { onResize } from './resize.js'
 import init_shaders from './init_shaders.js'
@@ -49,7 +51,8 @@ function init() {
 	/* Prevents headaches when loading NPOT textures */
 	ctx.gl.pixelStorei(ctx.gl.UNPACK_ALIGNMENT, 1);
 
-	load_from_url("img/room.jpg");
+	media_populate();
+	load_from_url(media[0]);
 
 	setup_input();
 }
@@ -78,70 +81,6 @@ ctx.animate_cont = function animate(time) {
 	render();
 	if (ctx.continous)
 		requestAnimationFrame(animate);
-}
-
-async function load_from_url(url) {
-	ctx.dom.spinner.style.display = 'block';
-	ctx.gui.handle.hide();
-	try {
-		ctx.dom.statusMSG.innerText = "Requesting " + url;
-		const response = await fetch(url);
-		ctx.dom.statusMSG.innerText = "Downloading " + url;
-		ctx.dom.filesize.innerText = "(" +
-			((response.headers.get('Content-Length') / 1000000)).toFixed(2) +
-			" MegaByte" + ")";
-		const blob = await response.blob();
-		ctx.dom.statusMSG.innerText = "Decoding image";
-		const bitmap = await createImageBitmap(blob);
-
-		const crop = {
-			top: 46,
-			bot: 62,
-			left: 45,
-			right: 63
-		}
-		ctr.ch1.fov_deg = 342;
-		ctx.gui.controller.img_fov.updateDisplay();
-
-		media_setup(bitmap, crop);
-
-	} catch (err) {
-		console.error(err);
-	}
-}
-
-function media_setup(bitmap, crop) {
-	ctx.dom.statusMSG.innerText = "Transfering into GPU memory";
-	ctx.gui.controller.left.max(bitmap.width / 2).setValue(crop.left);
-	ctx.gui.controller.right.max(bitmap.width / 2).setValue(crop.right);
-	ctx.gui.controller.top.max(bitmap.height / 2).setValue(crop.top);
-	ctx.gui.controller.bot.max(bitmap.height / 2).setValue(crop.bot);
-
-	ctx.gl.deleteTexture(ctx.shaders.ch1.tex);
-	ctx.shaders.ch1.tex = ctx.gl.createTexture();
-	ctx.gl.bindTexture(ctx.gl.TEXTURE_2D, ctx.shaders.ch1.tex);
-	ctx.gl.texParameteri(
-		ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_WRAP_S, ctx.gl.CLAMP_TO_EDGE);
-	ctx.gl.texParameteri(
-		ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_WRAP_T, ctx.gl.CLAMP_TO_EDGE);
-	ctx.gl.texParameteri(
-		ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_MIN_FILTER, ctx.gl.LINEAR);
-	ctx.gl.texParameteri(
-		ctx.gl.TEXTURE_2D, ctx.gl.TEXTURE_MAG_FILTER, ctx.gl.LINEAR);
-
-	ctx.shaders.ch1.w = bitmap.width;
-	ctx.shaders.ch1.h = bitmap.height;
-	ctx.gl.texImage2D(ctx.gl.TEXTURE_2D, 0, ctx.gl.RGBA, ctx.gl.RGBA,
-		ctx.gl.UNSIGNED_BYTE, bitmap);
-	bitmap.close();
-	ctx.gui.handle.show();
-	ctx.dom.spinner.style.display = 'none';
-	ctx.dom.statusMSG.innerText = "\u00A0";
-	ctx.dom.filesize.innerText = "\u00A0";
-
-	/* Have to call a redraw here, since this function is called async */
-	ctx.redraw = true;
-	redraw();
 }
 
 main();

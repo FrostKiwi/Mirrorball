@@ -1,7 +1,6 @@
 /* Style the tab */
 .tab {
 	border-radius: calc(1vw + 1vh) calc(1vw + 1vh) 0 0;
-	width: 100%;
 	display: flex;
 }
 
@@ -43,7 +42,6 @@
 }
 
 .tab .closeTab {
-	/* Removed width and height */
 	background-color: #AA000044;
 	display: flex;
 	align-items: center;
@@ -56,8 +54,15 @@
 }
 
 .tabcontent {
+	width: 80vw;
+	width: 80svw;
+	padding: 10px 25px;
 	animation: fadeEffect 0.25s;
-	/* Fading effect takes 1 second */
+	display: flex;
+	flex-wrap: wrap;
+	overflow-y: auto;
+	gap: 20px;
+	box-sizing: border-box;
 }
 
 /* Go from zero to full opacity */

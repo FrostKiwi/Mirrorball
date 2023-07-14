@@ -27,7 +27,7 @@ function openTab(evt, cityName) {
 
 	// Show the current tab, and add an "active" class to the button that opened the tab
 	if (evt) {
-		document.getElementById(cityName).style.display = "block";
+		document.getElementById(cityName).style.display = "flex";
 		evt.currentTarget.className += " active";
 	} else if (tablinks.length > 0) {
 		// Exclude the closeTab button

@@ -5,8 +5,10 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Frost-O-Rama</title>
-	<link rel="icon" href="favicon.svg">
+	<link rel="icon" href="style/img/favicon.svg">
 	<link rel="stylesheet" href="style/style.css">
+	<link rel="stylesheet" href="style/card.css">
+	<link rel="stylesheet" href="style/gui.css">
 	<link rel="stylesheet" href="style/tab.css">
 	<script src="js/tabs.js"></script>
 </head>
@@ -22,23 +24,19 @@
 				Select Media
 			</button>
 			<button class="closeTab" onclick="closeMenu()">
-				<img src="style/xmark.svg">
+				<img src="style/img/xmark.svg">
 			</button>
 		</div>
-
 
 		<div id="about" class="tabcontent">
 			<p>Explainer</p>
 		</div>
 
-		<div id="media" class="tabcontent">
-			<p>Media selection</p>
-		</div>
-
+		<div id="media" class="tabcontent"></div>
 	</div>
 
 	<div id="spinner" class="panel loader">
-		<img class="clock" src="style/clock.svg">
+		<img class="clock" src="style/img/clock.svg">
 		<p id="statusMSG">Loading</p>
 		<p id="filesize">&nbsp;</p>
 	</div>

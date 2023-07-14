@@ -17,40 +17,25 @@ canvas {
 	display: block;
 }
 
-.lil-gui {
-	--widget-color: #2d3741;
-}
-
-.lil-gui.root {
-	--background-color: var(--bgcolor);
-	backdrop-filter: var(--blur);
-	-webkit-backdrop-filter: var(--blur);
-}
-
-/* Fix as per: 
-   https: //github.com/georgealways/lil-gui/issues/109#issuecomment-1611658861
- */
-.lil-gui:not(.root) {
-	background-color: transparent;
-}
-
-.container {
-	width: 100vw;
-	height: 100vh;
-}
-
 .panel {
+	z-index: 1005; /* Display above the controls */
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	max-width: 100%;
-	max-height: 100%;
-	min-width: 25%;
-	min-height: 25%;
+	max-width: 90vw;
+	max-height: 90vh;
+	min-width: 25vw;
+	min-height: 25vh;
+	/* Override if supported */
+	max-width: 90svw;
+	max-height: 90svh;
+	min-width: 25svw;
+	min-height: 25svh;
 	transform: translate(-50%, -50%);
+	display: flex;
+	flex-direction: column;
 
 	/* Style */
-	padding: 20 px;
 	background-color: #000000CC;
 	border-radius: calc(1vw + 1vh);
 	box-shadow:

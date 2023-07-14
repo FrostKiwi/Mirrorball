@@ -50,8 +50,8 @@ function update_degrees() {
 	if (ctr.cam.rot_deg[0] < -90) ctr.cam.rot_deg[0] = -90;
 
 	/* Make sure the GUI responds */
-	ctx.gui.controller.pitch.updateDisplay();
-	ctx.gui.controller.yaw.updateDisplay();
+	ctx.gui.controller.cam_pitch.updateDisplay();
+	ctx.gui.controller.cam_yaw.updateDisplay();
 	ctx.gui.controller.cam_fov.updateDisplay();
 }
 

@@ -1,0 +1,51 @@
+.card {
+	background: #FFFFFF;
+	border-radius: 15px;
+	box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+	margin: 2% auto;
+	cursor: pointer;
+	overflow: hidden;
+}
+
+.card-header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px;
+	position: relative;
+}
+
+.card-title {
+	font-weight: 600;
+	margin: 0;
+	color: #222
+}
+
+.card-icon {
+	padding-right: 5px;
+	height: 25px;
+	width: auto;
+	filter: invert(20%)
+}
+
+.card-image {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.card-description {
+	padding: 10px;
+}
+
+.card-field {
+	margin: 0;
+	color: #333333;
+}
+
+.card-field .file-size,
+.card-field .dimensions,
+.card-field .submitter {
+	font-weight: 600;
+	color: #333333;
+}

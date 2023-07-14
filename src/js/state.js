@@ -12,6 +12,7 @@ export let ctx = {
 	animate: null,
 	animate_cont: null,
 	drawing: false,
+	loading: false,
 	canvasToDisplaySizeMap: null,
 	shaders: {
 		ch1: {
@@ -191,7 +192,7 @@ export function redraw() {
 
 function toggleMenu() {
 	if (ctx.dom.menu.style.display === 'none')
-		ctx.dom.menu.style.display = 'block';
+		ctx.dom.menu.style.display = 'flex';
 	else
 		ctx.dom.menu.style.display = 'none';
 }
