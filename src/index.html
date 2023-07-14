@@ -7,15 +7,36 @@
 	<title>Frost-O-Rama</title>
 	<link rel="icon" href="favicon.svg">
 	<link rel="stylesheet" href="style/style.css">
+	<link rel="stylesheet" href="style/tab.css">
+	<script src="js/tabs.js"></script>
 </head>
 
 <body>
 	<canvas></canvas>
 	<div id="menu" class="panel">
-<!-- 		<img src="style/kiwi_happy.svg" class="kiwi flip" />
-		<h1>Welcome</h1>
-		<img src="style/kiwi_love.svg" class="kiwi" /> -->
+		<div class="tab">
+			<button class="tablinks" onclick="openTab(event, 'about')">
+				What's this?
+			</button>
+			<button class="tablinks" onclick="openTab(event, 'media')">
+				Select Media
+			</button>
+			<button class="closeTab" onclick="closeMenu()">
+				<img src="style/xmark.svg">
+			</button>
+		</div>
+
+
+		<div id="about" class="tabcontent">
+			<p>Explainer</p>
+		</div>
+
+		<div id="media" class="tabcontent">
+			<p>Media selection</p>
+		</div>
+
 	</div>
+
 	<div id="spinner" class="panel loader">
 		<img class="clock" src="style/clock.svg">
 		<p id="statusMSG">Loading</p>

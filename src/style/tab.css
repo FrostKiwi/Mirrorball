@@ -1,0 +1,77 @@
+/* Style the tab */
+.tab {
+	border-radius: calc(1vw + 1vh) calc(1vw + 1vh) 0 0;
+	width: 100%;
+	display: flex;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+	color: rgb(230, 230, 230);
+	background-color: inherit;
+	float: left;
+	border: none;
+	height: 50px;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	transition: 0.3s;
+	border-radius: calc(1vw + 1vh) calc(1vw + 1vh) 0 0;
+	background-color: #00000044;
+}
+
+/* Remove border radius from right side of all buttons except the last */
+.tab button:not(:last-child) {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+/* Remove border radius from left side of all buttons except the first */
+.tab button:not(:first-child) {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+	background-color: #00000088;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+	background-color: #00000066;
+}
+
+.tab .closeTab {
+	/* Removed width and height */
+	background-color: #AA000044;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.tab .closeTab img {
+	/* Adjust the image size according to your needs */
+	width: 20px;
+}
+
+.tabcontent {
+	animation: fadeEffect 0.25s;
+	/* Fading effect takes 1 second */
+}
+
+/* Go from zero to full opacity */
+@keyframes fadeEffect {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+.closeTab img {
+	filter: invert(1);
+	opacity: 0.8;
+}

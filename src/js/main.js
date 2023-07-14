@@ -51,9 +51,6 @@ function init() {
 
 	load_from_url("img/room.jpg");
 
-	/* DEBUG */
-	ctx.gui.menu();
-
 	setup_input();
 }
 
