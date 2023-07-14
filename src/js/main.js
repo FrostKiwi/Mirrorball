@@ -1,4 +1,4 @@
-import { ctx } from './state.js';
+import { ctx, toggleMenu } from './state.js';
 import { load_from_url, media_populate } from './media.js';
 import media from './mediaData.js';
 import init_gui from './gui.js';
@@ -6,6 +6,7 @@ import { onResize } from './resize.js'
 import init_shaders from './init_shaders.js'
 import render from './render.js'
 import { key_input, setup_input } from './input.js'
+import { openTab } from './tabs.js'
 
 ctx.canvas = document.querySelector("canvas");
 /* Since we draw over the whole screen, no need to flush */
@@ -51,6 +52,20 @@ function init() {
 	/* Prevents headaches when loading NPOT textures */
 	ctx.gl.pixelStorei(ctx.gl.UNPACK_ALIGNMENT, 1);
 
+	document.getElementById('tab_about').addEventListener(
+		'click', function (event) {
+			openTab(event, 'about');
+		}
+	);
+	document.getElementById('tab_media').addEventListener(
+		'click', function (event) {
+			openTab(event, 'media');
+		}
+	);
+	document.getElementById('tab_close').onclick = function () {
+		toggleMenu();
+	};
+	document.getElementById("tab_about").click();
 	media_populate();
 	load_from_url(media[0]);
 

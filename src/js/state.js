@@ -190,7 +190,7 @@ export function redraw() {
 		requestAnimationFrame(ctx.animate);
 }
 
-function toggleMenu() {
+export function toggleMenu() {
 	if (ctx.dom.menu.style.display === 'none')
 		ctx.dom.menu.style.display = 'flex';
 	else

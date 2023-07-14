@@ -10,20 +10,19 @@
 	<link rel="stylesheet" href="style/card.css">
 	<link rel="stylesheet" href="style/gui.css">
 	<link rel="stylesheet" href="style/tab.css">
-	<script src="js/tabs.js"></script>
 </head>
 
 <body>
 	<canvas></canvas>
 	<div id="menu" class="panel">
 		<div class="tab">
-			<button class="tablinks" onclick="openTab(event, 'about')">
+			<button class="tablinks" id="tab_about">
 				What's this?
 			</button>
-			<button class="tablinks" onclick="openTab(event, 'media')">
+			<button class="tablinks" id="tab_media">
 				Select Media
 			</button>
-			<button class="closeTab" onclick="closeMenu()">
+			<button class="closeTab" id="tab_close">
 				<img src="style/img/xmark.svg">
 			</button>
 		</div>

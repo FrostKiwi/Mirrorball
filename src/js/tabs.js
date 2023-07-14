@@ -1,5 +1,5 @@
 // As per https://www.w3schools.com/howto/howto_js_tabs.asp
-function openTab(evt, cityName) {
+export function openTab(evt, cityName) {
 	// Declare all variables
 	var i, tabcontent, tablinks;
 
@@ -24,24 +24,9 @@ function openTab(evt, cityName) {
 		}
 	}
 
-
 	// Show the current tab, and add an "active" class to the button that opened the tab
 	if (evt) {
 		document.getElementById(cityName).style.display = "flex";
 		evt.currentTarget.className += " active";
-	} else if (tablinks.length > 0) {
-		// Exclude the closeTab button
-		if (tablinks[0].className.indexOf("closeTab") === -1) {
-			tablinks[0].click(); // Clicks on the first tab
-		}
-	}
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-	openTab(null, null); // Will automatically open the first tab
-}, false);
-
-function closeMenu() {
-	const menu = document.getElementById('menu');
-	menu.style.display = 'none';
+	};
 }

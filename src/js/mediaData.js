@@ -30,7 +30,7 @@ const media = [
 		thumb: "/media/thumb/store.jpg",
 		fileSize: "2.2 MB",
 		dimensions: "2464x2464",
-		sphere_fov: 310,
+		sphere_fov: 260,
 		crop: {
 			top: 97,
 			bot: 125,

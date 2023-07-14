@@ -14,7 +14,7 @@ export function media_populate() {
 		};
 		card.innerHTML = `
 			<div class="card-header">
-				<img src="style/img/${media.type}.svg" style="color: #6d0129;" class="card-icon">
+				<img src="img/${media.type}.svg" style="color: #6d0129;" class="card-icon">
 				<h2 class="card-title">${media.title}</h2>
 			</div>
 			<img class="card-image" src="${media.thumb}" alt="Thumbnail">
