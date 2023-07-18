@@ -94,6 +94,30 @@ const media = [
 			Yaw: -50,
 			Pitch: 0
 		}
+	},
+	{
+		type: "image",
+		title: "Inverted earth",
+		path: "/media/earth.jpg",
+		thumb: "/media/thumb/earth.jpg",
+		fileSize: "4.6 MB",
+		dimensions: "8192x8192",
+		sphere_fov: 360,
+		crop: {
+			top: 0,
+			bot: 0,
+			left: 0,
+			right: 0
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 0,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 0,
+			Pitch: 0
+		}
 	}
 ];
 
