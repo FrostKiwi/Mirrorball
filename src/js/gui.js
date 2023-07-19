@@ -22,10 +22,10 @@ export default function init_gui() {
 		ctr.cam.fov, 'cur', ctx.cam.fov.min, ctx.cam.fov.max, 1).name(
 			"Vertical FOV [in °]"
 		).onChange(redraw);
-	ctx.gui.controller.cam_pitch = ctx.gui.folder.camera.add(
-		ctr.cam.rot_deg, '0', -90, 90).name("Pitch [in °]").onChange(redraw);
 	ctx.gui.controller.cam_yaw = ctx.gui.folder.camera.add(
 		ctr.cam.rot_deg, '1', -180, 180).name("Yaw [in °]").onChange(redraw);
+	ctx.gui.controller.cam_pitch = ctx.gui.folder.camera.add(
+		ctr.cam.rot_deg, '0', -90, 90).name("Pitch [in °]").onChange(redraw);
 
 	/* Projection Controls */
 	ctx.gui.folder.setup =
@@ -57,13 +57,13 @@ export default function init_gui() {
 
 	/* World rotation */
 	ctx.gui.folder.world = ctx.gui.folder.setup.addFolder('World Rotation');
-	ctx.gui.controller.world_pitch =
-		ctx.gui.folder.world.add(ctr.ch1.rot_deg, '0', -180, 180).name(
-			"Pitch [in °]"
-		).onChange(redraw);
 	ctx.gui.controller.world_yaw =
 		ctx.gui.folder.world.add(ctr.ch1.rot_deg, '1', -180, 180).name(
 			"Yaw [in °]"
+		).onChange(redraw);
+	ctx.gui.controller.world_pitch =
+		ctx.gui.folder.world.add(ctr.ch1.rot_deg, '0', -180, 180).name(
+			"Pitch [in °]"
 		).onChange(redraw);
 	ctx.gui.controller.world_roll =
 		ctx.gui.folder.world.add(ctr.ch1.rot_deg, '2', -180, 180).name(

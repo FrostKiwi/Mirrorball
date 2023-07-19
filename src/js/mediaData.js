@@ -73,7 +73,7 @@ const media = [
 	},
 	{
 		type: "image",
-		title: "Tokyo Park",
+		title: "Giant Tokyopark Ball",
 		path: "/media/tokyo.jpg",
 		thumb: "/media/thumb/tokyo.jpg",
 		fileSize: "1.6 MB",
@@ -116,6 +116,78 @@ const media = [
 		},
 		camera_inital: {
 			Yaw: 0,
+			Pitch: 0
+		}
+	},
+	{
+		type: "image",
+		title: "M.C. Escher sphere table",
+		path: "/media/escher_table.jpg",
+		thumb: "/media/thumb/escher_table.jpg",
+		fileSize: "1.1 MB",
+		dimensions: "1841x1087",
+		sphere_fov: 290,
+		crop: {
+			top: 111,
+			bot: 479,
+			left: 673,
+			right: 677
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 34,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: -90,
+			Pitch: 0
+		}
+	},
+	{
+		type: "image",
+		title: "M.C. Escher sphere in hand",
+		path: "/media/escher_hand.jpg",
+		thumb: "/media/thumb/escher_hand.jpg",
+		fileSize: "3.57 MB",
+		dimensions: "2016x3000",
+		sphere_fov: 300,
+		crop: {
+			top: 145,
+			bot: 1131,
+			left: 154,
+			right: 154
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 8,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 50,
+			Pitch: 0
+		}
+	},
+	{
+		type: "image",
+		title: "M.C. Escher sphere woodcut",
+		path: "/media/escher_woodcut.jpg",
+		thumb: "/media/thumb/escher_woodcut.jpg",
+		fileSize: "0.1 MB",
+		dimensions: "600x593",
+		sphere_fov: 260,
+		crop: {
+			top: 43,
+			bot: 34,
+			left: 42,
+			right: 43
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 38,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: -60,
 			Pitch: 0
 		}
 	}
