@@ -43,9 +43,6 @@
 	color: #333333;
 }
 
-.card-field .file-size,
-.card-field .dimensions,
-.card-field .submitter {
+.card-field .value {
 	font-weight: 600;
-	color: #333333;
 }

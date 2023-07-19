@@ -1,5 +1,5 @@
 import { ctx, toggleMenu } from './state.js';
-import { load_from_url, media_populate, upload_card } from './media.js';
+import { load_from_url, media_populate, upload_image, upload_video } from './media.js';
 import media from './mediaData.js';
 import init_gui from './gui.js';
 import { onResize } from './resize_canvas.js'
@@ -67,8 +67,11 @@ function init() {
 			openTab(event, 'connect');
 		}
 	);
-	document.getElementById('upload-file').onclick = function () {
-		upload_card();
+	document.getElementById('upload-image').onclick = function () {
+		upload_image();
+	};
+	document.getElementById('upload-video').onclick = function () {
+		upload_video();
 	};
 	document.getElementById('tab_close').onclick = function () {
 		toggleMenu();

@@ -7,10 +7,9 @@ export function media_populate() {
 		let card = document.createElement('div');
 		card.className = 'card';
 		card.onclick = function () {
-			if (!ctx.loading) {
-				load_from_url(media);
-				closeMenu();
-			}
+			if (ctx.loading) return;
+			load_from_url(media);
+			closeMenu();
 		};
 		card.innerHTML = `
 			<div class="card-header">
@@ -19,17 +18,19 @@ export function media_populate() {
 			</div>
 			<img class="card-image" src="${media.thumb}" alt="Thumbnail">
 			<div class="card-description">
-				<p class="card-field">File Size: <span class="file-size">${media.fileSize}</span></p>
-				<p class="card-field">Dimensions: <span class="dimensions">${media.dimensions}</span></p>
-				<p class="card-field">Submitter: <span class="submitter">${media.submitter}</span></p>
+				<p class="card-field">File Size:
+					<span class="value">${media.fileSize}</span></p>
+				<p class="card-field">Dimensions:
+					<span class="value">${media.dimensions}</span></p>
+				<p class="card-field">Submitter:
+					<span class="value">${media.submitter}</span>
+				</p>
 			</div>`;
 		mediaDiv.appendChild(card);
 	});
 };
 
 const user_media = {
-	type: null,
-	path: null,
 	sphere_fov: 360,
 	crop: {
 		top: 0,
@@ -48,7 +49,8 @@ const user_media = {
 	}
 }
 
-export function upload_card() {
+export function upload_image() {
+	if (ctx.loading) return;
 	const file_selector = document.createElement('input');
 	file_selector.type = 'file';
 	file_selector.accept = 'image/*';
@@ -57,6 +59,18 @@ export function upload_card() {
 		user_media.type = "image";
 		load_from_url(user_media);
 		closeMenu();
+	}
+	file_selector.click();
+};
+
+export function upload_video() {
+	if (ctx.loading) return;
+	const file_selector = document.createElement('input');
+	file_selector.type = 'file';
+	file_selector.accept = 'video/*';
+	file_selector.onchange = function (event) {
+		user_media.path = URL.createObjectURL(event.target.files[0]);
+		user_media.type = "video";
 	}
 	file_selector.click();
 };
@@ -77,32 +91,33 @@ export async function load_from_url(media) {
 		ctx.dom.statusMSG.innerText = "Decoding image";
 		const bitmap = await createImageBitmap(blob);
 
-		ctr.ch1.fov_deg = media.sphere_fov;
-		ctr.cam.rot_deg[0] = media.camera_inital.Pitch;
-		ctr.cam.rot_deg[1] = media.camera_inital.Yaw;
-		ctr.ch1.rot_deg[0] = media.world_rotation.Pitch;
-		ctr.ch1.rot_deg[1] = media.world_rotation.Yaw;
-		ctr.ch1.rot_deg[2] = media.world_rotation.Roll;
-		ctx.gui.controller.world_pitch.updateDisplay();
-		ctx.gui.controller.world_yaw.updateDisplay();
-		ctx.gui.controller.world_roll.updateDisplay();
-		ctx.gui.controller.cam_pitch.updateDisplay();
-		ctx.gui.controller.cam_yaw.updateDisplay();
-		ctx.gui.controller.img_fov.updateDisplay();
-
-		media_setup(bitmap, media.crop);
+		media_setup(bitmap, media);
 
 	} catch (err) {
 		console.error(err);
 	}
 }
 
-function media_setup(bitmap, crop) {
+function media_setup(bitmap, media) {
 	ctx.dom.statusMSG.innerText = "Transfering into GPU memory";
-	ctx.gui.controller.left.max(bitmap.width / 2).setValue(crop.left);
-	ctx.gui.controller.right.max(bitmap.width / 2).setValue(crop.right);
-	ctx.gui.controller.top.max(bitmap.height / 2).setValue(crop.top);
-	ctx.gui.controller.bot.max(bitmap.height / 2).setValue(crop.bot);
+
+	ctr.ch1.fov_deg = media.sphere_fov;
+	ctr.cam.rot_deg[0] = media.camera_inital.Pitch;
+	ctr.cam.rot_deg[1] = media.camera_inital.Yaw;
+	ctr.ch1.rot_deg[0] = media.world_rotation.Pitch;
+	ctr.ch1.rot_deg[1] = media.world_rotation.Yaw;
+	ctr.ch1.rot_deg[2] = media.world_rotation.Roll;
+	ctx.gui.controller.world_pitch.updateDisplay();
+	ctx.gui.controller.world_yaw.updateDisplay();
+	ctx.gui.controller.world_roll.updateDisplay();
+	ctx.gui.controller.cam_pitch.updateDisplay();
+	ctx.gui.controller.cam_yaw.updateDisplay();
+	ctx.gui.controller.img_fov.updateDisplay();
+
+	ctx.gui.controller.left.max(bitmap.width / 2).setValue(media.crop.left);
+	ctx.gui.controller.right.max(bitmap.width / 2).setValue(media.crop.right);
+	ctx.gui.controller.top.max(bitmap.height / 2).setValue(media.crop.top);
+	ctx.gui.controller.bot.max(bitmap.height / 2).setValue(media.crop.bot);
 
 	ctx.gl.deleteTexture(ctx.shaders.ch1.tex);
 	ctx.shaders.ch1.tex = ctx.gl.createTexture();
