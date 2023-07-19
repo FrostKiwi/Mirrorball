@@ -1,8 +1,8 @@
 import { ctx, toggleMenu } from './state.js';
-import { load_from_url, media_populate } from './media.js';
+import { load_from_url, media_populate, upload_card } from './media.js';
 import media from './mediaData.js';
 import init_gui from './gui.js';
-import { onResize } from './resize.js'
+import { onResize } from './resize_canvas.js'
 import init_shaders from './init_shaders.js'
 import render from './render.js'
 import { key_input, setup_input } from './input.js'
@@ -62,6 +62,14 @@ function init() {
 			openTab(event, 'media');
 		}
 	);
+	document.getElementById('tab_connect').addEventListener(
+		'click', function (event) {
+			openTab(event, 'connect');
+		}
+	);
+	document.getElementById('upload-file').onclick = function () {
+		upload_card();
+	};
 	document.getElementById('tab_close').onclick = function () {
 		toggleMenu();
 	};

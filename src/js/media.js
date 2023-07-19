@@ -14,7 +14,7 @@ export function media_populate() {
 		};
 		card.innerHTML = `
 			<div class="card-header">
-				<img src="img/${media.type}.svg" style="color: #6d0129;" class="card-icon">
+				<img src="img/${media.type}.svg" class="card-icon">
 				<h2 class="card-title">${media.title}</h2>
 			</div>
 			<img class="card-image" src="${media.thumb}" alt="Thumbnail">
@@ -25,6 +25,40 @@ export function media_populate() {
 			</div>`;
 		mediaDiv.appendChild(card);
 	});
+};
+
+const user_media = {
+	type: null,
+	path: null,
+	sphere_fov: 360,
+	crop: {
+		top: 0,
+		bot: 0,
+		left: 0,
+		right: 0
+	},
+	world_rotation: {
+		Yaw: 0,
+		Pitch: 0,
+		Roll: 0
+	},
+	camera_inital: {
+		Yaw: 0,
+		Pitch: 0
+	}
+}
+
+export function upload_card() {
+	const file_selector = document.createElement('input');
+	file_selector.type = 'file';
+	file_selector.accept = 'image/*';
+	file_selector.onchange = function (event) {
+		user_media.path = URL.createObjectURL(event.target.files[0]);
+		user_media.type = "image";
+		load_from_url(user_media);
+		closeMenu();
+	}
+	file_selector.click();
 };
 
 export async function load_from_url(media) {

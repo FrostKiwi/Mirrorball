@@ -20,7 +20,10 @@
 				What's this?
 			</button>
 			<button class="tablinks" id="tab_media">
-				Select Media
+				Media gallery
+			</button>
+			<button class="tablinks" id="tab_connect">
+				Userfile or device
 			</button>
 			<button class="closeTab" id="tab_close">
 				<img src="style/img/xmark.svg">
@@ -32,6 +35,21 @@
 		</div>
 
 		<div id="media" class="tabcontent"></div>
+		<div id="connect" class="tabcontent">
+			<div id="upload-file" class="card">
+				<div class="card-header">
+					<img src="style/img/upload.svg" class="card-icon">
+					<h2 class="card-title">Image</h2>
+				</div>
+				<img class="card-image" src="style/img/file_image.svg" alt="Thumbnail">
+				<div class="card-description">
+					<p class="card-field">Load an image into the WebApp.<br>
+						<span class="file-size">The file stays on your device<br>
+							nothing is uploaded to a server.</span>
+					</p>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div id="spinner" class="panel loader">
