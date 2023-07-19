@@ -1,4 +1,5 @@
 import { ctx, ctr, redraw } from './state.js';
+import { print_glinfo } from './gl_basics.js'
 import GUI from 'lil-gui';
 
 export default function init_gui() {
@@ -129,6 +130,7 @@ function eruda_toggle(value) {
 			script.src = "//cdn.jsdelivr.net/npm/eruda";
 			script.onload = function () {
 				eruda.init();
+				print_glinfo();
 			};
 			document.body.appendChild(script);
 		}

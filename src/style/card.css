@@ -46,3 +46,8 @@
 .card-field .value {
 	font-weight: 600;
 }
+
+.source-link {
+	color: #607eb6;
+	/* Set your desired color value here */
+}

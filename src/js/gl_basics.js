@@ -1,5 +1,7 @@
 /* From: https://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html */
 
+import { ctx } from './state.js';
+
 /**
  * Creates and compiles a shader.
  *
@@ -59,7 +61,18 @@ function createProgram(gl, vertexShader, fragmentShader) {
 };
 
 export function compile_and_link(gl, vertex, fragment) {
-	const vs =  compileShader(gl, vertex, gl.VERTEX_SHADER);
+	const vs = compileShader(gl, vertex, gl.VERTEX_SHADER);
 	const fs = compileShader(gl, fragment, gl.FRAGMENT_SHADER);
 	return createProgram(gl, vs, fs);
+}
+
+export function print_glinfo() {
+	console.log(
+		"WebGL Version: " + ctx.gl.getParameter(ctx.gl.VERSION) + '\n' +
+		"Vendor: " + ctx.gl.getParameter(ctx.gl.VENDOR) + '\n' +
+		"Renderer: " + ctx.gl.getParameter(ctx.gl.RENDERER) + '\n' +
+		"GLSL Version: " +
+		ctx.gl.getParameter(ctx.gl.SHADING_LANGUAGE_VERSION) + '\n' +
+		"Max tex-size: " +
+		ctx.gl.getParameter(ctx.gl.MAX_TEXTURE_SIZE) + "px²");
 }

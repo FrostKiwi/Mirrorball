@@ -73,7 +73,7 @@ const media = [
 	},
 	{
 		type: "image",
-		title: "Giant Tokyopark Ball",
+		title: "Giant Tokyo ball",
 		path: "/media/tokyo.jpg",
 		thumb: "/media/thumb/tokyo.jpg",
 		fileSize: "1.6 MB",
@@ -102,6 +102,7 @@ const media = [
 		thumb: "/media/thumb/earth.jpg",
 		fileSize: "4.6 MB",
 		dimensions: "8192x8192",
+		source: "https://visibleearth.nasa.gov/images/147190/explorer-base-map",
 		sphere_fov: 360,
 		crop: {
 			top: 0,
@@ -126,6 +127,7 @@ const media = [
 		thumb: "/media/thumb/escher_table.jpg",
 		fileSize: "1.1 MB",
 		dimensions: "1841x1087",
+		source: "https://mcescher.com/foundation/",
 		sphere_fov: 290,
 		crop: {
 			top: 111,
@@ -150,6 +152,7 @@ const media = [
 		thumb: "/media/thumb/escher_hand.jpg",
 		fileSize: "3.57 MB",
 		dimensions: "2016x3000",
+		source: "https://mcescher.com/foundation/",
 		sphere_fov: 300,
 		crop: {
 			top: 145,
@@ -174,6 +177,7 @@ const media = [
 		thumb: "/media/thumb/escher_woodcut.jpg",
 		fileSize: "0.1 MB",
 		dimensions: "600x593",
+		source: "https://mcescher.com/foundation/",
 		sphere_fov: 260,
 		crop: {
 			top: 43,
@@ -188,6 +192,31 @@ const media = [
 		},
 		camera_inital: {
 			Yaw: -60,
+			Pitch: 0
+		}
+	},
+	{
+		type: "image",
+		title: "Gene Miller 1982",
+		path: "/media/gene_miller.jpg",
+		thumb: "/media/thumb/gene_miller.jpg",
+		fileSize: "0.2 MB",
+		dimensions: "1536x1024",
+		source: "https://www.pauldebevec.com/ReflectionMapping/miller.html",
+		sphere_fov: 310,
+		crop: {
+			top: 314,
+			bot: 281,
+			left: 561,
+			right: 544
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 0,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: -100,
 			Pitch: 0
 		}
 	}

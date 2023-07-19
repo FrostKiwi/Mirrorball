@@ -11,6 +11,13 @@ export function media_populate() {
 			load_from_url(media);
 			closeMenu();
 		};
+
+		let sourceLink = '';
+		if (media.source) {
+			sourceLink = `<p class="card-field">
+			<a href="${media.source}" class="source-link">Source</a></p>`;
+		}
+
 		card.innerHTML = `
 			<div class="card-header">
 				<img src="img/${media.type}.svg" class="card-icon">
@@ -22,9 +29,7 @@ export function media_populate() {
 					<span class="value">${media.fileSize}</span></p>
 				<p class="card-field">Dimensions:
 					<span class="value">${media.dimensions}</span></p>
-				<p class="card-field">Submitter:
-					<span class="value">${media.submitter}</span>
-				</p>
+				${sourceLink}
 			</div>`;
 		mediaDiv.appendChild(card);
 	});

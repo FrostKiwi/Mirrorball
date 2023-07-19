@@ -1,6 +1,7 @@
 import { ctx, toggleMenu } from './state.js';
 import { load_from_url, media_populate, upload_image, upload_video } from './media.js';
 import media from './mediaData.js';
+import { print_glinfo } from './gl_basics.js'
 import init_gui from './gui.js';
 import { onResize } from './resize_canvas.js'
 import init_shaders from './init_shaders.js'
@@ -14,14 +15,7 @@ ctx.gl = ctx.canvas.getContext('webgl', { preserveDrawingBuffer: false });
 
 function main() {
 	if (ctx.gl)
-		console.log(
-			"WebGL Version: " + ctx.gl.getParameter(ctx.gl.VERSION) + '\n' +
-			"Vendor: " + ctx.gl.getParameter(ctx.gl.VENDOR) + '\n' +
-			"Renderer: " + ctx.gl.getParameter(ctx.gl.RENDERER) + '\n' +
-			"GLSL Version: " +
-			ctx.gl.getParameter(ctx.gl.SHADING_LANGUAGE_VERSION) + '\n' +
-			"Max tex-size: " +
-			ctx.gl.getParameter(ctx.gl.MAX_TEXTURE_SIZE) + "px²");
+		print_glinfo();
 	else {
 		console.error("No WebGl context received.");
 		return;
@@ -34,6 +28,8 @@ function init() {
 	ctx.canvasToDisplaySizeMap = new Map([[ctx.canvas, [300, 150]]]);
 	const resizeObserver = new ResizeObserver(onResize);
 	resizeObserver.observe(ctx.canvas, { box: 'content-box' });
+
+	ctx.max_texsize = ctx.gl.getParameter(ctx.gl.MAX_TEXTURE_SIZE);
 
 	/* Input handlers */
 

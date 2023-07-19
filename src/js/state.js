@@ -10,6 +10,7 @@ export let ctx = {
 	redraw: false,
 	continous: false,
 	animate: null,
+	max_texsize: 0,
 	animate_cont: null,
 	drawing: false,
 	loading: false,
