@@ -1,14 +1,13 @@
-import { ctx, toggleMenu } from './state.js';
-import { load_from_url, media_populate, upload_image, update_texture } from './media.js';
-import { list_devices, upload_video } from './media_video.js'
+import { ctx } from './state.js';
+import { load_from_url, update_texture } from './media.js';
 import media from './mediaData.js';
 import { print_glinfo } from './gl_basics.js'
 import init_gui from './gui.js';
 import { onResize } from './resize_canvas.js'
 import init_shaders from './init_shaders.js'
 import render from './render.js'
+import { setupTabs } from './tabs.js';
 import { key_input, setup_input, controller_input } from './input.js'
-import { openTab } from './tabs.js'
 
 ctx.canvas = document.querySelector("canvas");
 /* Since we draw over the whole screen, no need to flush */
@@ -49,35 +48,7 @@ function init() {
 	/* Prevents headaches when loading NPOT textures */
 	ctx.gl.pixelStorei(ctx.gl.UNPACK_ALIGNMENT, 1);
 
-	document.getElementById('tab_about').addEventListener(
-		'click', function (event) {
-			openTab(event, 'about');
-		}
-	);
-	document.getElementById('tab_media').addEventListener(
-		'click', function (event) {
-			openTab(event, 'media');
-		}
-	);
-	document.getElementById('tab_connect').addEventListener(
-		'click', function (event) {
-			openTab(event, 'connect');
-		}
-	);
-	document.getElementById('upload-image').onclick = function () {
-		upload_image();
-	};
-	document.getElementById('upload-video').onclick = function () {
-		upload_video();
-	};
-	document.getElementById('webcam').onclick = function () {
-		list_devices();
-	};
-	document.getElementById('tab_close').onclick = function () {
-		toggleMenu();
-	};
-	document.getElementById("tab_about").click();
-	media_populate();
+	setupTabs();
 	load_from_url(media[0]);
 
 	setup_input();

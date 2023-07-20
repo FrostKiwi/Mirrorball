@@ -1,3 +1,7 @@
+import { toggleMenu } from './state.js';
+import { list_devices, upload_video } from './media_video.js'
+import { media_populate, upload_image } from './media.js';
+
 // As per https://www.w3schools.com/howto/howto_js_tabs.asp
 export function openTab(evt, cityName) {
 	// Declare all variables
@@ -29,4 +33,36 @@ export function openTab(evt, cityName) {
 		document.getElementById(cityName).style.display = "flex";
 		evt.currentTarget.className += " active";
 	};
+}
+
+export function setupTabs() {
+	document.getElementById('tab_about').addEventListener(
+		'click', function (event) {
+			openTab(event, 'about');
+		}
+	);
+	document.getElementById('tab_media').addEventListener(
+		'click', function (event) {
+			openTab(event, 'media');
+		}
+	);
+	document.getElementById('tab_connect').addEventListener(
+		'click', function (event) {
+			openTab(event, 'connect');
+		}
+	);
+	document.getElementById('upload-image').onclick = function () {
+		upload_image();
+	};
+	document.getElementById('upload-video').onclick = function () {
+		upload_video();
+	};
+	document.getElementById('webcam').onclick = function () {
+		list_devices();
+	};
+	document.getElementById('tab_close').onclick = function () {
+		toggleMenu();
+	};
+	document.getElementById("tab_about").click();
+	media_populate();
 }

@@ -94,6 +94,8 @@ export function controller_input() {
 		let mul = (ctr.cam.fov.cur - ctx.cam.fov.min) /
 			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
 
+		/* Get exponential scaling gamepad curve via the axes' magnitude, so the
+		   pow operator doesn't restrict diagonal movement. */
 		const exp_scale =
 			Math.pow(
 				Math.sqrt(gp.axes[0] * gp.axes[0] + gp.axes[1] * gp.axes[1]),

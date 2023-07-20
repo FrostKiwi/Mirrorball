@@ -11,39 +11,12 @@ export function list_devices() {
 	navigator.mediaDevices.getUserMedia({ video: true })
 		.then(stream => {
 			/* Make sure to stop the stream */
-			/* Maybe useless? */
 			stream.getTracks().forEach(track => track.stop());
 
 			/* Enumerate devices after permissions granted */
 			navigator.mediaDevices.enumerateDevices()
 				.then(devices => {
-					let videoDevices = devices.filter(device => device.kind === 'videoinput');
-					let selector = document.getElementById('webcams');
-
-					videoDevices.forEach((device, index) => {
-						let option = document.createElement('option');
-						option.value = device.deviceId;
-						/* fallback to Camera n if label is not available */
-						option.text = device.label || `Camera ${index + 1}`;
-						selector.appendChild(option);
-					});
-
-					let startButton = document.getElementById('start');
-					startButton.addEventListener('click', () => launch_stream(selector.value));
-
-					let hideElements = document.querySelectorAll('#hide_on_device');
-					hideElements.forEach(element => {
-						element.style.display = 'none';
-					});
-					let showElements = document.querySelectorAll('#show_on_device');
-					showElements.forEach(element => {
-						element.style.display = 'block';
-					});
-					document.getElementById('webcams').style.display = 'block';
-					document.getElementById('start').style.display = 'block';
-
-					document.getElementById('spinner').style.display = 'none';
-					ctx.loading = false;
+					getDeviceList(devices)
 				})
 				.catch(err => {
 					document.getElementById('spinner').style.display = 'none';
@@ -54,6 +27,36 @@ export function list_devices() {
 			document.getElementById('spinner').style.display = 'none';
 			console.error('User denied permissions,', err);
 		});
+}
+
+function getDeviceList(devices) {
+	let videoDevices = devices.filter(device => device.kind === 'videoinput');
+	let selector = document.getElementById('webcams');
+
+	videoDevices.forEach((device, index) => {
+		let option = document.createElement('option');
+		option.value = device.deviceId;
+		/* fallback to Camera n if label is not available */
+		option.text = device.label || `Camera ${index + 1}`;
+		selector.appendChild(option);
+	});
+
+	let startButton = document.getElementById('start');
+	startButton.addEventListener('click', () => launch_stream(selector.value));
+
+	let hideElements = document.querySelectorAll('#hide_on_device');
+	hideElements.forEach(element => {
+		element.style.display = 'none';
+	});
+	let showElements = document.querySelectorAll('#show_on_device');
+	showElements.forEach(element => {
+		element.style.display = 'block';
+	});
+	document.getElementById('webcams').style.display = 'block';
+	document.getElementById('start').style.display = 'block';
+
+	document.getElementById('spinner').style.display = 'none';
+	ctx.loading = false;
 }
 
 export function disable_video() {
