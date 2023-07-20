@@ -1,5 +1,6 @@
 import { ctx, toggleMenu } from './state.js';
-import { load_from_url, media_populate, upload_image, upload_video } from './media.js';
+import { load_from_url, media_populate, upload_image } from './media.js';
+import { list_devices, upload_video } from './media_video.js'
 import media from './mediaData.js';
 import { print_glinfo } from './gl_basics.js'
 import init_gui from './gui.js';
@@ -68,6 +69,9 @@ function init() {
 	};
 	document.getElementById('upload-video').onclick = function () {
 		upload_video();
+	};
+	document.getElementById('webcam').onclick = function () {
+		list_devices();
 	};
 	document.getElementById('tab_close').onclick = function () {
 		toggleMenu();

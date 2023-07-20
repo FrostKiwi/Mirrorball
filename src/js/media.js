@@ -35,7 +35,7 @@ export function media_populate() {
 	});
 };
 
-const user_media = {
+export const user_media = {
 	sphere_fov: 360,
 	crop: {
 		top: 0,
@@ -64,18 +64,6 @@ export function upload_image() {
 		user_media.type = "image";
 		load_from_url(user_media);
 		closeMenu();
-	}
-	file_selector.click();
-};
-
-export function upload_video() {
-	if (ctx.loading) return;
-	const file_selector = document.createElement('input');
-	file_selector.type = 'file';
-	file_selector.accept = 'video/*';
-	file_selector.onchange = function (event) {
-		user_media.path = URL.createObjectURL(event.target.files[0]);
-		user_media.type = "video";
 	}
 	file_selector.click();
 };
