@@ -82,12 +82,58 @@ export function key_input(time) {
 	update_degrees();
 }
 
+export function controller_input() {
+	const gamepads = navigator.getGamepads();
+
+	if (gamepads[0]) {
+		const gp = gamepads[0];
+
+		const rotationSpeed = 2.5;
+		const zoomSpeed = 1.5;
+
+		let mul = (ctr.cam.fov.cur - ctx.cam.fov.min) /
+			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
+
+		const exp_scale =
+			Math.pow(
+				Math.sqrt(gp.axes[0] * gp.axes[0] + gp.axes[1] * gp.axes[1]),
+				3);
+
+		if (Math.abs(gp.axes[1]) > ctx.gui.deadzone)
+			ctr.cam.rot_deg[0] -=
+				gp.axes[1] * exp_scale * rotationSpeed * mul;
+
+		if (Math.abs(gp.axes[0]) > ctx.gui.deadzone)
+			ctr.cam.rot_deg[1] -=
+				gp.axes[0] * exp_scale * rotationSpeed * mul;
+
+		if (Math.abs(gp.axes[3]) > ctx.gui.deadzone)
+			ctr.cam.fov.cur +=
+				gp.axes[3] * Math.pow(gp.axes[3], 4) * zoomSpeed * mul;
+
+		update_degrees();
+	}
+}
+
 export function setup_input() {
 	let lastTouch = null;
 	let lastMouse = null;
 	const mouseSpeed = 0.2;
 	const fingerSpeed = 0.4;
 	const wheelSpeed = 0.05;
+
+	/* Set controller to enable continous mode */
+	window.addEventListener("gamepadconnected", (e) => {
+		ctx.controller = true;
+		if (!ctx.continous) {
+			ctx.continous = true;
+			requestAnimationFrame(ctx.animate_cont);
+		}
+	});
+
+	window.addEventListener("gamepaddisconnected", (e) => {
+		ctx.controller = false;
+	});
 
 	/* Touch */
 	ctx.canvas.addEventListener('touchstart', e => {

@@ -2,19 +2,19 @@ import { ctx } from './state.js';
 import { user_media, media_setup } from './media.js';
 
 export function list_devices() {
-	// If the selector already exists, return from function
+	/* If the selector already exists, return from function */
 	if (ctx.loading || document.getElementById('webcam-selector')) return;
 	ctx.loading = true;
-	// start spinner and hide menus
 	document.getElementById('spinner').style.display = 'block';
 	document.getElementById('statusMSG').innerText = "Requesting full list of all video devices";
 
 	navigator.mediaDevices.getUserMedia({ video: true })
 		.then(stream => {
-			// Make sure to stop the stream
+			/* Make sure to stop the stream */
+			/* Maybe useless? */
 			stream.getTracks().forEach(track => track.stop());
 
-			// Enumerate devices after permissions granted
+			/* Enumerate devices after permissions granted */
 			navigator.mediaDevices.enumerateDevices()
 				.then(devices => {
 					let videoDevices = devices.filter(device => device.kind === 'videoinput');
@@ -23,14 +23,14 @@ export function list_devices() {
 					videoDevices.forEach((device, index) => {
 						let option = document.createElement('option');
 						option.value = device.deviceId;
-						option.text = device.label || `Camera ${index + 1}`; // fallback to Camera n if label is not available
+						/* fallback to Camera n if label is not available */
+						option.text = device.label || `Camera ${index + 1}`;
 						selector.appendChild(option);
 					});
 
 					let startButton = document.getElementById('start');
 					startButton.addEventListener('click', () => launch_stream(selector.value));
 
-					// Hide elements with id "hide_on_device"
 					let hideElements = document.querySelectorAll('#hide_on_device');
 					hideElements.forEach(element => {
 						element.style.display = 'none';
@@ -42,18 +42,15 @@ export function list_devices() {
 					document.getElementById('webcams').style.display = 'block';
 					document.getElementById('start').style.display = 'block';
 
-					// stop spinner and show menus
 					document.getElementById('spinner').style.display = 'none';
 					ctx.loading = false;
 				})
 				.catch(err => {
-					// stop spinner and show error message
 					document.getElementById('spinner').style.display = 'none';
 					console.error('An error occurred: ' + err);
 				});
 		})
 		.catch(err => {
-			// stop spinner and show error message
 			document.getElementById('spinner').style.display = 'none';
 			console.error('User denied permissions,', err);
 		});
@@ -78,7 +75,7 @@ function launch_stream(deviceId) {
 	disable_video();
 
 	ctx.loading = true;
-	// start spinner and hide menus
+	/* Start spinner, hide menus */
 	document.getElementById('spinner').style.display = 'block';
 	document.getElementById('statusMSG').innerText = "Starting device stream";
 
@@ -97,10 +94,7 @@ function launch_stream(deviceId) {
 			ctx.video.srcObject = stream;
 			ctx.video.onloadedmetadata = function (e) {
 				ctx.video.play();
-				// You may run createImageBitmap here, when video data is ready
 				createImageBitmap(ctx.video).then(bitmap => {
-					// Here you can work with your image bitmap.
-					// Just for example, log bitmap to console
 					media_setup(bitmap, user_media);
 					ctx.playing = true;
 					if (!ctx.continous) {

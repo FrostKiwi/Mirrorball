@@ -11,6 +11,7 @@ export let ctx = {
 	continous: false,
 	animate: null,
 	video: null,
+	controller: false,
 	playing: false,
 	max_texsize: 0,
 	animate_cont: null,
@@ -48,6 +49,7 @@ export let ctx = {
 		controller: {},
 		crop_negative: false,
 		eruda: false,
+		deadzone: 0.1,
 		folder: {
 			viz: null,
 			crop: null,

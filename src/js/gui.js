@@ -81,6 +81,9 @@ export default function init_gui() {
 			"Fullscreen not supported by browser"
 		).disable();
 
+	ctx.gui.folder.settings.add(ctx.gui, 'deadzone', 0, 0.75).name(
+		"Gamepad deadzone"
+	);
 	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 2, 256, 1).name(
 		"Visualization subdivisions"
 	).onChange(redraw);

@@ -7,7 +7,7 @@ import init_gui from './gui.js';
 import { onResize } from './resize_canvas.js'
 import init_shaders from './init_shaders.js'
 import render from './render.js'
-import { key_input, setup_input } from './input.js'
+import { key_input, setup_input, controller_input } from './input.js'
 import { openTab } from './tabs.js'
 
 ctx.canvas = document.querySelector("canvas");
@@ -109,8 +109,12 @@ ctx.animate_cont = function animate(time) {
 			update_texture(bitmap);
 		});
 
-	render();
-	if (ctx.continous || ctx.playing)
+	if (ctx.controller){
+		controller_input();
+	}
+
+		render();
+	if (ctx.continous || ctx.playing || ctx.controller)
 		requestAnimationFrame(animate);
 }
 
