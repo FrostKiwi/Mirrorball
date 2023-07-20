@@ -105,7 +105,6 @@ function launch_stream(deviceId) {
 					ctx.playing = true;
 					if (!ctx.continous) {
 						ctx.continous = true;
-						lastKeyUpdate = 0;
 						requestAnimationFrame(ctx.animate_cont);
 					}
 				});
