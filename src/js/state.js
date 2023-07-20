@@ -11,6 +11,7 @@ export let ctx = {
 	continous: false,
 	animate: null,
 	video: null,
+	playing: false,
 	max_texsize: 0,
 	animate_cont: null,
 	drawing: false,

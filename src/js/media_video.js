@@ -61,6 +61,9 @@ export function list_devices() {
 
 export function disable_video() {
 	if (ctx.video) {
+		ctx.playing = false;
+		ctx.continous = false;
+
 		if (ctx.video.srcObject) {
 			const tracks = ctx.video.srcObject.getTracks();
 			tracks.forEach(track => track.stop());
@@ -99,6 +102,12 @@ function launch_stream(deviceId) {
 					// Here you can work with your image bitmap.
 					// Just for example, log bitmap to console
 					media_setup(bitmap, user_media);
+					ctx.playing = true;
+					if (!ctx.continous) {
+						ctx.continous = true;
+						lastKeyUpdate = 0;
+						requestAnimationFrame(ctx.animate_cont);
+					}
 				});
 			};
 		})

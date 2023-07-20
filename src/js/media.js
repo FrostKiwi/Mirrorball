@@ -141,6 +141,16 @@ export function media_setup(bitmap, media) {
 	redraw();
 }
 
+export function update_texture(bitmap) {
+	if (ctx.shaders.ch1.w != bitmap.width ||
+		ctx.shaders.ch1.h != bitmap.height) {
+		console.error("Bitmap and texture size mismatch");
+		return;
+	};
+	ctx.gl.texSubImage2D(ctx.gl.TEXTURE_2D, 0, 0, 0,
+		ctx.gl.RGBA, ctx.gl.UNSIGNED_BYTE, bitmap);
+}
+
 /* Defined twice and three times if we count the toggle menu button,
    need to clean this up. */
 function closeMenu() {
