@@ -91,7 +91,7 @@ export async function load_from_url(media) {
 	}
 }
 
-function media_setup(bitmap, media) {
+export function media_setup(bitmap, media) {
 	ctx.dom.statusMSG.innerText = "Transfering into GPU memory";
 
 	ctr.ch1.fov_deg = media.sphere_fov;

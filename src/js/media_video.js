@@ -1,5 +1,5 @@
 import { ctx} from './state.js';
-import { user_media } from './media.js';
+import { user_media, media_setup } from './media.js';
 
 export function list_devices() {
 	// If the selector already exists, return from function
@@ -77,18 +77,18 @@ function launch_stream(deviceId) {
 		}
 	};
 
-	const video = document.createElement('video');
+	ctx.video = document.createElement('video');
 
 	navigator.mediaDevices.getUserMedia(constraints)
 		.then(stream => {
-			video.srcObject = stream;
-			video.onloadedmetadata = function (e) {
-				video.play();
+			ctx.video.srcObject = stream;
+			ctx.video.onloadedmetadata = function (e) {
+				ctx.video.play();
 				// You may run createImageBitmap here, when video data is ready
-				createImageBitmap(video).then(bitmap => {
+				createImageBitmap(ctx.video).then(bitmap => {
 					// Here you can work with your image bitmap.
 					// Just for example, log bitmap to console
-					console.log(bitmap);
+					media_setup(bitmap, user_media);
 				});
 			};
 		})
