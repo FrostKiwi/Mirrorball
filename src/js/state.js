@@ -42,6 +42,7 @@ export let ctx = {
 	gui: {
 		handle: null,
 		menu: toggleMenu,
+		blur: true,
 		fullscreen: toggle_fullscreen,
 		controller: {},
 		crop_negative: false,

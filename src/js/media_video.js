@@ -1,4 +1,4 @@
-import { ctx} from './state.js';
+import { ctx } from './state.js';
 import { user_media, media_setup } from './media.js';
 
 export function list_devices() {
@@ -18,9 +18,7 @@ export function list_devices() {
 			navigator.mediaDevices.enumerateDevices()
 				.then(devices => {
 					let videoDevices = devices.filter(device => device.kind === 'videoinput');
-					let selector = document.createElement('select');
-					selector.id = 'webcam-selector';
-					selector.classList.add('list');
+					let selector = document.getElementById('webcams');
 
 					videoDevices.forEach((device, index) => {
 						let option = document.createElement('option');
@@ -29,27 +27,20 @@ export function list_devices() {
 						selector.appendChild(option);
 					});
 
-					let selectContainer = document.createElement('div');
-					let label = document.createElement('p');
-					label.textContent = "Select device";
-					selectContainer.appendChild(label);
-					selectContainer.appendChild(selector);
-
-					// Create start stream button
-					let startButton = document.createElement('button');
-					startButton.textContent = "Start Stream";
-					startButton.id = 'start-stream-button';
-					selectContainer.appendChild(startButton);
+					let startButton = document.getElementById('start');
 					startButton.addEventListener('click', () => launch_stream(selector.value));
-
-					// Add the select box and button to the card-description
-					document.querySelector('#webcam .card-description').appendChild(selectContainer);
 
 					// Hide elements with id "hide_on_device"
 					let hideElements = document.querySelectorAll('#hide_on_device');
 					hideElements.forEach(element => {
 						element.style.display = 'none';
 					});
+					let showElements = document.querySelectorAll('#show_on_device');
+					showElements.forEach(element => {
+						element.style.display = 'block';
+					});
+					document.getElementById('webcams').style.display = 'block';
+					document.getElementById('start').style.display = 'block';
 
 					// stop spinner and show menus
 					document.getElementById('spinner').style.display = 'none';
@@ -68,7 +59,26 @@ export function list_devices() {
 		});
 }
 
+export function disable_video() {
+	if (ctx.video) {
+		if (ctx.video.srcObject) {
+			const tracks = ctx.video.srcObject.getTracks();
+			tracks.forEach(track => track.stop());
+			ctx.video.srcObject = null;
+		}
+		ctx.video.remove();
+		ctx.video = null;
+	}
+}
+
 function launch_stream(deviceId) {
+	disable_video();
+
+	ctx.loading = true;
+	// start spinner and hide menus
+	document.getElementById('spinner').style.display = 'block';
+	document.getElementById('statusMSG').innerText = "Starting device stream";
+
 	let constraints = {
 		video: {
 			deviceId: { exact: deviceId },

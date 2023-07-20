@@ -84,6 +84,9 @@ export default function init_gui() {
 	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 2, 256, 1).name(
 		"Visualization subdivisions"
 	).onChange(redraw);
+	ctx.gui.folder.settings.add(ctx.gui, 'blur').name(
+		"Menu blur"
+	).onChange(toggleBlur);
 	ctx.gui.folder.debug = ctx.gui.folder.settings.addFolder('Debug').close();
 	ctx.gui.folder.debug.add(ctx.gui, 'showStats').name(
 		"Show performance"
@@ -138,5 +141,13 @@ function eruda_toggle(value) {
 		if (window.eruda) {  // If Eruda is already loaded
 			eruda.destroy();
 		}
+	}
+}
+
+function toggleBlur(value) {
+	if (value) {
+		document.documentElement.style.setProperty('--blur', 'blur(calc(1vw + 1vh))');
+	} else {
+		document.documentElement.style.setProperty('--blur', 'none');
 	}
 }

@@ -1,5 +1,6 @@
 import { ctx, ctr, redraw } from './state.js';
 import media from './mediaData.js'
+import { disable_video } from './media_video.js'
 
 export function media_populate() {
 	let mediaDiv = document.getElementById('media');
@@ -70,7 +71,7 @@ export function upload_image() {
 
 export async function load_from_url(media) {
 	ctx.loading = true;
-
+	disable_video();
 	ctx.dom.spinner.style.display = 'block';
 	ctx.gui.handle.hide();
 	try {
