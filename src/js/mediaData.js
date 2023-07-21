@@ -219,6 +219,30 @@ const media = [
 			Yaw: -100,
 			Pitch: 0
 		}
+	},
+	{
+		type: "image",
+		title: "Postbank ¼ Mirror",
+		path: "/media/postbank.jpg",
+		thumb: "/media/thumb/postbank.jpg",
+		fileSize: "1.5 MB",
+		dimensions: "4160x3120",
+		sphere_fov: 300,
+		crop: {
+			top: 446,
+			bot: 476,
+			left: 809,
+			right: 1143
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: -37,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: -60,
+			Pitch: -50
+		}
 	}
 ];
 
