@@ -3,7 +3,10 @@ import { user_media, media_setup } from './media.js';
 
 export function list_devices() {
 	/* If the selector already exists, return from function */
-	if (ctx.loading || document.getElementById('webcam-selector')) return;
+	if (ctx.loading ||
+		(document.getElementById('webcams') &&
+			document.getElementById('webcams').childElementCount > 0))
+		return;
 	ctx.loading = true;
 	document.getElementById('spinner').style.display = 'block';
 	document.getElementById('statusMSG').innerText = "Requesting full list of all video devices";

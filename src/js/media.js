@@ -149,6 +149,7 @@ export function update_texture(bitmap) {
 	};
 	ctx.gl.texSubImage2D(ctx.gl.TEXTURE_2D, 0, 0, 0,
 		ctx.gl.RGBA, ctx.gl.UNSIGNED_BYTE, bitmap);
+	bitmap.close();
 }
 
 /* Defined twice and three times if we count the toggle menu button,
