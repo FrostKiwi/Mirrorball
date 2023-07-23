@@ -16,7 +16,9 @@ window.addEventListener('keydown', function (e) {
 		/* continous redraws, if keys used keys are pressed */
 		if (!ctx.continous) {
 			ctx.continous = true;
-			lastKeyUpdate = 0;
+			/* Technically, 'last' variable is needed */
+			ctx.lastKeyUpdate = 0;
+			ctx.lastControllerUpdate = 0;
 			requestAnimationFrame(ctx.animate_cont);
 		}
 }, true);
@@ -35,8 +37,6 @@ window.addEventListener('blur', function () {
 	/* Stop continous redraws, if keys are released */
 	ctx.continous = false;
 });
-
-let lastKeyUpdate = 0;
 
 function update_degrees() {
 	/* Limits */
@@ -61,9 +61,9 @@ export function key_input(time) {
 	const zoomSpeed = 0.2;
 
 	let deltaTime;
-	deltaTime = time - lastKeyUpdate;
-	if (lastKeyUpdate == 0) deltaTime = 16.6;
-	lastKeyUpdate = time;
+	deltaTime = time - ctx.lastKeyUpdate;
+	if (ctx.lastKeyUpdate == 0) deltaTime = 16.6;
+	ctx.lastKeyUpdate = time;
 
 	let mul = (ctr.cam.fov.cur - ctx.cam.fov.min) /
 		(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
@@ -82,14 +82,19 @@ export function key_input(time) {
 	update_degrees();
 }
 
-export function controller_input() {
+export function controller_input(time) {
 	const gamepads = navigator.getGamepads();
 
 	if (gamepads[0]) {
 		const gp = gamepads[0];
 
-		const rotationSpeed = 2.5;
-		const zoomSpeed = 1.5;
+		const rotationSpeed = 0.25;
+		const zoomSpeed = 0.125;
+
+		let deltaTime;
+		deltaTime = time - ctx.lastControllerUpdate;
+		if (ctx.lastControllerUpdate == 0) deltaTime = 16.6;
+		ctx.lastControllerUpdate = time;
 
 		let mul = (ctr.cam.fov.cur - ctx.cam.fov.min) /
 			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
@@ -103,15 +108,16 @@ export function controller_input() {
 
 		if (Math.abs(gp.axes[1]) > ctx.gui.deadzone)
 			ctr.cam.rot_deg[0] -=
-				gp.axes[1] * exp_scale * rotationSpeed * mul;
+				gp.axes[1] * exp_scale * rotationSpeed * mul * deltaTime;
 
 		if (Math.abs(gp.axes[0]) > ctx.gui.deadzone)
 			ctr.cam.rot_deg[1] -=
-				gp.axes[0] * exp_scale * rotationSpeed * mul;
+				gp.axes[0] * exp_scale * rotationSpeed * mul * deltaTime;
 
 		if (Math.abs(gp.axes[3]) > ctx.gui.deadzone)
 			ctr.cam.fov.cur +=
-				gp.axes[3] * Math.pow(gp.axes[3], 4) * zoomSpeed * mul;
+				gp.axes[3] * Math.pow(gp.axes[3], 4) * zoomSpeed * mul *
+				deltaTime;
 
 		update_degrees();
 	}
@@ -129,6 +135,9 @@ export function setup_input() {
 		ctx.controller = true;
 		if (!ctx.continous) {
 			ctx.continous = true;
+			/* Technically, 'last' variable is needed */
+			ctx.lastKeyUpdate = 0;
+			ctx.lastControllerUpdate = 0;
 			requestAnimationFrame(ctx.animate_cont);
 		}
 	});

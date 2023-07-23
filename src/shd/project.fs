@@ -16,6 +16,9 @@ void main()
 	/* Extra scalar branch to prevent artifacts from bad GPU float precision */
 	/* Should switch to using multiple shaders instead of branching */
 	if (length(uv) >= 0.5 && scalar > 1.0)
+		/* Should use Antialiased drawing via screen space derivatives, which is
+		   WebGL 1.0 compatibile. But I didn't implement an extension check yet,
+		   so just to be sure let's draw it without anti-aliasing to be sure. */
 		gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
 	else
 	{

@@ -81,7 +81,7 @@ ctx.animate_cont = function animate(time) {
 		});
 
 	if (ctx.controller){
-		controller_input();
+		controller_input(time);
 	}
 
 		render();

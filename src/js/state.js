@@ -1,6 +1,11 @@
 import * as glm from 'gl-matrix';
 import Stats from 'stats.js';
 
+/* Like a bit of an ugly drawer, a piece of global state to keep track of webapp
+   state across all functions. The nice thing to do would be of course to make
+   everything as stateless as possible. For VR support I plan to port to
+   threeJS, which is when this clunky piece of state should be refactored. */
+
 /* State, which does not determine to redraws */
 export let ctx = {
 	canvas: null,
@@ -17,6 +22,9 @@ export let ctx = {
 	animate_cont: null,
 	drawing: false,
 	loading: false,
+	/* Technically, 'last' variable is needed */
+	lastKeyUpdate: 0,
+	lastControllerUpdate: 0,
 	canvasToDisplaySizeMap: null,
 	shaders: {
 		ch1: {
@@ -77,6 +85,10 @@ export let ctx = {
 };
 
 /* State, which results in a redraw upon change */
+/* This is absolutely necessary and will not be refactored away, to implement 
+   track state mutations, which result in a redraw. I want the app to be a
+   static page when not in video mode or when no gamepad is connected, to only
+   cause the browser to do work when it is actually necessary. */
 export let ctr = {
 	/* Toggles */
 	tog: {
@@ -137,7 +149,7 @@ let prev = {
 }
 
 /* Manual tree of comparison is bad, but works for now. Should maybe do a
-   structured clone, but maybe overkill? */
+   structured clone, but maybe overkill, since there isn't a lot to check? */
 export function redraw() {
 	if (!glm.vec3.equals(prev.cam.rot_deg, ctr.cam.rot_deg)) {
 		ctx.redraw = true;

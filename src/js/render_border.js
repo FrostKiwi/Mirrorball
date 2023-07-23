@@ -133,7 +133,8 @@ export default function render_border(project_points, subdiv, width, height) {
 		);
 
 		/* TODO: Should use instanced rendering, but don't wanna check for
-		   instanced rendering extension compatability just now. */
+		   instanced rendering extension compatability just now. WebGL 1.0
+		   without extensions should work. (Except NPOT textures) */
 
 		/* Top */
 		interp_border_pts(ray_topleft, ray_topright, subdiv * aspect,

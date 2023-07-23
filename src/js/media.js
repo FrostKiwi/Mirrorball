@@ -141,6 +141,9 @@ export function media_setup(bitmap, media) {
 	redraw();
 }
 
+/* Just update the texture without recreating it. Could implement an async GPU
+   transfer, but that would break WebGL 1.0 compatibility. I plan to move to
+   threeJS for VR support, so this is fine for now. */
 export function update_texture(bitmap) {
 	if (ctx.shaders.ch1.w != bitmap.width ||
 		ctx.shaders.ch1.h != bitmap.height) {
