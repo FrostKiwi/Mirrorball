@@ -32,6 +32,11 @@ export let ctx = {
 			w: 0,
 			h: 0,
 		},
+		ch2: {
+			tex: null,
+			w: 0,
+			h: 0,
+		},
 		viewrays: new Float32Array([
 			- 1.0, 1.0, 0.0, 0.0, 0.0,
 			1.0, 1.0, 0.0, 0.0, 0.0,
@@ -58,15 +63,7 @@ export let ctx = {
 		crop_negative: false,
 		eruda: false,
 		deadzone: 0.1,
-		folder: {
-			viz: null,
-			crop: null,
-			world: null,
-			setup: null,
-			debug: null,
-			camera: null,
-			settings: null
-		},
+		folder: {},
 		showStats: false,
 		showEventStats: false
 	},
@@ -109,6 +106,17 @@ export let ctr = {
 		},
 		rot_deg: glm.vec3.create()
 	},
+	/* Channel two for multi source feeds */
+	ch2: {
+		fov_deg: 360,
+		crop: {
+			top: 0,
+			bot: 0,
+			left: 0,
+			right: 0
+		},
+		rot_deg: glm.vec3.create()
+	},
 	/* Camera */
 	cam: {
 		rot_deg: glm.vec3.create(),
@@ -130,6 +138,17 @@ let prev = {
 	},
 	/* Media channels */
 	ch1: {
+		fov_deg: 360,
+		crop: {
+			top: 0,
+			bot: 0,
+			left: 0,
+			right: 0
+		},
+		rot_deg: glm.vec3.create()
+	},
+	/* Channel two for multi source feeds */
+	ch2: {
 		fov_deg: 360,
 		crop: {
 			top: 0,
@@ -194,6 +213,30 @@ export function redraw() {
 	else if (!glm.vec3.equals(prev.ch1.rot_deg, ctr.ch1.rot_deg)) {
 		ctx.redraw = true;
 		glm.vec3.copy(prev.ch1.rot_deg, ctr.ch1.rot_deg);
+	}
+	else if (prev.ch2.fov_deg !== ctr.ch2.fov_deg) {
+		ctx.redraw = true;
+		prev.ch2.fov_deg = ctr.ch2.fov_deg;
+	}
+	else if (prev.ch2.crop.top !== ctr.ch2.crop.top) {
+		ctx.redraw = true;
+		prev.ch2.crop.top = ctr.ch2.crop.top;
+	}
+	else if (prev.ch2.crop.bot !== ctr.ch2.crop.bot) {
+		ctx.redraw = true;
+		prev.ch2.crop.bot = ctr.ch2.crop.bot;
+	}
+	else if (prev.ch2.crop.left !== ctr.ch2.crop.left) {
+		ctx.redraw = true;
+		prev.ch2.crop.left = ctr.ch2.crop.left;
+	}
+	else if (prev.ch2.crop.right !== ctr.ch2.crop.right) {
+		ctx.redraw = true;
+		prev.ch2.crop.right = ctr.ch2.crop.right;
+	}
+	else if (!glm.vec3.equals(prev.ch2.rot_deg, ctr.ch2.rot_deg)) {
+		ctx.redraw = true;
+		glm.vec3.copy(prev.ch2.rot_deg, ctr.ch2.rot_deg);
 	}
 	else if (prev.tog.viz_subdiv !== ctr.tog.viz_subdiv) {
 		ctx.redraw = true;

@@ -71,6 +71,9 @@ export default function init_gui() {
 			"Roll [in °]"
 		).onChange(redraw);
 
+	channel2_setup();
+	channel2_disable();
+
 	ctx.gui.folder.settings = ctx.gui.handle.addFolder('Settings').close();
 
 	const elem = document.documentElement;
@@ -153,4 +156,88 @@ function toggleBlur(value) {
 	} else {
 		document.documentElement.style.setProperty('--blur', 'none');
 	}
+}
+
+function channel2_setup() {
+	/* Channel 2 */
+	ctx.gui.folder.ch2 =
+		ctx.gui.folder.setup.addFolder('Media Overlay').close();
+
+	/* Channel 2 */
+	/* Sphere's FOV / Distortion correction */
+	ctx.gui.controller.img_fov_ch2 =
+		ctx.gui.folder.ch2.add(ctr.ch2, 'fov_deg', 180, 360, 1).name(
+			"Sphere's FOV [in °]"
+		).onChange(redraw);
+
+	/* Channel 2 */
+	/* Crop */
+	ctx.gui.folder.crop_ch2 = ctx.gui.folder.ch2.addFolder('Image crop');
+	ctx.gui.controller.top_ch2 =
+		ctx.gui.folder.crop_ch2.add(ctr.ch2.crop, 'top', 0, 1, 1).onChange(
+			redraw
+		);
+	ctx.gui.controller.top_ch2.name("Top [px]");
+	ctx.gui.controller.bot_ch2 =
+		ctx.gui.folder.crop_ch2.add(ctr.ch2.crop, 'bot', 0, 1, 1).onChange(
+			redraw
+		);
+	ctx.gui.controller.bot_ch2.name("Bottom [px]");
+	ctx.gui.controller.left_ch2 =
+		ctx.gui.folder.crop_ch2.add(ctr.ch2.crop, 'left', 0, 1, 1).onChange(
+			redraw
+		);
+	ctx.gui.controller.left_ch2.name("Left [px]");
+	ctx.gui.controller.right_ch2 =
+		ctx.gui.folder.crop_ch2.add(
+			ctr.ch2.crop, 'right', 0, 1, 1).onChange(redraw);
+	ctx.gui.controller.right_ch2.name("Right [px]");
+	ctx.gui.folder.crop_ch2.add(ctx.gui, 'crop_negative').onChange(
+		toggle_crop_negative_ch2).name("Allow negative");
+
+	/* Channel 2 */
+	/* World rotation */
+	ctx.gui.folder.world_ch2 = ctx.gui.folder.ch2.addFolder('World Rotation');
+	ctx.gui.controller.world_yaw_ch2 =
+		ctx.gui.folder.world_ch2.add(ctr.ch2.rot_deg, '1', -180, 180).name(
+			"Yaw [in °]"
+		).onChange(redraw);
+	ctx.gui.controller.world_pitch_ch2 =
+		ctx.gui.folder.world_ch2.add(ctr.ch2.rot_deg, '0', -180, 180).name(
+			"Pitch [in °]"
+		).onChange(redraw);
+	ctx.gui.controller.world_roll_ch2 =
+		ctx.gui.folder.world_ch2.add(ctr.ch2.rot_deg, '2', -180, 180).name(
+			"Roll [in °]"
+		).onChange(redraw);
+}
+
+function channel2_disable() {
+	ctx.gui.folder.ch2.close();
+	ctx.gui.controller.img_fov_ch2.disable();
+	ctx.gui.controller.top_ch2.disable();
+	ctx.gui.controller.bot_ch2.disable();
+	ctx.gui.controller.left_ch2.disable();
+	ctx.gui.controller.right_ch2.disable();
+	ctx.gui.controller.world_yaw_ch2.disable();
+	ctx.gui.controller.world_pitch_ch2.disable();
+	ctx.gui.controller.world_roll_ch2.disable();
+}
+
+function toggle_crop_negative_ch2(value) {
+	if (value) {
+		ctx.gui.controller.left_ch2.min(ctx.shaders.ch2.w * -2);
+		ctx.gui.controller.right_ch2.min(ctx.shaders.ch2.w * -2);
+		ctx.gui.controller.top_ch2.min(ctx.shaders.ch2.h * -2);
+		ctx.gui.controller.bot_ch2.min(ctx.shaders.ch2.h * -2);
+	} else {
+		ctx.gui.controller.left_ch2.min(0);
+		ctx.gui.controller.right_ch2.min(0);
+		ctx.gui.controller.top_ch2.min(0);
+		ctx.gui.controller.bot_ch2.min(0);
+	}
+	ctx.gui.controller.left_ch2.updateDisplay();
+	ctx.gui.controller.right_ch2.updateDisplay();
+	ctx.gui.controller.top_ch2.updateDisplay();
+	ctx.gui.controller.bot_ch2.updateDisplay();
 }
