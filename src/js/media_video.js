@@ -1,5 +1,5 @@
 import { ctx } from './state.js';
-import { user_media, media_setup } from './media.js';
+import { user_media, media_setup, closeMenu } from './media.js';
 
 export function list_devices() {
 	/* If the selector already exists, return from function */
@@ -116,6 +116,38 @@ function launch_stream(deviceId) {
 		.catch(err => console.error('An error occurred: ' + err));
 }
 
+function load_video(user_media) {
+	disable_video();
+
+	ctx.loading = true;
+	/* Start spinner, hide menus */
+	document.getElementById('spinner').style.display = 'block';
+	document.getElementById('statusMSG').innerText = "Starting video stream";
+	ctx.video = document.createElement('video');
+	ctx.video.src = user_media.path;
+	ctx.video.loop = true;
+	ctx.video.muted = true;
+	ctx.video.play();
+
+	/* OnPlaying is called each loop, so have to guard against that */
+	ctx.video.onplaying = function () {
+		if (ctx.playing) return;
+		ctx.playing = true;
+
+		console.log("Entered");
+		createImageBitmap(ctx.video).then(bitmap => {
+			media_setup(bitmap, user_media);
+			if (!ctx.continous) {
+				ctx.continous = true;
+				/* Technically, 'last' variable is needed */
+				ctx.lastKeyUpdate = 0;
+				ctx.lastControllerUpdate = 0;
+				requestAnimationFrame(ctx.animate_cont);
+			}
+		});
+	}
+}
+
 export function upload_video() {
 	if (ctx.loading) return;
 	const file_selector = document.createElement('input');
@@ -124,6 +156,8 @@ export function upload_video() {
 	file_selector.onchange = function (event) {
 		user_media.path = URL.createObjectURL(event.target.files[0]);
 		user_media.type = "video";
+		load_video(user_media);
+		closeMenu();
 	}
 	file_selector.click();
 };

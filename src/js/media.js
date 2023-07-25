@@ -157,7 +157,7 @@ export function update_texture(bitmap) {
 
 /* Defined twice and three times if we count the toggle menu button,
    need to clean this up. */
-function closeMenu() {
+export function closeMenu() {
 	const menu = document.getElementById('menu');
 	menu.style.display = 'none';
 }
