@@ -17,9 +17,10 @@ export default function init_gui() {
 	ctx.gui.folder.viz.add(ctr.tog, 'viz').name(
 		"Project screen border"
 	).onChange(redraw);
-	ctx.gui.folder.viz.add(ctr.ch2, 'alpha', 0, 1, 0.1).name(
-		"Multi-Source Mix"
-	).disable().onChange(redraw);
+	ctx.gui.controller.alpha =
+		ctx.gui.folder.viz.add(ctr.ch2, 'alpha', 0, 1, 0.1).name(
+			"Multi-Source Mix"
+		).onChange(redraw);
 
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera').close();
 	ctx.gui.controller.cam_fov = ctx.gui.folder.camera.add(
@@ -78,7 +79,6 @@ export default function init_gui() {
 		).onChange(redraw);
 
 	channel2_setup();
-	channel2_disable();
 
 	ctx.gui.folder.settings = ctx.gui.handle.addFolder('Settings').close();
 
@@ -247,8 +247,11 @@ function channel2_setup() {
 		).onChange(redraw);
 }
 
-function channel2_disable() {
+export function channel2_disable() {
+	ctx.gui.folder
+	ctx.gui.controller.alpha.setValue(0);
 	ctx.gui.folder.ch2.close();
+	ctx.gui.controller.alpha.disable();
 	ctx.gui.controller.img_fov_ch2.disable();
 	ctx.gui.controller.top_ch2.disable();
 	ctx.gui.controller.bot_ch2.disable();
@@ -259,12 +262,24 @@ function channel2_disable() {
 	ctx.gui.controller.world_roll_ch2.disable();
 }
 
+export function channel2_enable() {
+	ctx.gui.controller.alpha.enable();
+	ctx.gui.controller.img_fov_ch2.enable();
+	ctx.gui.controller.top_ch2.enable();
+	ctx.gui.controller.bot_ch2.enable();
+	ctx.gui.controller.left_ch2.enable();
+	ctx.gui.controller.right_ch2.enable();
+	ctx.gui.controller.world_yaw_ch2.enable();
+	ctx.gui.controller.world_pitch_ch2.enable();
+	ctx.gui.controller.world_roll_ch2.enable();
+}
+
 function toggle_crop_negative_ch2(value) {
 	if (value) {
-		ctx.gui.controller.left_ch2.min(ctx.shaders.ch2.w * -2);
-		ctx.gui.controller.right_ch2.min(ctx.shaders.ch2.w * -2);
-		ctx.gui.controller.top_ch2.min(ctx.shaders.ch2.h * -2);
-		ctx.gui.controller.bot_ch2.min(ctx.shaders.ch2.h * -2);
+		ctx.gui.controller.left_ch2.min(ctx.shaders.ch1.w * -2);
+		ctx.gui.controller.right_ch2.min(ctx.shaders.ch1.w * -2);
+		ctx.gui.controller.top_ch2.min(ctx.shaders.ch1.h * -2);
+		ctx.gui.controller.bot_ch2.min(ctx.shaders.ch1.h * -2);
 	} else {
 		ctx.gui.controller.left_ch2.min(0);
 		ctx.gui.controller.right_ch2.min(0);

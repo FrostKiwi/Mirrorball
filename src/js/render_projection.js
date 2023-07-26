@@ -1,4 +1,4 @@
-import { ctx, ctr } from './state.js';
+import { ctx } from './state.js';
 import * as glm from 'gl-matrix';
 
 export default function render_project(width, height, channel) {
@@ -45,11 +45,15 @@ export default function render_project(width, height, channel) {
 		5 * Float32Array.BYTES_PER_ELEMENT,
 		2 * Float32Array.BYTES_PER_ELEMENT
 	);
-	
+
 	/* As per formula */
 	const scalar = 1.0 / Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4.0);
 	ctx.gl.uniform1f(ctx.shaders.project.scaler, scalar);
-	ctx.gl.uniform1f(ctx.shaders.project.alpha, 1);
+
+	if (channel.alpha)
+		ctx.gl.uniform1f(ctx.shaders.project.alpha, channel.alpha);
+	else
+		ctx.gl.uniform1f(ctx.shaders.project.alpha, 1);
 
 	ctx.gl.drawArrays(ctx.gl.TRIANGLE_FAN, 0, 4);
 }

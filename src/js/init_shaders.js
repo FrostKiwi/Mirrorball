@@ -50,6 +50,7 @@ export default function init_shaders(ctx, gl) {
 	Object.assign(ctx.shaders.border, {
 		vtx: gl.getAttribLocation(ctx.shaders.border.handle, "vtx"),
 		scale: gl.getUniformLocation(ctx.shaders.border.handle, "scale"),
+		alpha: gl.getUniformLocation(ctx.shaders.border.handle, "alpha"),
 		transform:
 			gl.getUniformLocation(ctx.shaders.border.handle, "transform"),
 		color: gl.getUniformLocation(ctx.shaders.border.handle, "color"),

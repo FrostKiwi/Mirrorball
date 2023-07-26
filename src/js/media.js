@@ -1,7 +1,7 @@
 import { ctx, ctr, redraw } from './state.js';
 import media from './mediaData.js'
 import { disable_video, load_video } from './media_video.js'
-import { recalc_croplimits } from './gui.js';
+import { recalc_croplimits, channel2_disable } from './gui.js';
 
 export function media_populate() {
 	let mediaDiv = document.getElementById('media');
@@ -73,6 +73,8 @@ export function upload_image() {
 export async function load_from_url(media) {
 	ctx.loading = true;
 	disable_video();
+	channel2_disable();
+
 	ctx.dom.spinner.style.display = 'block';
 	ctx.gui.handle.hide();
 	if (media.type == "image")

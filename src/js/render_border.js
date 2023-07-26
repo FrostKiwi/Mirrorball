@@ -1,4 +1,4 @@
-import { ctx, ctr } from './state.js';
+import { ctx } from './state.js';
 import * as glm from 'gl-matrix';
 
 const POINT_SIZE = 0.02;
@@ -7,7 +7,8 @@ const COLOR_TOPRIGHT = glm.vec3.fromValues(1, 1, 0);
 const COLOR_BOTLEFT = glm.vec3.fromValues(0, 1, 1);
 const COLOR_BOTRIGHT = glm.vec3.fromValues(1, 1, 0);
 
-function interp_border_pts(a, b, subdiv, aspect_ratio, color_a, color_b, diag) {
+function interp_border_pts(a, b, subdiv, aspect_ratio, color_a, color_b, diag,
+	channel) {
 	subdiv = Math.trunc(subdiv);
 
 	/* Ensure there is a point in the middle by making subdiv odd */
@@ -29,7 +30,7 @@ function interp_border_pts(a, b, subdiv, aspect_ratio, color_a, color_b, diag) {
 		glm.vec3.normalize(ray, ray);
 
 		const divider = 2.0 * Math.SQRT2 * Math.sqrt(ray[2] + 1.0);
-		const scalar = 1 / Math.sin(glm.glMatrix.toRadian(ctr.ch1.fov_deg) / 4);
+		const scalar = 1 / Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4);
 
 		glm.vec2.scale(
 			uv_proj,
@@ -75,7 +76,8 @@ function interp_border_pts_smp(a, b, subdiv, color_a, color_b, diag) {
 	}
 }
 
-export default function render_border(project_points, subdiv, width, height) {
+export default function render_border(project_points, subdiv, width, height,
+	channel) {
 	const aspect = width / height;
 
 	ctx.gl.useProgram(ctx.shaders.border.handle);
@@ -84,9 +86,9 @@ export default function render_border(project_points, subdiv, width, height) {
 	ctx.gl.enableVertexAttribArray(ctx.shaders.border.vtx);
 
 	const postcrop_w =
-		ctx.shaders.ch1.w - (ctr.ch1.crop.left + ctr.ch1.crop.right);
+		ctx.shaders.ch1.w - (channel.crop.left + channel.crop.right);
 	const postcrop_h =
-		ctx.shaders.ch1.h - (ctr.ch1.crop.top + ctr.ch1.crop.bot);
+		ctx.shaders.ch1.h - (channel.crop.top + channel.crop.bot);
 
 	const aspect_ratio = glm.vec2.fromValues(1, 1);
 
@@ -101,6 +103,12 @@ export default function render_border(project_points, subdiv, width, height) {
 		2 * Float32Array.BYTES_PER_ELEMENT, 0);
 	ctx.gl.uniform2f(ctx.shaders.border.scale,
 		POINT_SIZE / aspect, POINT_SIZE);
+
+	if (channel.alpha)
+		ctx.gl.uniform1f(ctx.shaders.border.alpha, channel.alpha);
+	else
+		ctx.gl.uniform1f(ctx.shaders.border.alpha, 1);
+
 	if (project_points) {
 		/* Split-Screen rendering */
 		if (width < ctx.canvas.width)
@@ -138,24 +146,24 @@ export default function render_border(project_points, subdiv, width, height) {
 
 		/* Top */
 		interp_border_pts(ray_topleft, ray_topright, subdiv * aspect,
-			aspect_ratio, COLOR_TOPLEFT, COLOR_TOPRIGHT, false);
+			aspect_ratio, COLOR_TOPLEFT, COLOR_TOPRIGHT, false, channel);
 		/* Right */
 		interp_border_pts(ray_topright, ray_botright, subdiv, aspect_ratio,
-			COLOR_TOPRIGHT, COLOR_BOTRIGHT, false);
+			COLOR_TOPRIGHT, COLOR_BOTRIGHT, false, channel);
 		/* Bottom */
 		interp_border_pts(ray_botright, ray_botleft, subdiv * aspect,
-			aspect_ratio, COLOR_BOTRIGHT, COLOR_BOTLEFT, false);
+			aspect_ratio, COLOR_BOTRIGHT, COLOR_BOTLEFT, false, channel);
 		/* Left */
 		interp_border_pts(ray_botleft, ray_topleft, subdiv, aspect_ratio,
-			COLOR_BOTLEFT, COLOR_TOPLEFT, false);
+			COLOR_BOTLEFT, COLOR_TOPLEFT, false, channel);
 		/* Diagonal, Bottom-left -> Top-right */
 		interp_border_pts(ray_botleft, ray_topright,
 			subdiv * aspect * Math.SQRT2, aspect_ratio,
-			COLOR_BOTLEFT, COLOR_TOPRIGHT, true);
+			COLOR_BOTLEFT, COLOR_TOPRIGHT, true, channel);
 		/* Diagonal, Top-left -> Bottom-right */
 		interp_border_pts(ray_topleft, ray_botright,
 			subdiv * aspect * Math.SQRT2, aspect_ratio,
-			COLOR_TOPLEFT, COLOR_BOTRIGHT, true);
+			COLOR_TOPLEFT, COLOR_BOTRIGHT, true, channel);
 	} else {
 		/* Split-Screen rendering */
 		if (width < ctx.canvas.width)

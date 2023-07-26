@@ -1,6 +1,6 @@
 import { ctx, ctr } from './state.js';
 
-export default function render_crop(width, height, channel){
+export default function render_crop(width, height, channel) {
 	/* Crop Shader */
 	const postcrop_w =
 		ctx.shaders.ch1.w - (channel.crop.left + channel.crop.right);
@@ -22,7 +22,7 @@ export default function render_crop(width, height, channel){
 		ctx.gl.uniform4f(ctx.shaders.crop.split, 0, 0.5, 1, 0.5);
 	else
 		ctx.gl.uniform4f(ctx.shaders.crop.split, 0, 0, 1, 1);
-		
+
 	ctx.gl.uniform4f(ctx.shaders.crop.crop, crop.x, crop.y, crop.w, crop.h);
 	ctx.gl.uniform1i(ctx.shaders.crop.mask_toggle, ctr.tog.mask);
 
@@ -37,7 +37,11 @@ export default function render_crop(width, height, channel){
 		ctx.gl.uniform1f(ctx.shaders.crop.aspect_w, 1.0);
 	}
 
-	ctx.gl.uniform1f(ctx.shaders.crop.alpha, 1);
+	if (channel.alpha)
+		ctx.gl.uniform1f(ctx.shaders.crop.alpha, channel.alpha);
+	else
+		ctx.gl.uniform1f(ctx.shaders.crop.alpha, 1);
+
 	ctx.gl.bindBuffer(ctx.gl.ARRAY_BUFFER, ctx.shaders.crop.bgvbo);
 	ctx.gl.enableVertexAttribArray(ctx.shaders.crop.vtx);
 	ctx.gl.enableVertexAttribArray(ctx.shaders.crop.coord);

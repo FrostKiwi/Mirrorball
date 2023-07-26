@@ -14,7 +14,6 @@ export let ctx = {
 	stats_events: new Stats(),
 	redraw: false,
 	continous: false,
-	channel2: false,
 	animate: null,
 	video: null,
 	controller: false,

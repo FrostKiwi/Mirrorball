@@ -1,7 +1,7 @@
 import * as glm from 'gl-matrix';
 import { ctx, ctr } from './state.js';
 
-export default function update_camera(width, height) {
+export default function update_camera(width, height, channel) {
 	/* Precalc some stuff */
 	const distance =
 		-0.5 / Math.tan(glm.glMatrix.toRadian(ctr.cam.fov.cur) / 2);
@@ -15,9 +15,9 @@ export default function update_camera(width, height) {
 	const cam_rot_y = glm.glMatrix.toRadian(ctr.cam.rot_deg[1] + 180);
 
 	/* Channel 1 rotation */
-	const ch1_rot_x = glm.glMatrix.toRadian(ctr.ch1.rot_deg[0]);
-	const ch1_rot_y = glm.glMatrix.toRadian(ctr.ch1.rot_deg[1]);
-	const ch1_rot_z = glm.glMatrix.toRadian(ctr.ch1.rot_deg[2]);
+	const ch1_rot_x = glm.glMatrix.toRadian(channel.rot_deg[0]);
+	const ch1_rot_y = glm.glMatrix.toRadian(channel.rot_deg[1]);
+	const ch1_rot_z = glm.glMatrix.toRadian(channel.rot_deg[2]);
 
 	/* Update View-Rays */
 	for (let i = 0; i < 4 * 5; i += 5) {

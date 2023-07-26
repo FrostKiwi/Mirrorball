@@ -2,6 +2,7 @@
 precision mediump float;
 uniform vec3 color;
 varying vec2 vtx_fs;
+uniform float alpha;
 
 void main()
 {
@@ -9,7 +10,7 @@ void main()
 		/* Should use Antialiased drawing via screen space derivatives, which is
 		   WebGL 1.0 compatibile. But I didn't implement an extension check yet,
 		   so just to be sure let's draw it without anti-aliasing to be sure. */
-		gl_FragColor = vec4(color, 1);
+		gl_FragColor = vec4(color, alpha);
 	else
 		discard;
 }
