@@ -30,7 +30,6 @@ function init() {
 	resizeObserver.observe(ctx.canvas, { box: 'content-box' });
 
 	ctx.max_texsize = ctx.gl.getParameter(ctx.gl.MAX_TEXTURE_SIZE);
-
 	/* Input handlers */
 
 	init_gui();

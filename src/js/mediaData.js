@@ -5,7 +5,8 @@ const media = [
 		path: "/media/room.jpg",
 		thumb: "/media/thumb/room.jpg",
 		fileSize: "2 MB",
-		dimensions: "4096x4096",
+		width: "4096",
+		height: "4096",
 		sphere_fov: 342,
 		crop: {
 			top: 46,
@@ -29,7 +30,8 @@ const media = [
 		path: "/media/store.jpg",
 		thumb: "/media/thumb/store.jpg",
 		fileSize: "2.2 MB",
-		dimensions: "2464x2464",
+		width: "2464",
+		height: "2464",
 		sphere_fov: 260,
 		crop: {
 			top: 97,
@@ -53,7 +55,8 @@ const media = [
 		path: "/media/mouth.jpg",
 		thumb: "/media/thumb/mouth.jpg",
 		fileSize: "1.9 MB",
-		dimensions: "3200x3200",
+		width: "3200",
+		height: "3200",
 		sphere_fov: 304,
 		crop: {
 			top: 567,
@@ -77,7 +80,8 @@ const media = [
 		path: "/media/tokyo.jpg",
 		thumb: "/media/thumb/tokyo.jpg",
 		fileSize: "1.6 MB",
-		dimensions: "2960x2960",
+		width: "2960",
+		height: "2960",
 		sphere_fov: 306,
 		crop: {
 			top: 32,
@@ -101,7 +105,8 @@ const media = [
 		path: "/media/earth.jpg",
 		thumb: "/media/thumb/earth.jpg",
 		fileSize: "4.6 MB",
-		dimensions: "8192x8192",
+		width: "8192",
+		height: "8192",
 		source: "https://visibleearth.nasa.gov/images/147190/explorer-base-map",
 		sphere_fov: 360,
 		crop: {
@@ -126,7 +131,8 @@ const media = [
 		path: "/media/escher_table.jpg",
 		thumb: "/media/thumb/escher_table.jpg",
 		fileSize: "1.1 MB",
-		dimensions: "1841x1087",
+		width: "1841",
+		height: "1087",
 		source: "https://mcescher.com/foundation/",
 		sphere_fov: 290,
 		crop: {
@@ -151,7 +157,8 @@ const media = [
 		path: "/media/escher_hand.jpg",
 		thumb: "/media/thumb/escher_hand.jpg",
 		fileSize: "3.57 MB",
-		dimensions: "2016x3000",
+		width: "2016",
+		height: "3000",
 		source: "https://mcescher.com/foundation/",
 		sphere_fov: 300,
 		crop: {
@@ -176,7 +183,8 @@ const media = [
 		path: "/media/escher_woodcut.jpg",
 		thumb: "/media/thumb/escher_woodcut.jpg",
 		fileSize: "0.1 MB",
-		dimensions: "600x593",
+		width: "600",
+		height: "593",
 		source: "https://mcescher.com/foundation/",
 		sphere_fov: 260,
 		crop: {
@@ -201,7 +209,8 @@ const media = [
 		path: "/media/gene_miller.jpg",
 		thumb: "/media/thumb/gene_miller.jpg",
 		fileSize: "0.2 MB",
-		dimensions: "1536x1024",
+		width: "1536",
+		height: "1024",
 		source: "https://www.pauldebevec.com/ReflectionMapping/miller.html",
 		sphere_fov: 310,
 		crop: {
@@ -226,7 +235,8 @@ const media = [
 		path: "/media/postbank.jpg",
 		thumb: "/media/thumb/postbank.jpg",
 		fileSize: "1.5 MB",
-		dimensions: "4160x3120",
+		width: "4160",
+		height: "3120",
 		sphere_fov: 300,
 		crop: {
 			top: 446,

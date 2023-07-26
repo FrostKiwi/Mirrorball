@@ -20,6 +20,15 @@ export function media_populate() {
 			<a href="${media.source}" class="source-link">Source</a></p>`;
 		}
 
+		let resizeWarn = '';
+		if (media.width > ctx.max_texsize || media.height > ctx.max_texsize) {
+			resizeWarn = `<p class="card-field">
+			<a class="value">
+			Size above your GPU limit of ${ctx.max_texsize} px²<br>
+			Image will be resized to fit that.
+			</p>`;
+		}
+
 		card.innerHTML = `
 			<div class="card-header">
 				<img src="img/${media.type}.svg" class="card-icon">
@@ -30,7 +39,8 @@ export function media_populate() {
 				<p class="card-field">File Size:
 					<span class="value">${media.fileSize}</span></p>
 				<p class="card-field">Dimensions:
-					<span class="value">${media.dimensions}</span></p>
+					<span class="value">${media.width}x${media.height}</span></p>
+				${resizeWarn}
 				${sourceLink}
 			</div>`;
 		mediaDiv.appendChild(card);
@@ -95,14 +105,16 @@ export async function load_from_url(media) {
 			ctx.dom.statusMSG.innerText = "Decoding image";
 			ctx.dom.filesize.innerText =
 				"If the app hangs here, your\n" +
-				"device is unable to decode\n" +
-				"the image at this resolution.";
+				"device can load the image\n" +
+				"but failed, propably low on\n" +
+				"graphics memory right now."
 			let bitmap;
-			if (ctx.gui.resize.w || ctx.gui.resize.h)
+			/* Should only resize the side that actually needs it actually... */
+			if (media.width > ctx.max_texsize || media.height > ctx.max_texsize)
 				bitmap = await createImageBitmap(blob,
 					{
-						resizeWidth: ctx.gui.resize.w,
-						resizeHeight: ctx.gui.resize.h
+						resizeWidth: ctx.max_texsize,
+						resizeheight: ctx.max_texsize,
 					});
 			else
 				bitmap = await createImageBitmap(blob);
@@ -139,6 +151,18 @@ export function media_setup(bitmap, media) {
 	ctx.gui.controller.right.setValue(media.crop.right);
 	ctx.gui.controller.top.setValue(media.crop.top);
 	ctx.gui.controller.bot.setValue(media.crop.bot);
+
+	/* In case resize was performed due to GPU not supporting that size */
+	if (media.width != bitmap.width || media.height != bitmap.height) {
+		ctx.gui.controller.left.setValue(
+			media.crop.left * bitmap.width / media.width);
+		ctx.gui.controller.right.setValue(
+			media.crop.right * bitmap.width / media.width);
+		ctx.gui.controller.top.setValue(
+			media.crop.top * bitmap.height / media.height);
+		ctx.gui.controller.bot.setValue(
+			media.crop.bot * bitmap.height / media.height);
+	}
 
 	ctx.gl.deleteTexture(ctx.shaders.ch1.tex);
 	ctx.shaders.ch1.tex = ctx.gl.createTexture();
