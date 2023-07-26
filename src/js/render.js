@@ -15,8 +15,8 @@ export default function render() {
 		if (ctx.canvas.width / ctx.canvas.height > 1) {
 			/* Horizontal split-screen rendering */
 			update_camera(ctx.canvas.width / 2, ctx.canvas.height);
-			render_crop(ctx.canvas.width / 2, ctx.canvas.height);
-			render_project(ctx.canvas.width / 2, ctx.canvas.height);
+			render_crop(ctx.canvas.width / 2, ctx.canvas.height, ctr.ch1);
+			render_project(ctx.canvas.width / 2, ctx.canvas.height, ctr.ch1);
 			if (ctr.tog.viz) {
 				render_border(true, ctr.tog.viz_subdiv,
 					ctx.canvas.width / 2, ctx.canvas.height);
@@ -26,8 +26,8 @@ export default function render() {
 		} else {
 			/* Vertical Split-screen rendering */
 			update_camera(ctx.canvas.width, ctx.canvas.height / 2);
-			render_crop(ctx.canvas.width, ctx.canvas.height / 2);
-			render_project(ctx.canvas.width, ctx.canvas.height / 2);
+			render_crop(ctx.canvas.width, ctx.canvas.height / 2, ctr.ch1);
+			render_project(ctx.canvas.width, ctx.canvas.height / 2, ctr.ch1);
 			if (ctr.tog.viz) {
 				render_border(true, ctr.tog.viz_subdiv,
 					ctx.canvas.width, ctx.canvas.height / 2);
@@ -39,13 +39,13 @@ export default function render() {
 		/* No Split-screen rendering */
 		update_camera(ctx.canvas.width, ctx.canvas.height);
 		if (ctr.tog.crop) {
-			render_crop(ctx.canvas.width, ctx.canvas.height);
+			render_crop(ctx.canvas.width, ctx.canvas.height, ctr.ch1);
 			if (ctr.tog.viz)
 				render_border(true, ctr.tog.viz_subdiv,
 					ctx.canvas.width, ctx.canvas.height);
 		}
 		if (ctr.tog.project) {
-			render_project();
+			render_project(ctx.canvas.width, ctx.canvas.height, ctr.ch1);
 			if (ctr.tog.viz)
 				render_border(false, ctr.tog.viz_subdiv,
 					ctx.canvas.width, ctx.canvas.height);

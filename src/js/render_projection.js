@@ -1,20 +1,20 @@
 import { ctx, ctr } from './state.js';
 import * as glm from 'gl-matrix';
 
-export default function render_project(width, height) {
+export default function render_project(width, height, channel) {
 	const crop = {
 		x: (1 / ctx.shaders.ch1.w) *
-			(ctx.shaders.ch1.w / 2 + ctr.ch1.crop.left /
-				2 - ctr.ch1.crop.right / 2),
+			(ctx.shaders.ch1.w / 2 + channel.crop.left /
+				2 - channel.crop.right / 2),
 		y: (1 / ctx.shaders.ch1.h) *
-			(ctx.shaders.ch1.h / 2 + ctr.ch1.crop.top /
-				2 - ctr.ch1.crop.bot / 2),
+			(ctx.shaders.ch1.h / 2 + channel.crop.top /
+				2 - channel.crop.bot / 2),
 		w: (1 / ctx.shaders.ch1.w) *
-			(ctx.shaders.ch1.w - ctr.ch1.crop.left /
-				1 - ctr.ch1.crop.right / 1),
+			(ctx.shaders.ch1.w - channel.crop.left /
+				1 - channel.crop.right / 1),
 		h: (1 / ctx.shaders.ch1.h) *
-			(ctx.shaders.ch1.h - ctr.ch1.crop.top /
-				1 - ctr.ch1.crop.bot / 1)
+			(ctx.shaders.ch1.h - channel.crop.top /
+				1 - channel.crop.bot / 1)
 	}
 
 	ctx.gl.useProgram(ctx.shaders.project.handle);
@@ -47,7 +47,7 @@ export default function render_project(width, height) {
 	);
 	
 	/* As per formula */
-	const scalar = 1.0 / Math.sin(glm.glMatrix.toRadian(ctr.ch1.fov_deg) / 4.0);
+	const scalar = 1.0 / Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4.0);
 	ctx.gl.uniform1f(ctx.shaders.project.scaler, scalar);
 	ctx.gl.uniform1f(ctx.shaders.project.alpha, 1);
 

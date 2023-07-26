@@ -41,17 +41,20 @@ export default function init_gui() {
 	/* Crop */
 	ctx.gui.folder.crop = ctx.gui.folder.setup.addFolder('Image crop');
 	ctx.gui.controller.top =
-		ctx.gui.folder.crop.add(ctr.ch1.crop, 'top', 0, 1, 1).onChange(redraw);
+		ctx.gui.folder.crop.add(ctr.ch1.crop, 'top', 0, 1, 1).onChange(
+			recalc_croplimits);
 	ctx.gui.controller.top.name("Top [px]");
 	ctx.gui.controller.bot =
-		ctx.gui.folder.crop.add(ctr.ch1.crop, 'bot', 0, 1, 1).onChange(redraw);
+		ctx.gui.folder.crop.add(ctr.ch1.crop, 'bot', 0, 1, 1).onChange(
+			recalc_croplimits);
 	ctx.gui.controller.bot.name("Bottom [px]");
 	ctx.gui.controller.left =
-		ctx.gui.folder.crop.add(ctr.ch1.crop, 'left', 0, 1, 1).onChange(redraw);
+		ctx.gui.folder.crop.add(ctr.ch1.crop, 'left', 0, 1, 1).onChange(
+			recalc_croplimits);
 	ctx.gui.controller.left.name("Left [px]");
 	ctx.gui.controller.right =
-		ctx.gui.folder.crop.add(
-			ctr.ch1.crop, 'right', 0, 1, 1).onChange(redraw);
+		ctx.gui.folder.crop.add(ctr.ch1.crop, 'right', 0, 1, 1).onChange(
+			recalc_croplimits);
 	ctx.gui.controller.right.name("Right [px]");
 	ctx.gui.folder.crop.add(ctx.gui, 'crop_negative').onChange(
 		toggle_crop_negative).name("Allow negative");
@@ -130,6 +133,38 @@ function toggle_crop_negative(value) {
 	ctx.gui.controller.bot.updateDisplay();
 }
 
+export function recalc_croplimits(issue_redraw) {
+	ctx.gui.controller.left.max(
+		ctx.shaders.ch1.w - ctr.ch1.crop.right - 1);
+	ctx.gui.controller.right.max(
+		ctx.shaders.ch1.w - ctr.ch1.crop.left - 1);
+	ctx.gui.controller.top.max(
+		ctx.shaders.ch1.h - ctr.ch1.crop.bot - 1);
+	ctx.gui.controller.bot.max(
+		ctx.shaders.ch1.h - ctr.ch1.crop.top - 1);
+	ctx.gui.controller.left.updateDisplay();
+	ctx.gui.controller.right.updateDisplay();
+	ctx.gui.controller.top.updateDisplay();
+	ctx.gui.controller.bot.updateDisplay();
+
+	/* 2nd Channel */
+	ctx.gui.controller.left_ch2.max(
+		ctx.shaders.ch1.w - ctr.ch1.crop.right - 1);
+	ctx.gui.controller.right_ch2.max(
+		ctx.shaders.ch1.w - ctr.ch1.crop.left - 1);
+	ctx.gui.controller.top_ch2.max(
+		ctx.shaders.ch1.h - ctr.ch1.crop.bot - 1);
+	ctx.gui.controller.bot_ch2.max(
+		ctx.shaders.ch1.h - ctr.ch1.crop.top - 1);
+	ctx.gui.controller.left_ch2.updateDisplay();
+	ctx.gui.controller.right_ch2.updateDisplay();
+	ctx.gui.controller.top_ch2.updateDisplay();
+	ctx.gui.controller.bot_ch2.updateDisplay();
+
+	if (!ctx.loading)
+		redraw();
+}
+
 function eruda_toggle(value) {
 	if (value) {  // If the checkbox is checked
 		if (window.eruda) {  // If Eruda is already loaded
@@ -175,22 +210,19 @@ function channel2_setup() {
 	ctx.gui.folder.crop_ch2 = ctx.gui.folder.ch2.addFolder('Image crop');
 	ctx.gui.controller.top_ch2 =
 		ctx.gui.folder.crop_ch2.add(ctr.ch2.crop, 'top', 0, 1, 1).onChange(
-			redraw
-		);
+			recalc_croplimits);
 	ctx.gui.controller.top_ch2.name("Top [px]");
 	ctx.gui.controller.bot_ch2 =
 		ctx.gui.folder.crop_ch2.add(ctr.ch2.crop, 'bot', 0, 1, 1).onChange(
-			redraw
-		);
+			recalc_croplimits);
 	ctx.gui.controller.bot_ch2.name("Bottom [px]");
 	ctx.gui.controller.left_ch2 =
 		ctx.gui.folder.crop_ch2.add(ctr.ch2.crop, 'left', 0, 1, 1).onChange(
-			redraw
-		);
+			recalc_croplimits);
 	ctx.gui.controller.left_ch2.name("Left [px]");
 	ctx.gui.controller.right_ch2 =
 		ctx.gui.folder.crop_ch2.add(
-			ctr.ch2.crop, 'right', 0, 1, 1).onChange(redraw);
+			ctr.ch2.crop, 'right', 0, 1, 1).onChange(recalc_croplimits);
 	ctx.gui.controller.right_ch2.name("Right [px]");
 	ctx.gui.folder.crop_ch2.add(ctx.gui, 'crop_negative').onChange(
 		toggle_crop_negative_ch2).name("Allow negative");

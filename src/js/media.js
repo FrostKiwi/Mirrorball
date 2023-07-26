@@ -1,6 +1,7 @@
 import { ctx, ctr, redraw } from './state.js';
 import media from './mediaData.js'
 import { disable_video, load_video } from './media_video.js'
+import { recalc_croplimits } from './gui.js';
 
 export function media_populate() {
 	let mediaDiv = document.getElementById('media');
@@ -116,10 +117,10 @@ export function media_setup(bitmap, media) {
 	ctx.gui.controller.cam_yaw.updateDisplay();
 	ctx.gui.controller.img_fov.updateDisplay();
 
-	ctx.gui.controller.left.max(bitmap.width / 2).setValue(media.crop.left);
-	ctx.gui.controller.right.max(bitmap.width / 2).setValue(media.crop.right);
-	ctx.gui.controller.top.max(bitmap.height / 2).setValue(media.crop.top);
-	ctx.gui.controller.bot.max(bitmap.height / 2).setValue(media.crop.bot);
+	ctx.gui.controller.left.setValue(media.crop.left);
+	ctx.gui.controller.right.setValue(media.crop.right);
+	ctx.gui.controller.top.setValue(media.crop.top);
+	ctx.gui.controller.bot.setValue(media.crop.bot);
 
 	ctx.gl.deleteTexture(ctx.shaders.ch1.tex);
 	ctx.shaders.ch1.tex = ctx.gl.createTexture();
@@ -135,6 +136,8 @@ export function media_setup(bitmap, media) {
 
 	ctx.shaders.ch1.w = bitmap.width;
 	ctx.shaders.ch1.h = bitmap.height;
+	recalc_croplimits();
+
 	ctx.gl.texImage2D(ctx.gl.TEXTURE_2D, 0, ctx.gl.RGBA, ctx.gl.RGBA,
 		ctx.gl.UNSIGNED_BYTE, bitmap);
 	bitmap.close();

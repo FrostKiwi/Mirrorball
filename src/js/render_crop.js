@@ -1,14 +1,14 @@
 import { ctx, ctr } from './state.js';
 
-export default function render_crop(width, height){
+export default function render_crop(width, height, channel){
 	/* Crop Shader */
 	const postcrop_w =
-		ctx.shaders.ch1.w - (ctr.ch1.crop.left + ctr.ch1.crop.right);
+		ctx.shaders.ch1.w - (channel.crop.left + channel.crop.right);
 	const postcrop_h =
-		ctx.shaders.ch1.h - (ctr.ch1.crop.top + ctr.ch1.crop.bot);
+		ctx.shaders.ch1.h - (channel.crop.top + channel.crop.bot);
 	const crop = {
-		x: (1 / ctx.shaders.ch1.w) * ctr.ch1.crop.left,
-		y: (1 / ctx.shaders.ch1.h) * ctr.ch1.crop.top,
+		x: (1 / ctx.shaders.ch1.w) * channel.crop.left,
+		y: (1 / ctx.shaders.ch1.h) * channel.crop.top,
 		w: (1 / ctx.shaders.ch1.w) * postcrop_w,
 		h: (1 / ctx.shaders.ch1.h) * postcrop_h
 	}
