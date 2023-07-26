@@ -133,8 +133,7 @@ export function load_video(user_media) {
 	ctx.video.onplaying = function () {
 		if (ctx.playing) return;
 		ctx.playing = true;
-
-		console.log("Entered");
+		
 		createImageBitmap(ctx.video).then(bitmap => {
 			media_setup(bitmap, user_media);
 			if (!ctx.continous) {

@@ -136,7 +136,7 @@ function toggle_crop_negative(value) {
 	ctx.gui.controller.bot.updateDisplay();
 }
 
-export function recalc_croplimits(issue_redraw) {
+export function recalc_croplimits() {
 	ctx.gui.controller.left.max(
 		ctx.shaders.ch1.w - ctr.ch1.crop.right - 1);
 	ctx.gui.controller.right.max(

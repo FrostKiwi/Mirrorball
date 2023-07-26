@@ -109,13 +109,17 @@ export async function load_from_url(media) {
 				"but failed, propably low on\n" +
 				"graphics memory right now."
 			let bitmap;
-			/* Should only resize the side that actually needs it actually... */
-			if (media.width > ctx.max_texsize || media.height > ctx.max_texsize)
+			/* Resize if outside GPU limits */
+			if (media.width > ctx.max_texsize ||
+				media.height > ctx.max_texsize) {
 				bitmap = await createImageBitmap(blob,
 					{
-						resizeWidth: ctx.max_texsize,
-						resizeheight: ctx.max_texsize,
+						resizeWidth: media.width > ctx.max_texsize ?
+							ctx.max_texsize : media.width,
+						resizeheight: media.height > ctx.max_texsize ?
+							ctx.max_texsize : media.height,
 					});
+			}
 			else
 				bitmap = await createImageBitmap(blob);
 
@@ -154,14 +158,16 @@ export function media_setup(bitmap, media) {
 
 	/* In case resize was performed due to GPU not supporting that size */
 	if (media.width != bitmap.width || media.height != bitmap.height) {
-		ctx.gui.controller.left.setValue(
-			media.crop.left * bitmap.width / media.width);
-		ctx.gui.controller.right.setValue(
-			media.crop.right * bitmap.width / media.width);
-		ctx.gui.controller.top.setValue(
-			media.crop.top * bitmap.height / media.height);
-		ctx.gui.controller.bot.setValue(
-			media.crop.bot * bitmap.height / media.height);
+		if (media.width && media.height) {
+			ctx.gui.controller.left.setValue(
+				media.crop.left * bitmap.width / media.width);
+			ctx.gui.controller.right.setValue(
+				media.crop.right * bitmap.width / media.width);
+			ctx.gui.controller.top.setValue(
+				media.crop.top * bitmap.height / media.height);
+			ctx.gui.controller.bot.setValue(
+				media.crop.bot * bitmap.height / media.height);
+		}
 	}
 
 	ctx.gl.deleteTexture(ctx.shaders.ch1.tex);
