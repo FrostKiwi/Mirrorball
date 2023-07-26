@@ -17,6 +17,9 @@ export default function init_gui() {
 	ctx.gui.folder.viz.add(ctr.tog, 'viz').name(
 		"Project screen border"
 	).onChange(redraw);
+	ctx.gui.folder.viz.add(ctr.ch2, 'alpha', 0, 1, 0.1).name(
+		"Multi-Source Mix"
+	).disable().onChange(redraw);
 
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera').close();
 	ctx.gui.controller.cam_fov = ctx.gui.folder.camera.add(

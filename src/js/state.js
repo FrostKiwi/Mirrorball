@@ -14,6 +14,7 @@ export let ctx = {
 	stats_events: new Stats(),
 	redraw: false,
 	continous: false,
+	channel2: false,
 	animate: null,
 	video: null,
 	controller: false,
@@ -103,6 +104,7 @@ export let ctr = {
 	},
 	/* Channel two for multi source feeds */
 	ch2: {
+		alpha: 0,
 		fov_deg: 360,
 		crop: {
 			top: 0,
@@ -145,6 +147,7 @@ let prev = {
 	},
 	/* Channel two for multi source feeds */
 	ch2: {
+		alpha: 0,
 		fov_deg: 360,
 		crop: {
 			top: 0,
@@ -210,6 +213,22 @@ export function redraw() {
 		ctx.redraw = true;
 		glm.vec3.copy(prev.ch1.rot_deg, ctr.ch1.rot_deg);
 	}
+	else if (!glm.vec3.equals(prev.ch2.rot_deg, ctr.ch2.rot_deg)) {
+		ctx.redraw = true;
+		glm.vec3.copy(prev.ch2.rot_deg, ctr.ch2.rot_deg);
+	}
+	else if (prev.tog.viz_subdiv !== ctr.tog.viz_subdiv) {
+		ctx.redraw = true;
+		prev.tog.viz_subdiv = ctr.tog.viz_subdiv;
+	}
+	else if (prev.cam.fov.cur !== ctr.cam.fov.cur) {
+		ctx.redraw = true;
+		prev.cam.fov.cur = ctr.cam.fov.cur;
+	}
+	else if (prev.ch2.alpha !== ctr.ch2.alpha) {
+		ctx.redraw = true;
+		prev.ch2.alpha = ctr.ch2.alpha;
+	}
 	else if (prev.ch2.fov_deg !== ctr.ch2.fov_deg) {
 		ctx.redraw = true;
 		prev.ch2.fov_deg = ctr.ch2.fov_deg;
@@ -229,18 +248,6 @@ export function redraw() {
 	else if (prev.ch2.crop.right !== ctr.ch2.crop.right) {
 		ctx.redraw = true;
 		prev.ch2.crop.right = ctr.ch2.crop.right;
-	}
-	else if (!glm.vec3.equals(prev.ch2.rot_deg, ctr.ch2.rot_deg)) {
-		ctx.redraw = true;
-		glm.vec3.copy(prev.ch2.rot_deg, ctr.ch2.rot_deg);
-	}
-	else if (prev.tog.viz_subdiv !== ctr.tog.viz_subdiv) {
-		ctx.redraw = true;
-		prev.tog.viz_subdiv = ctr.tog.viz_subdiv;
-	}
-	else if (prev.cam.fov.cur !== ctr.cam.fov.cur) {
-		ctx.redraw = true;
-		prev.cam.fov.cur = ctr.cam.fov.cur;
 	}
 
 	if (ctx.redraw)

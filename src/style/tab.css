@@ -10,6 +10,10 @@
 	background-color: inherit;
 	float: left;
 	border: none;
+	
+	display: flex;
+	align-items: center;
+
 	height: 50px;
 	outline: none;
 	cursor: pointer;
