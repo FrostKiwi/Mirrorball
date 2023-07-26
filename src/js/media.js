@@ -75,6 +75,10 @@ export async function load_from_url(media) {
 	disable_video();
 	channel2_disable();
 
+	/* On reloads, try freeing VRAM as soon as possible, since there are weird
+	   effects when trying to decode  */
+	ctx.gl.deleteTexture(ctx.shaders.ch1.tex);
+
 	ctx.dom.spinner.style.display = 'block';
 	ctx.gui.handle.hide();
 	if (media.type == "image")
@@ -89,7 +93,19 @@ export async function load_from_url(media) {
 				" MegaByte" + ")";
 			const blob = await response.blob();
 			ctx.dom.statusMSG.innerText = "Decoding image";
-			const bitmap = await createImageBitmap(blob);
+			ctx.dom.filesize.innerText =
+				"If the app hangs here, your\n" +
+				"device is unable to decode\n" +
+				"the image at this resolution.";
+			let bitmap;
+			if (ctx.gui.resize.w || ctx.gui.resize.h)
+				bitmap = await createImageBitmap(blob,
+					{
+						resizeWidth: ctx.gui.resize.w,
+						resizeHeight: ctx.gui.resize.h
+					});
+			else
+				bitmap = await createImageBitmap(blob);
 
 			media_setup(bitmap, media);
 		} catch (err) {

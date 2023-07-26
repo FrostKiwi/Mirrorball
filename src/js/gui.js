@@ -109,6 +109,12 @@ export default function init_gui() {
 	ctx.gui.folder.debug.add(ctx.gui, 'eruda').name(
 		"Eruda debug console"
 	).onChange(eruda_toggle);
+	ctx.gui.folder.debug.add(ctx.gui.resize, 'w', 0, ctx.max_texsize
+	, 1).name(
+		"Force Width");
+	ctx.gui.folder.debug.add(ctx.gui.resize, 'h', 0, ctx.max_texsize
+	, 1).name(
+		"Force Height");
 }
 
 function toggleStats(value) {

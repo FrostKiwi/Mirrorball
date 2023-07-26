@@ -60,7 +60,11 @@ export let ctx = {
 		deadzone: 0.1,
 		folder: {},
 		showStats: false,
-		showEventStats: false
+		showEventStats: false,
+		resize: {
+			w: 0,
+			h: 0
+		}
 	},
 	cam: {
 		fov: {
