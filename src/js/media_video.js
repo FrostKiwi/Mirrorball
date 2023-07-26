@@ -116,7 +116,7 @@ function launch_stream(deviceId) {
 		.catch(err => console.error('An error occurred: ' + err));
 }
 
-function load_video(user_media) {
+export function load_video(user_media) {
 	disable_video();
 
 	ctx.loading = true;

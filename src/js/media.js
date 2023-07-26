@@ -1,6 +1,6 @@
 import { ctx, ctr, redraw } from './state.js';
 import media from './mediaData.js'
-import { disable_video } from './media_video.js'
+import { disable_video, load_video } from './media_video.js'
 
 export function media_populate() {
 	let mediaDiv = document.getElementById('media');
@@ -74,22 +74,30 @@ export async function load_from_url(media) {
 	disable_video();
 	ctx.dom.spinner.style.display = 'block';
 	ctx.gui.handle.hide();
-	try {
-		ctx.dom.statusMSG.innerText = "Requesting " + media.path;
-		const response = await fetch(media.path);
-		ctx.dom.statusMSG.innerText = "Downloading " + media.path;
-		ctx.dom.filesize.innerText = "(" +
-			((response.headers.get('Content-Length') / 1000000)).toFixed(2) +
-			" MegaByte" + ")";
-		const blob = await response.blob();
-		ctx.dom.statusMSG.innerText = "Decoding image";
-		const bitmap = await createImageBitmap(blob);
+	if (media.type == "image")
+		try {
+			ctx.dom.statusMSG.innerText = "Requesting " + media.path;
+			const response = await fetch(media.path);
+			ctx.dom.statusMSG.innerText = "Downloading " + media.path;
+			ctx.dom.filesize.innerText = "(" +
+				(
+					(response.headers.get('Content-Length') / 1000000)
+				).toFixed(2) +
+				" MegaByte" + ")";
+			const blob = await response.blob();
+			ctx.dom.statusMSG.innerText = "Decoding image";
+			const bitmap = await createImageBitmap(blob);
 
-		media_setup(bitmap, media);
-
-	} catch (err) {
-		console.error(err);
-	}
+			media_setup(bitmap, media);
+		} catch (err) {
+			console.error(err);
+		}
+	else if (media.type == "video")
+		try {
+			load_video(media)
+		} catch (err) {
+			console.error(err);
+		}
 }
 
 export function media_setup(bitmap, media) {
