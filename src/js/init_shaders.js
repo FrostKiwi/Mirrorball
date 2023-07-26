@@ -37,6 +37,7 @@ export default function init_shaders(ctx, gl) {
 	Object.assign(ctx.shaders.crop, {
 		vtx: gl.getAttribLocation(ctx.shaders.crop.handle, "vtx"),
 		coord: gl.getAttribLocation(ctx.shaders.crop.handle, "coord"),
+		alpha: gl.getUniformLocation(ctx.shaders.crop.handle, "alpha"),
 		aspect_w: gl.getUniformLocation(ctx.shaders.crop.handle, "aspect_w"),
 		aspect_h: gl.getUniformLocation(ctx.shaders.crop.handle, "aspect_h"),
 		crop: gl.getUniformLocation(ctx.shaders.crop.handle, "crop"),
@@ -60,6 +61,7 @@ export default function init_shaders(ctx, gl) {
 		pos: gl.getAttribLocation(ctx.shaders.project.handle, "pos"),
 		viewray: gl.getAttribLocation(ctx.shaders.project.handle, "rayvtx"),
 		scaler: gl.getUniformLocation(ctx.shaders.project.handle, "scalar"),
+		alpha: gl.getUniformLocation(ctx.shaders.project.handle, "alpha"),
 		crop: gl.getUniformLocation(ctx.shaders.project.handle, "crop"),
 		split: gl.getUniformLocation(ctx.shaders.project.handle, "split"),
 		rayvbo: gl.createBuffer()

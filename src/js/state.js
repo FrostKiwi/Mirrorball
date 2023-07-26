@@ -32,11 +32,6 @@ export let ctx = {
 			w: 0,
 			h: 0,
 		},
-		ch2: {
-			tex: null,
-			w: 0,
-			h: 0,
-		},
 		viewrays: new Float32Array([
 			- 1.0, 1.0, 0.0, 0.0, 0.0,
 			1.0, 1.0, 0.0, 0.0, 0.0,
@@ -126,7 +121,8 @@ export let ctr = {
 	}
 }
 
-/* Ugly copy pasted. Maybe should use structured clone */
+/* Ugly copy pasted. Maybe should use structured clone, but json.stringify feels
+   like a weird hack and I'm a bit worried what it does to the rotation vecs */
 let prev = {
 	/* Toggles */
 	tog: {

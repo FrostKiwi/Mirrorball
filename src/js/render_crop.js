@@ -37,6 +37,7 @@ export default function render_crop(width, height){
 		ctx.gl.uniform1f(ctx.shaders.crop.aspect_w, 1.0);
 	}
 
+	ctx.gl.uniform1f(ctx.shaders.crop.alpha, 1);
 	ctx.gl.bindBuffer(ctx.gl.ARRAY_BUFFER, ctx.shaders.crop.bgvbo);
 	ctx.gl.enableVertexAttribArray(ctx.shaders.crop.vtx);
 	ctx.gl.enableVertexAttribArray(ctx.shaders.crop.coord);

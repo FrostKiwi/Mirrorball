@@ -44,6 +44,10 @@ function init() {
 	ctx.stats_events.dom.style.display =
 		ctx.gui.showEventStats ? 'block' : 'none';
 
+	/* Alpha for multi-source video feeds */
+	ctx.gl.enable(ctx.gl.BLEND);
+	ctx.gl.blendFunc(ctx.gl.SRC_ALPHA, ctx.gl.ONE_MINUS_SRC_ALPHA);
+
 	ctx.gl.clearColor(0, 0, 0, 1);
 	/* Prevents headaches when loading NPOT textures */
 	ctx.gl.pixelStorei(ctx.gl.UNPACK_ALIGNMENT, 1);
@@ -80,11 +84,11 @@ ctx.animate_cont = function animate(time) {
 			update_texture(bitmap);
 		});
 
-	if (ctx.controller){
+	if (ctx.controller) {
 		controller_input(time);
 	}
 
-		render();
+	render();
 	if (ctx.continous || ctx.playing || ctx.controller)
 		requestAnimationFrame(animate);
 }

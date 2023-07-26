@@ -7,6 +7,7 @@ varying vec3 Ray;
 uniform vec4 crop;
 uniform float scalar;
 uniform sampler2D sample_projection;
+uniform float alpha;
 
 void main()
 {
@@ -19,13 +20,13 @@ void main()
 		/* Should use Antialiased drawing via screen space derivatives, which is
 		   WebGL 1.0 compatibile. But I didn't implement an extension check yet,
 		   so just to be sure let's draw it without anti-aliasing to be sure. */
-		gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+		gl_FragColor = vec4(0.0, 0.0, 0.0, alpha);
 	else
 	{
 		/* Scale from NDC to UV space */
 		uv *= vec2(crop.z, crop.w);
 		uv.x = crop.x + uv.x;
 		uv.y = crop.y - uv.y;
-		gl_FragColor = texture2D(sample_projection, uv);
+		gl_FragColor = vec4(texture2D(sample_projection, uv).rgb, alpha);
 	}
 }
