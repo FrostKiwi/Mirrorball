@@ -64,5 +64,22 @@ export function setupTabs() {
 		toggleMenu();
 	};
 	document.getElementById("tab_about").click();
+
+	document.getElementById('image_multi').addEventListener('click',
+		function (event) {
+			event.stopPropagation();
+		}
+	);
+	document.getElementById('vid_multi').addEventListener('click',
+		function (event) {
+			event.stopPropagation();
+		}
+	);
+	document.getElementById('dev_multi').addEventListener('click',
+		function (event) {
+			event.stopPropagation();
+		}
+	);
+
 	media_populate();
 }

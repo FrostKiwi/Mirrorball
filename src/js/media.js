@@ -1,7 +1,7 @@
 import { ctx, ctr, redraw } from './state.js';
 import media from './mediaData.js'
 import { disable_video, load_video } from './media_video.js'
-import { recalc_croplimits, channel2_disable } from './gui.js';
+import { recalc_croplimits, channel2_disable, channel2_enable } from './gui.js';
 
 export function media_populate() {
 	let mediaDiv = document.getElementById('media');
@@ -63,7 +63,8 @@ export const user_media = {
 	camera_inital: {
 		Yaw: 0,
 		Pitch: 0
-	}
+	},
+	ch2: false
 }
 
 export function upload_image() {
@@ -74,6 +75,11 @@ export function upload_image() {
 	file_selector.onchange = function (event) {
 		user_media.path = URL.createObjectURL(event.target.files[0]);
 		user_media.type = "image";
+		if (document.getElementById('image_multi').checked)
+			user_media.ch2 = true;
+		else
+			user_media.ch2 = false;
+
 		load_from_url(user_media);
 		closeMenu();
 	}
@@ -84,6 +90,8 @@ export async function load_from_url(media) {
 	ctx.loading = true;
 	disable_video();
 	channel2_disable();
+	if (media.ch2)
+		channel2_enable();
 
 	/* On reloads, try freeing VRAM as soon as possible, since there are weird
 	   effects when trying to decode  */

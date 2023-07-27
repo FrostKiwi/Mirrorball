@@ -152,13 +152,13 @@ export function recalc_croplimits() {
 
 	/* 2nd Channel */
 	ctx.gui.controller.left_ch2.max(
-		ctx.shaders.ch1.w - ctr.ch1.crop.right - 1);
+		ctx.shaders.ch1.w - ctr.ch2.crop.right - 1);
 	ctx.gui.controller.right_ch2.max(
-		ctx.shaders.ch1.w - ctr.ch1.crop.left - 1);
+		ctx.shaders.ch1.w - ctr.ch2.crop.left - 1);
 	ctx.gui.controller.top_ch2.max(
-		ctx.shaders.ch1.h - ctr.ch1.crop.bot - 1);
+		ctx.shaders.ch1.h - ctr.ch2.crop.bot - 1);
 	ctx.gui.controller.bot_ch2.max(
-		ctx.shaders.ch1.h - ctr.ch1.crop.top - 1);
+		ctx.shaders.ch1.h - ctr.ch2.crop.top - 1);
 	ctx.gui.controller.left_ch2.updateDisplay();
 	ctx.gui.controller.right_ch2.updateDisplay();
 	ctx.gui.controller.top_ch2.updateDisplay();

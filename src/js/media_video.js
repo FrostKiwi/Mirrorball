@@ -101,6 +101,10 @@ function launch_stream(deviceId) {
 			ctx.video.onloadedmetadata = function (e) {
 				ctx.video.play();
 				createImageBitmap(ctx.video).then(bitmap => {
+					if (document.getElementById('dev_multi').checked)
+						user_media.ch2 = true;
+					else
+						user_media.ch2 = false;
 					media_setup(bitmap, user_media);
 					ctx.playing = true;
 					if (!ctx.continous) {
@@ -155,6 +159,10 @@ export function upload_video() {
 	file_selector.onchange = function (event) {
 		user_media.path = URL.createObjectURL(event.target.files[0]);
 		user_media.type = "video";
+		if (document.getElementById('vid_multi').checked)
+			user_media.ch2 = true;
+		else
+			user_media.ch2 = false;
 		load_video(user_media);
 		closeMenu();
 	}

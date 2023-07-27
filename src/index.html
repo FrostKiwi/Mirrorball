@@ -44,9 +44,12 @@
 				<img class="card-image" src="style/img/file_image.svg" alt="Thumbnail">
 				<div class="card-description">
 					<p class="card-field">
+						<input type="checkbox" id="image_multi" name="mult_img">
+						<label for="mult_img">Multi-Source Image</label><br><br>
 						<span class="value">
 							Load an image into the WebApp<br>
-							or take photo with smartphone</span><br>
+							or take photo with smartphone
+						</span><br>
 						The file stays on your device,<br>
 						nothing is uploaded to a server
 					</p>
@@ -60,10 +63,13 @@
 				<img class="card-image" src="style/img/file_video.svg" alt="Thumbnail">
 				<div class="card-description">
 					<p class="card-field">
+						<input type="checkbox" id="vid_multi" name="mult_vid">
+						<label for="mult_vid">Multi-Source Feed</label><br><br>
 						<span class="value">
-							Load a video into the WebApp</span><br>
+							Load a video into the WebApp
+						</span><br>
 						The file stays on your device,<br>
-						nothing is uploaded to a server
+						nothing is uploaded to a server<br>
 					</p>
 				</div>
 			</div>
@@ -77,16 +83,20 @@
 					<p id="hide_on_device" class="card-field">
 						<span class="value">
 							Connect a webcam or capture card</span><br>
-						Requests a full list of devices<br>
+						Requests a full list of devices
 					</p>
 					<p id="show_on_device" class="card-field hidden">
 						<span class="value">
-							Select camera</span>
+							Select camera
+						</span>
 					</p>
 					<select id="webcams" class="list hidden">
 					</select>
 					<button id="start" type="button" class="stream hidden">Start stream</button>
 					<p id="show_on_device" class="card-field hidden">
+						<input type="checkbox" id="dev_multi" name="mult_dev">
+						<label for="mult_dev">Multi-Source Feed</label><br><br>
+
 						This will start a stream with the <br>
 						highest possible resolution, <br>
 						regardless of framerate. <br>
