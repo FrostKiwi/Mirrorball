@@ -125,7 +125,7 @@ const media = [
 			Pitch: 0
 		}
 	},
-	{
+	/* {
 		type: "image",
 		title: "M.C. Escher sphere table",
 		path: "/media/escher_table.jpg",
@@ -202,7 +202,7 @@ const media = [
 			Yaw: -60,
 			Pitch: 0
 		}
-	},
+	}, */
 	{
 		type: "image",
 		title: "Gene Miller 1982",
