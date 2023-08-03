@@ -1,4 +1,5 @@
 import { ctx, ctr } from './state.js';
+import * as glm from 'gl-matrix';
 
 export default function render_crop(width, height, channel) {
 	/* Crop Shader */
@@ -25,6 +26,18 @@ export default function render_crop(width, height, channel) {
 
 	ctx.gl.uniform4f(ctx.shaders.crop.crop, crop.x, crop.y, crop.w, crop.h);
 	ctx.gl.uniform1i(ctx.shaders.crop.mask_toggle, ctr.tog.mask);
+
+	/* For the Area visualization */
+	ctx.gl.uniform1i(ctx.shaders.crop.area_toggle, ctr.tog.area);
+	/* As per formula */
+	/* Reciprocal here to save on GPU division */
+	const scalar_rcp = Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4.0);
+	ctx.gl.uniform1f(ctx.shaders.crop.scalar_rcp, scalar_rcp);
+
+	ctx.gl.uniform1f(ctx.shaders.crop.area_f,
+		Math.sin(glm.glMatrix.toRadian(ctr.tog.area_f) / 4.0));
+	ctx.gl.uniform1f(ctx.shaders.crop.area_b,
+		Math.sin(glm.glMatrix.toRadian(360 - ctr.tog.area_b) / 4.0));
 
 	if (postcrop_h / postcrop_w > height / width) {
 		ctx.gl.uniform1f(ctx.shaders.crop.aspect_h, 1.0);

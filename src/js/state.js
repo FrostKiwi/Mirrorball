@@ -86,6 +86,9 @@ export let ctr = {
 	tog: {
 		crop: true,
 		project: true,
+		area: false,
+		area_f: 90,
+		area_b: 90,
 		viz: false,
 		viz_subdiv: 16,
 		mask: false
@@ -128,6 +131,9 @@ let prev = {
 	/* Toggles */
 	tog: {
 		crop: true,
+		area: false,
+		area_f: 90,
+		area_b: 90,
 		project: true,
 		viz: false,
 		viz_subdiv: 16,
@@ -187,6 +193,18 @@ export function redraw() {
 	else if (prev.tog.viz !== ctr.tog.viz) {
 		ctx.redraw = true;
 		prev.tog.viz = ctr.tog.viz;
+	}
+	else if (prev.tog.area !== ctr.tog.area) {
+		ctx.redraw = true;
+		prev.tog.area = ctr.tog.area;
+	}
+	else if (prev.tog.area_f !== ctr.tog.area_f) {
+		ctx.redraw = true;
+		prev.tog.area_f = ctr.tog.area_f;
+	}
+	else if (prev.tog.area_b !== ctr.tog.area_b) {
+		ctx.redraw = true;
+		prev.tog.area_b = ctr.tog.area_b;
 	}
 	else if (prev.ch1.fov_deg !== ctr.ch1.fov_deg) {
 		ctx.redraw = true;

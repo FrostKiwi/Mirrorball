@@ -6,7 +6,11 @@ precision highp float;
 varying vec3 Ray;
 uniform vec4 crop;
 uniform float scalar;
+uniform float scalar_rcp;
 uniform sampler2D sample_projection;
+uniform bool area_toggle;
+uniform float area_f;
+uniform float area_b;
 uniform float alpha;
 
 void main()
@@ -27,9 +31,9 @@ void main()
 		vec2 uv = dist * vec2(crop.z, crop.w);
 		uv.x = crop.x + uv.x;
 		uv.y = crop.y - uv.y;
-		if (length(dist) < 0.3826 / 2.0)
+		if (area_toggle && length(dist * scalar_rcp) < area_f)
 			gl_FragColor = vec4(texture2D(sample_projection, uv).rgb, alpha) * vec4(0.5, 1, 0.5, alpha);
-		else if (length(dist / scalar) > 0.9238 / 2.0)
+		else if (area_toggle && length(dist * scalar_rcp) > area_b)
 			gl_FragColor = vec4(texture2D(sample_projection, uv).rgb, alpha) * vec4(1, 0.5, 0.5, alpha);
 		else
 			gl_FragColor = vec4(texture2D(sample_projection, uv).rgb, alpha);
