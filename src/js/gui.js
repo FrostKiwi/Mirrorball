@@ -8,18 +8,29 @@ export default function init_gui() {
 	ctx.gui.handle.add(ctx.gui, 'menu').name("Select Media");
 	ctx.gui.handle.add(ctr.tog, 'crop').name("Original").onChange(redraw);
 	ctx.gui.handle.add(ctr.tog, 'project').name("Projection").onChange(redraw);
+	ctx.gui.controller.alpha =
+		ctx.gui.handle.add(ctr.ch2, 'alpha', 0, 1, 0.1).name(
+			"Multi-Source Mix"
+		).onChange(redraw);
 
 	/* Visualizations */
 	ctx.gui.folder.viz = ctx.gui.handle.addFolder('Visualizations').open();
 	ctx.gui.folder.viz.add(ctr.tog, 'mask').name(
-		"Circle Mask"
+		"Ball Mask"
 	).onChange(redraw);
 	ctx.gui.folder.viz.add(ctr.tog, 'viz').name(
-		"Project screen border"
+		"Mapping and Distortion"
 	).onChange(redraw);
-	ctx.gui.controller.alpha =
-		ctx.gui.folder.viz.add(ctr.ch2, 'alpha', 0, 1, 0.1).name(
-			"Multi-Source Mix"
+	ctx.gui.folder.viz.add(ctr.tog, 'area').name(
+		"Projection Area (Solid Angle)"
+	).onChange(redraw);
+	ctx.gui.controller.area_f = ctx.gui.folder.viz.add(
+		ctr.tog, 'area_f', 0, 360, 1).name(
+			"Solid angle front [in °]"
+		).onChange(redraw);
+	ctx.gui.controller.area_b = ctx.gui.folder.viz.add(
+		ctr.tog, 'area_b', 0, 360, 1).name(
+			"Solid angle front [in °]"
 		).onChange(redraw);
 
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera').close();
