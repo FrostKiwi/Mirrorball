@@ -194,7 +194,7 @@ export function media_setup(bitmap, media) {
 	ctx.shaders.ch1.h = bitmap.height;
 	recalc_croplimits();
 
-	ctx.gl.texImage2D(ctx.gl.TEXTURE_2D, 0, ctx.gl.RGBA, ctx.gl.RGBA,
+	ctx.gl.texImage2D(ctx.gl.TEXTURE_2D, 0, ctx.gl.RGB, ctx.gl.RGB,
 		ctx.gl.UNSIGNED_BYTE, bitmap);
 	bitmap.close();
 	ctx.gui.handle.show();
@@ -218,7 +218,7 @@ export function update_texture(bitmap) {
 		return;
 	};
 	ctx.gl.texSubImage2D(ctx.gl.TEXTURE_2D, 0, 0, 0,
-		ctx.gl.RGBA, ctx.gl.UNSIGNED_BYTE, bitmap);
+		ctx.gl.RGB, ctx.gl.UNSIGNED_BYTE, bitmap);
 	bitmap.close();
 }
 
