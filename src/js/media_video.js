@@ -65,12 +65,17 @@ function getDeviceList(devices) {
 export function disable_video() {
 	if (ctx.video) {
 		ctx.playing = false;
-		ctx.continous = false;
+		if (!ctx.controller)
+			ctx.continous = false;
 
 		if (ctx.video.srcObject) {
 			const tracks = ctx.video.srcObject.getTracks();
 			tracks.forEach(track => track.stop());
 			ctx.video.srcObject = null;
+		} else if (ctx.video.src) {
+			ctx.video.pause();
+			/* Probably not needed */
+			ctx.video.removeAttribute('src');
 		}
 		ctx.video.remove();
 		ctx.video = null;
@@ -135,9 +140,9 @@ export function load_video(user_media) {
 
 	/* OnPlaying is called each loop, so have to guard against that */
 	ctx.video.onplaying = function () {
-		if (ctx.playing) return;
+		if (ctx.playing || !ctx.video) return;
 		ctx.playing = true;
-		
+
 		createImageBitmap(ctx.video).then(bitmap => {
 			media_setup(bitmap, user_media);
 			if (!ctx.continous) {

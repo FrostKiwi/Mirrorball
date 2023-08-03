@@ -47,7 +47,6 @@ export default function render() {
 					ctx.canvas.width, ctx.canvas.height / 2, ctr.ch1);
 			}
 			if (ctr.ch2.alpha) {
-				console.log("askdjfh;aslkdfja");
 				update_camera(ctx.canvas.width, ctx.canvas.height / 2,
 					ctr.ch2);
 				render_crop(ctx.canvas.width, ctx.canvas.height / 2,

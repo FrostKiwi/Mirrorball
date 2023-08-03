@@ -14,7 +14,7 @@ window.addEventListener('keydown', function (e) {
 	keyState[e.code] = true;
 	if (usedKeys.includes(e.code))
 		/* continous redraws, if keys used keys are pressed */
-		if (!ctx.continous) {
+		if (!ctx.continous && !ctx.playing && !ctx.controller) {
 			ctx.continous = true;
 			/* Technically, 'last' variable is needed */
 			ctx.lastKeyUpdate = 0;
@@ -27,7 +27,8 @@ window.addEventListener('keyup', function (e) {
 	keyState[e.code] = false;
 	if (usedKeys.every(key => !keyState[key]))
 		/* Stop continous redraws, if keys are released */
-		ctx.continous = false;
+		if (ctx.continous && !ctx.playing && !ctx.controller)
+			ctx.continous = false;
 }, true);
 
 window.addEventListener('blur', function () {
@@ -35,7 +36,8 @@ window.addEventListener('blur', function () {
 		keyState[key] = false;
 	}
 	/* Stop continous redraws, if keys are released */
-	ctx.continous = false;
+	if (ctx.continous && !ctx.playing && !ctx.controller)
+		ctx.continous = false;
 });
 
 function update_degrees() {
@@ -147,7 +149,7 @@ export function setup_input() {
 	/* Set controller to enable continous mode */
 	window.addEventListener("gamepadconnected", (e) => {
 		ctx.controller = true;
-		if (!ctx.continous) {
+		if (!ctx.continous && !ctx.playing && !ctx.controller) {
 			ctx.continous = true;
 			/* Technically, 'last' variable is needed */
 			ctx.lastKeyUpdate = 0;

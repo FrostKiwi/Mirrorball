@@ -54,6 +54,7 @@ export let ctx = {
 		menu: toggleMenu,
 		blur: true,
 		fullscreen: toggle_fullscreen,
+		state: dump_state,
 		controller: {},
 		crop_negative: false,
 		eruda: false,
@@ -291,4 +292,13 @@ function toggle_fullscreen() {
 		else if (elem.webkitRequestFullscreen)
 			elem.webkitRequestFullscreen();
 	}
+}
+
+function dump_state() {
+	console.log("Print general state")
+	console.log(ctx)
+	console.log("Print redraw state")
+	console.log(ctr)
+	console.log("Print redraw comparison state")
+	console.log(prev)
 }

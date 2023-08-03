@@ -120,6 +120,9 @@ export default function init_gui() {
 	ctx.gui.folder.debug.add(ctx.gui, 'eruda').name(
 		"Eruda debug console"
 	).onChange(eruda_toggle);
+	
+	/* Debug print */
+	/* ctx.gui.folder.debug.add(ctx.gui, 'state').name(" state"); */
 }
 
 function toggleStats(value) {
