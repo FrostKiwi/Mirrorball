@@ -23,15 +23,15 @@ export default function init_gui() {
 	).onChange(redraw);
 	ctx.gui.folder.viz.add(ctr.tog, 'area').name(
 		"Projection Area (Solid Angle)"
-	).onChange(redraw);
+	).onChange(toggleArea);
 	ctx.gui.controller.area_f = ctx.gui.folder.viz.add(
-		ctr.tog, 'area_f', 0, 360, 1).name(
+		ctr.tog, 'area_f', 0, 360 - ctr.tog.area_b, 1).name(
 			"Solid angle front [in °]"
-		).onChange(redraw);
+		).onChange(recalc_arealimits).disable();
 	ctx.gui.controller.area_b = ctx.gui.folder.viz.add(
-		ctr.tog, 'area_b', 0, 360, 1).name(
+		ctr.tog, 'area_b', 0, 360 - ctr.tog.area_f, 1).name(
 			"Solid angle front [in °]"
-		).onChange(redraw);
+		).onChange(recalc_arealimits).disable();
 
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera').close();
 	ctx.gui.controller.cam_fov = ctx.gui.folder.camera.add(
@@ -147,6 +147,18 @@ function toggle_crop_negative(value) {
 	ctx.gui.controller.bot.updateDisplay();
 }
 
+export function recalc_arealimits() {
+	ctx.gui.controller.area_b.max(
+		360 - ctr.tog.area_f);
+	ctx.gui.controller.area_f.max(
+		360 - ctr.tog.area_b);
+	ctx.gui.controller.area_b.updateDisplay();
+	ctx.gui.controller.area_f.updateDisplay();
+
+	if (!ctx.loading)
+		redraw();
+}
+
 export function recalc_croplimits() {
 	ctx.gui.controller.left.max(
 		ctx.shaders.ch1.w - ctr.ch1.crop.right - 1);
@@ -200,11 +212,23 @@ function eruda_toggle(value) {
 }
 
 function toggleBlur(value) {
-	if (value) {
+	if (value)
 		document.documentElement.style.setProperty('--blur', 'blur(calc(1vw + 1vh))');
-	} else {
+	else
 		document.documentElement.style.setProperty('--blur', 'none');
+}
+
+function toggleArea(value) {
+	if (value) {
+		ctx.gui.controller.area_f.enable();
+		ctx.gui.controller.area_b.enable();
 	}
+	else {
+		ctx.gui.controller.area_f.disable();
+		ctx.gui.controller.area_b.disable();
+	}
+	if (!ctx.loading)
+		redraw();
 }
 
 function channel2_setup() {
