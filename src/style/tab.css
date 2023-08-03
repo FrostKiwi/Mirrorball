@@ -70,6 +70,10 @@
 	box-sizing: border-box;
 }
 
+.msgcontent {
+	padding: 10px 25px;
+}
+
 /* Go from zero to full opacity */
 @keyframes fadeEffect {
 	from {

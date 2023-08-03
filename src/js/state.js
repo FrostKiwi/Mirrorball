@@ -71,6 +71,7 @@ export let ctx = {
 	},
 	dom: {
 		menu: document.getElementById('menu'),
+		message: document.getElementById('message'),
 		spinner: document.getElementById('spinner'),
 		statusMSG: document.getElementById('statusMSG'),
 		filesize: document.getElementById('filesize')
@@ -277,6 +278,13 @@ export function toggleMenu() {
 		ctx.dom.menu.style.display = 'flex';
 	else
 		ctx.dom.menu.style.display = 'none';
+}
+
+export function toggleMessage() {
+	if (ctx.dom.message.style.display === 'none')
+		ctx.dom.message.style.display = 'flex';
+	else
+		ctx.dom.message.style.display = 'none';
 }
 
 function toggle_fullscreen() {

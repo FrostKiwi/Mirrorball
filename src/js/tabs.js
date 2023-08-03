@@ -1,9 +1,9 @@
-import { toggleMenu } from './state.js';
+import { ctx, toggleMenu } from './state.js';
 import { list_devices, upload_video } from './media_video.js'
 import { media_populate, upload_image } from './media.js';
 
 // As per https://www.w3schools.com/howto/howto_js_tabs.asp
-export function openTab(evt, cityName) {
+export function openTab(evt, tabname) {
 	// Declare all variables
 	var i, tabcontent, tablinks;
 
@@ -30,7 +30,7 @@ export function openTab(evt, cityName) {
 
 	// Show the current tab, and add an "active" class to the button that opened the tab
 	if (evt) {
-		document.getElementById(cityName).style.display = "flex";
+		document.getElementById(tabname).style.display = "flex";
 		evt.currentTarget.className += " active";
 	};
 }
@@ -80,6 +80,12 @@ export function setupTabs() {
 			event.stopPropagation();
 		}
 	);
+
+	document.getElementById('message_close').onclick = function () {
+		toggleMessage();
+	};
+
+	ctx.dom.message.style.display = 'none';
 
 	media_populate();
 }
