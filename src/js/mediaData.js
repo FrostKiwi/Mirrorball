@@ -51,7 +51,7 @@ const media = [
 	},
 	{
 		type: "image",
-		title: "Eletronics Store",
+		title: "Eletronics store",
 		path: "/media/store.jpg",
 		thumb: "/media/thumb/store.jpg",
 		fileSize: "2.2 MB",
@@ -72,6 +72,56 @@ const media = [
 		camera_inital: {
 			Yaw: -120,
 			Pitch: -40
+		}
+	},
+	{
+		type: "image",
+		title: "Hardware store",
+		path: "/media/store_hardware.jpg",
+		thumb: "/media/thumb/store_hardware.jpg",
+		fileSize: "2.08 MB",
+		width: "2883",
+		height: "2883",
+		sphere_fov: 260,
+		crop: {
+			top: 3,
+			bot: 106,
+			left: 50,
+			right: 57
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: -90,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: -120,
+			Pitch: -35
+		}
+	},
+	{
+		type: "image",
+		title: "Department store",
+		path: "/media/store_yodobashi.jpg",
+		thumb: "/media/thumb/store_yodobashi.jpg",
+		fileSize: "2.08 MB",
+		width: "2422",
+		height: "2422",
+		sphere_fov: 265,
+		crop: {
+			top: 31,
+			bot: 17,
+			left: 104,
+			right: 70
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: -90,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: -175,
+			Pitch: -45
 		}
 	},
 	{
@@ -228,6 +278,31 @@ const media = [
 	},
 	{
 		type: "image",
+		title: "Street lamp",
+		path: "/media/lamp.jpg",
+		thumb: "/media/thumb/lamp.jpg",
+		fileSize: "1.9 MB",
+		width: "4096",
+		height: "4096",
+		sphere_fov: 340,
+		crop: {
+			top: 151,
+			bot: 110,
+			left: 145,
+			right: 119
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: -17,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 0,
+			Pitch: 0
+		}
+	},
+	{
+		type: "image",
 		title: "Different Rotations",
 		path: "/media/rotation_compare.jpg",
 		thumb: "/media/thumb/rotation_compare.jpg",
@@ -263,6 +338,81 @@ const media = [
 				Pitch: 24,
 				Roll: 1
 			},
+		}
+	},
+	{
+		type: "image",
+		title: "Fire Hydrant",
+		path: "/media/fire_hydrant.jpg",
+		thumb: "/media/thumb/fire_hydrant.jpg",
+		fileSize: "4.38 MB",
+		width: "4096",
+		height: "4096",
+		sphere_fov: 330,
+		crop: {
+			top: 118,
+			bot: 165,
+			left: 170,
+			right: 102
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 90,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: -145,
+			Pitch: -10
+		}
+	},
+	{
+		type: "image",
+		title: "Movie VFX Probe",
+		path: "/media/movie.jpg",
+		thumb: "/media/thumb/movie.jpg",
+		fileSize: "0.2 MB",
+		width: "1079",
+		height: "1080",
+		sphere_fov: 330,
+		crop: {
+			top: 0,
+			bot: 0,
+			left: 0,
+			right: 0
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: -5,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 90,
+			Pitch: -20
+		}
+	},
+	{
+		type: "image",
+		title: "Security Camera",
+		path: "/media/security_camera.jpg",
+		thumb: "/media/thumb/security_camera.jpg",
+		fileSize: "1.67 MB",
+		width: "4096",
+		height: "4096",
+		sphere_fov: 260,
+		crop: {
+			top: 581,
+			bot: 502,
+			left: 614,
+			right: 481
+		},
+		world_rotation: {
+			Yaw: 4,
+			Pitch: -98,	
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: -145,
+			Pitch: -30
 		}
 	},
 ];
