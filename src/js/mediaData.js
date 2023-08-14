@@ -25,6 +25,31 @@ const media = [
 		}
 	},
 	{
+		type: "video",
+		title: "Walk-around",
+		path: "/media/walkaround.mp4",
+		thumb: "/media/thumb/walkaround.jpg",
+		fileSize: "9.5 MB",
+		width: "2048",
+		height: "2048",
+		sphere_fov: 346,
+		crop: {
+			top: 26,
+			bot: 9,
+			left: 22,
+			right: 16
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 0,
+			Roll: 2
+		},
+		camera_inital: {
+			Yaw: -60,
+			Pitch: 0
+		}
+	},
+	{
 		type: "image",
 		title: "Eletronics Store",
 		path: "/media/store.jpg",
@@ -200,7 +225,46 @@ const media = [
 			Yaw: -70,
 			Pitch: -23
 		}
-	}
+	},
+	{
+		type: "image",
+		title: "Different Rotations",
+		path: "/media/rotation_compare.jpg",
+		thumb: "/media/thumb/rotation_compare.jpg",
+		fileSize: "4.38 MB",
+		width: "8192",
+		height: "4096",
+		sphere_fov: 346,
+		crop: {
+			top: 74,
+			bot: 75,
+			left: 80,
+			right: 4165
+		},
+		world_rotation: {
+			Yaw: -50,
+			Pitch: 2,
+			Roll: -2.5
+		},
+		camera_inital: {
+			Yaw: -40,
+			Pitch: 0
+		},
+		ch2:{
+			sphere_fov: 346,
+			crop: {
+				top: 71,
+				bot: 62,
+				left: 4158,
+				right: 74
+			},
+			world_rotation: {
+				Yaw: 0,
+				Pitch: 24,
+				Roll: 1
+			},
+		}
+	},
 ];
 
 export default media;

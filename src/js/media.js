@@ -164,6 +164,22 @@ export function media_setup(bitmap, media) {
 	ctx.gui.controller.top.setValue(media.crop.top);
 	ctx.gui.controller.bot.setValue(media.crop.bot);
 
+	if (media.ch2){
+		ctr.ch2.fov_deg = media.ch2.sphere_fov;
+		ctr.ch2.rot_deg[0] = media.ch2.world_rotation.Pitch;
+		ctr.ch2.rot_deg[1] = media.ch2.world_rotation.Yaw;
+		ctr.ch2.rot_deg[2] = media.ch2.world_rotation.Roll;
+
+		ctx.gui.controller.left_ch2.setValue(media.ch2.crop.left);
+		ctx.gui.controller.right_ch2.setValue(media.ch2.crop.right);
+		ctx.gui.controller.top_ch2.setValue(media.ch2.crop.top);
+		ctx.gui.controller.bot_ch2.setValue(media.ch2.crop.bot);
+
+		ctx.gui.controller.world_pitch_ch2.updateDisplay();
+		ctx.gui.controller.world_yaw_ch2.updateDisplay();
+		ctx.gui.controller.world_roll_ch2.updateDisplay();
+	}
+
 	/* In case resize was performed due to GPU not supporting that size */
 	if (media.width != bitmap.width || media.height != bitmap.height) {
 		if (media.width && media.height) {
