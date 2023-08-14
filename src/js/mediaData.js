@@ -4,24 +4,24 @@ const media = [
 		title: "Bedroom",
 		path: "/media/room.jpg",
 		thumb: "/media/thumb/room.jpg",
-		fileSize: "2 MB",
+		fileSize: "2.7 MB",
 		width: "4096",
 		height: "4096",
-		sphere_fov: 342,
+		sphere_fov: 346,
 		crop: {
-			top: 46,
+			top: 71,
 			bot: 62,
-			left: 45,
-			right: 63
+			left: 62,
+			right: 74
 		},
 		world_rotation: {
 			Yaw: 0,
-			Pitch: 0,
-			Roll: 0
+			Pitch: 24,
+			Roll: 1
 		},
 		camera_inital: {
 			Yaw: -40,
-			Pitch: 0
+			Pitch: -10
 		}
 	},
 	{
