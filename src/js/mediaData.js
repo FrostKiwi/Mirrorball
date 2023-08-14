@@ -125,84 +125,6 @@ const media = [
 			Pitch: 0
 		}
 	},
-	/* {
-		type: "image",
-		title: "M.C. Escher sphere table",
-		path: "/media/escher_table.jpg",
-		thumb: "/media/thumb/escher_table.jpg",
-		fileSize: "1.1 MB",
-		width: "1841",
-		height: "1087",
-		source: "https://mcescher.com/foundation/",
-		sphere_fov: 290,
-		crop: {
-			top: 111,
-			bot: 479,
-			left: 673,
-			right: 677
-		},
-		world_rotation: {
-			Yaw: 0,
-			Pitch: 34,
-			Roll: 0
-		},
-		camera_inital: {
-			Yaw: -90,
-			Pitch: 0
-		}
-	},
-	{
-		type: "image",
-		title: "M.C. Escher sphere in hand",
-		path: "/media/escher_hand.jpg",
-		thumb: "/media/thumb/escher_hand.jpg",
-		fileSize: "3.57 MB",
-		width: "2016",
-		height: "3000",
-		source: "https://mcescher.com/foundation/",
-		sphere_fov: 300,
-		crop: {
-			top: 145,
-			bot: 1131,
-			left: 154,
-			right: 154
-		},
-		world_rotation: {
-			Yaw: 0,
-			Pitch: 8,
-			Roll: 0
-		},
-		camera_inital: {
-			Yaw: 50,
-			Pitch: 0
-		}
-	},
-	{
-		type: "image",
-		title: "M.C. Escher sphere woodcut",
-		path: "/media/escher_woodcut.jpg",
-		thumb: "/media/thumb/escher_woodcut.jpg",
-		fileSize: "0.1 MB",
-		width: "600",
-		height: "593",
-		source: "https://mcescher.com/foundation/",
-		sphere_fov: 260,
-		crop: {
-			top: 43,
-			bot: 34,
-			left: 42,
-			right: 43
-		},
-		world_rotation: {
-			Yaw: 0,
-			Pitch: 38,
-			Roll: 0
-		},
-		camera_inital: {
-			Yaw: -60,
-			Pitch: 0
-		}
-	}, */
 	{
 		type: "image",
 		title: "Gene Miller 1982",
@@ -252,6 +174,31 @@ const media = [
 		camera_inital: {
 			Yaw: -60,
 			Pitch: -50
+		}
+	},
+	{
+		type: "image",
+		title: "Soup ladle",
+		path: "/media/ladle.jpg",
+		thumb: "/media/thumb/ladle.jpg",
+		fileSize: "0.5 MB",
+		width: "2048",
+		height: "2048",
+		sphere_fov: 280,
+		crop: {
+			top: 42,
+			bot: 15,
+			left: 39,
+			right: 24
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 7,
+			Roll: 3
+		},
+		camera_inital: {
+			Yaw: -70,
+			Pitch: -23
 		}
 	}
 ];
