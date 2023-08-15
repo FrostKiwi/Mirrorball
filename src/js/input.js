@@ -148,8 +148,8 @@ export function setup_input() {
 
 	/* Set controller to enable continous mode */
 	window.addEventListener("gamepadconnected", (e) => {
-		ctx.controller = true;
 		if (!ctx.continous && !ctx.playing && !ctx.controller) {
+			ctx.controller = true;
 			ctx.continous = true;
 			/* Technically, 'last' variable is needed */
 			ctx.lastKeyUpdate = 0;
