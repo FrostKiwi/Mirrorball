@@ -1,5 +1,6 @@
 import { ctx } from './state.js';
 import { user_media, media_setup, closeMenu } from './media.js';
+import { channel2_enable } from './gui.js';
 
 export function list_devices() {
 	/* If the selector already exists, return from function */
@@ -128,6 +129,8 @@ function launch_stream(deviceId) {
 export function load_video(user_media) {
 	disable_video();
 
+	if (user_media.ch2)
+		channel2_enable();
 	ctx.loading = true;
 	/* Start spinner, hide menus */
 	document.getElementById('spinner').style.display = 'block';

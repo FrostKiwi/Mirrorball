@@ -341,6 +341,148 @@ const media = [
 		}
 	},
 	{
+		type: "video",
+		title: "Color + Thermal Grilled Cheese",
+		path: "/media/cheese-eating.mp4",
+		thumb: "/media/thumb/cheese-eating.jpg",
+		fileSize: "14.9 MB",
+		width: "2048",
+		height: "2048",
+		sphere_fov: 333,
+		crop: {
+			top: 147,
+			bot: 14,
+			left: 136,
+			right: 26
+		},
+		world_rotation: {
+			Yaw: -134,
+			Pitch: 0,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 60,
+			Pitch: 0
+		},
+		ch2: {
+			sphere_fov: 320,
+			crop: {
+				top: 17,
+				bot: 1605,
+				left: 16,
+				right: 1610
+			},
+			world_rotation: {
+				Yaw: 0,
+				Pitch: -4,
+				Roll: 1
+			},
+		}
+	},
+	{
+		type: "video",
+		title: "Microwave Cheese",
+		path: "/media/microwave.mp4",
+		thumb: "/media/thumb/microwave.jpg",
+		fileSize: "17.1 MB",
+		width: "2048",
+		height: "2048",
+		sphere_fov: 280,
+		crop: {
+			top: 39,
+			bot: 52,
+			left: 76,
+			right: 26
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: -3,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 30,
+			Pitch: -20
+		},
+		ch2: {
+			sphere_fov: 280,
+			crop: {
+				top: 30,
+				bot: 1755,
+				left: 51,
+				right: 1709
+			},
+			world_rotation: {
+				Yaw: -30,
+				Pitch: -30,
+				Roll: -15
+			},
+		}
+	},
+	{
+		type: "video",
+		title: "Color + Thermal Laser cladding",
+		path: "/media/cladding.mp4",
+		thumb: "/media/thumb/cladding.jpg",
+		fileSize: "13.3 MB",
+		width: "2048",
+		height: "2048",
+		sphere_fov: 330,
+		crop: {
+			top: 190,
+			bot: 21,
+			left: 169,
+			right: 39
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 1,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 70,
+			Pitch: 0
+		},
+		ch2: {
+			sphere_fov: 320,
+			crop: {
+				top: 7,
+				bot: 1599,
+				left: 11,
+				right: 1581
+			},
+			world_rotation: {
+				Yaw: -178,
+				Pitch: -14,
+				Roll: -177
+			},
+		}
+	},
+	{
+		type: "image",
+		title: "Roof",
+		path: "/media/roof.jpg",
+		thumb: "/media/thumb/roof.jpg",
+		fileSize: "2.83 MB",
+		width: "3884",
+		height: "3884",
+		sphere_fov: 339,
+		crop: {
+			top: 68,
+			bot: 103,
+			left: 79,
+			right: 91
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 0,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 90,
+			Pitch: 0
+		}
+	},
+	{
 		type: "image",
 		title: "Fire Hydrant",
 		path: "/media/fire_hydrant.jpg",
@@ -413,6 +555,84 @@ const media = [
 		camera_inital: {
 			Yaw: -145,
 			Pitch: -30
+		}
+	},
+	{
+		type: "image",
+		title: "Distance comparison",
+		path: "/media/distance.jpg",
+		thumb: "/media/thumb/distance.jpg",
+		fileSize: "5.51 MB",
+		width: "8192",
+		height: "4096",
+		sphere_fov: 345,
+		crop: {
+			top: 33,
+			bot: 96,
+			left: 71,
+			right: 4153
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 0,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 180,
+			Pitch: 0
+		},
+		ch2: {
+			sphere_fov: 334,
+			crop: {
+				top: 80,
+				bot: 88,
+				left: 4182,
+				right: 85
+			},
+			world_rotation: {
+				Yaw: 0,
+				Pitch: 0,
+				Roll: 0
+			},
+		}
+	},
+	{
+		type: "image",
+		title: "Ball size comparison",
+		path: "/media/size.jpg",
+		thumb: "/media/thumb/size.jpg",
+		fileSize: "5.44 MB",
+		width: "8192",
+		height: "4096",
+		sphere_fov: 334,
+		crop: {
+			top: 80,
+			bot: 88,
+			left: 86,
+			right: 4181
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 0,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 180,
+			Pitch: 0
+		},
+		ch2: {
+			sphere_fov: 343,
+			crop: {
+				top: 103,
+				bot: 112,
+				left: 4201,
+				right: 107
+			},
+			world_rotation: {
+				Yaw: 0,
+				Pitch: 0,
+				Roll: 0
+			},
 		}
 	},
 ];

@@ -164,7 +164,7 @@ export function media_setup(bitmap, media) {
 	ctx.gui.controller.top.setValue(media.crop.top);
 	ctx.gui.controller.bot.setValue(media.crop.bot);
 
-	if (media.ch2){
+	if (media.ch2 && typeof media.ch2 != "boolean") {
 		ctr.ch2.fov_deg = media.ch2.sphere_fov;
 		ctr.ch2.rot_deg[0] = media.ch2.world_rotation.Pitch;
 		ctr.ch2.rot_deg[1] = media.ch2.world_rotation.Yaw;
