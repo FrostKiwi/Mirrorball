@@ -61,7 +61,8 @@ export let ctx = {
 		deadzone: 0.1,
 		folder: {},
 		showStats: false,
-		showEventStats: false
+		showEventStats: false,
+		gamepad: 1
 	},
 	cam: {
 		fov: {

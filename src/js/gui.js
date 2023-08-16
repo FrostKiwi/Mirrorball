@@ -101,6 +101,9 @@ export default function init_gui() {
 			"Fullscreen not supported by browser"
 		).disable();
 
+	ctx.gui.folder.settings.add(ctx.gui, 'gamepad', 1, 4, 1, 1).name(
+		"Choose Gamepad"
+	);
 	ctx.gui.folder.settings.add(ctx.gui, 'deadzone', 0, 0.75).name(
 		"Gamepad deadzone"
 	);

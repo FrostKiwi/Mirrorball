@@ -87,8 +87,8 @@ export function key_input(time) {
 export function controller_input(time) {
 	const gamepads = navigator.getGamepads();
 
-	if (gamepads[0]) {
-		const gp = gamepads[0];
+	if (gamepads[ctx.gui.gamepad - 1]) {
+		const gp = gamepads[ctx.gui.gamepad - 1];
 
 		const rotationSpeed = 0.25;
 		const zoomSpeed = 0.125;
@@ -155,6 +155,8 @@ export function setup_input() {
 			ctx.lastKeyUpdate = 0;
 			ctx.lastControllerUpdate = 0;
 			requestAnimationFrame(ctx.animate_cont);
+		} else {
+			ctx.controller = true;
 		}
 	});
 
