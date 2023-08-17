@@ -458,6 +458,31 @@ const media = [
 		}
 	},
 	{
+		type: "video",
+		title: "Laser cladding 2023",
+		path: "/media/cladding2023.mp4",
+		thumb: "/media/thumb/cladding2023.jpg",
+		fileSize: "6.6 MB",
+		width: "2048",
+		height: "2048",
+		sphere_fov: 342,
+		crop: {
+			top: 19,
+			bot: 14,
+			left: 7,
+			right: 13
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 2,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: 55,
+			Pitch: 0
+		}
+	},
+	{
 		type: "image",
 		title: "Roof",
 		path: "/media/roof.jpg",
@@ -660,6 +685,7 @@ const media = [
 			Pitch: -10
 		}
 	},
+
 ];
 
 export default media;
