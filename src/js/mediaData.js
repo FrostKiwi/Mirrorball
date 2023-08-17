@@ -635,6 +635,31 @@ const media = [
 			},
 		}
 	},
+	{
+		type: "image",
+		title: "ArchViz (3D-Render)",
+		path: "/media/archviz.jpg",
+		thumb: "/media/thumb/archviz.jpg",
+		fileSize: "1.55 MB",
+		width: "4096",
+		height: "4096",
+		sphere_fov: 360,
+		crop: {
+			top: 0,
+			bot: 0,
+			left: 0,
+			right: 0
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 0,
+			Roll: 0
+		},
+		camera_inital: {
+			Yaw: -60,
+			Pitch: -10
+		}
+	},
 ];
 
 export default media;
