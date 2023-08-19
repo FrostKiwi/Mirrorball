@@ -11,4 +11,4 @@ Deceptively simple, it is an incredible intersection of Computer Science and Mat
 [![Watch the video](https://img.youtube.com/vi/rJPKTCdk-WI/0.jpg)](https://www.youtube.com/watch?v=rJPKTCdk-WI)
 
 # Photo contribution guide, regarding https://youtu.be/rJPKTCdk-WI?t=1822
-Full step-by-step guide following soon. Basically, just fork, drag and drop the photo anywhere in the code, no matter the directory, no matter the size or format, commit and submit the Pull Request. I will move the photo to the correct place, input the required cropping and rotation numbers, create the thumbnail and make sure you are properly credited in in any way you wish.
+Full step-by-step guide following soon. Basically, just fork, drag and drop the photo anywhere in the code, no matter the directory, no matter the size or format, commit and submit the Pull Request. I will move the photo to the correct place, input the required cropping and rotation numbers, create the thumbnail and make sure you are properly credited in any way you wish.
