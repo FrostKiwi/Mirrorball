@@ -1,5 +1,6 @@
 import { ctx, ctr, redraw } from './state.js';
 import media from './mediaData.js'
+import media_user from './mediaData_user.js'
 import { disable_video, load_video } from './media_video.js'
 import { recalc_croplimits, channel2_disable, channel2_enable } from './gui.js';
 
@@ -36,6 +37,52 @@ export function media_populate() {
 			</div>
 			<img class="card-image" src="${media.thumb}" alt="Thumbnail">
 			<div class="card-description">
+				<p class="card-field">File Size:
+					<span class="value">${media.fileSize}</span></p>
+				<p class="card-field">Dimensions:
+					<span class="value">${media.width}x${media.height}</span></p>
+				${resizeWarn}
+				${sourceLink}
+			</div>`;
+		mediaDiv.appendChild(card);
+	});
+};
+
+export function media_populate_user() {
+	let mediaDiv = document.getElementById('media_user');
+	media_user.forEach(media => {
+		let card = document.createElement('div');
+		card.className = 'card';
+		card.onclick = function () {
+			if (ctx.loading) return;
+			load_from_url(media);
+			closeMenu();
+		};
+
+		let sourceLink = '';
+		if (media.source) {
+			sourceLink = `<p class="card-field">
+			<a href="${media.source}" class="source-link">Source</a></p>`;
+		}
+
+		let resizeWarn = '';
+		if (media.width > ctx.max_texsize || media.height > ctx.max_texsize) {
+			resizeWarn = `<p class="card-field">
+			<a class="value">
+			Size above your GPU limit of ${ctx.max_texsize} px²<br>
+			Image will be resized to fit that.
+			</p>`;
+		}
+
+		card.innerHTML = `
+			<div class="card-header">
+				<img src="img/${media.type}.svg" class="card-icon">
+				<h2 class="card-title">${media.title}</h2>
+			</div>
+			<img class="card-image" src="${media.thumb}" alt="Thumbnail">
+			<div class="card-description">
+				<p class="card-field">Submitter:
+					<span class="value"><a href="${media.submitter_link}" class="source-link">${media.submitter}</a></span></p>
 				<p class="card-field">File Size:
 					<span class="value">${media.fileSize}</span></p>
 				<p class="card-field">Dimensions:

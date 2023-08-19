@@ -1,6 +1,6 @@
 import { ctx, toggleMenu } from './state.js';
 import { list_devices, upload_video } from './media_video.js'
-import { media_populate, upload_image } from './media.js';
+import { media_populate, media_populate_user, upload_image } from './media.js';
 
 // As per https://www.w3schools.com/howto/howto_js_tabs.asp
 export function openTab(evt, tabname) {
@@ -46,6 +46,11 @@ export function setupTabs() {
 			openTab(event, 'media');
 		}
 	);
+	document.getElementById('tab_user').addEventListener(
+		'click', function (event) {
+			openTab(event, 'media_user');
+		}
+	);
 	document.getElementById('tab_connect').addEventListener(
 		'click', function (event) {
 			openTab(event, 'connect');
@@ -88,4 +93,5 @@ export function setupTabs() {
 	ctx.dom.message.style.display = 'none';
 
 	media_populate();
+	media_populate_user();
 }
