@@ -238,6 +238,16 @@ export function media_setup(bitmap, media) {
 				media.crop.top * bitmap.height / media.height);
 			ctx.gui.controller.bot.setValue(
 				media.crop.bot * bitmap.height / media.height);
+			if (media.ch2) {
+				ctx.gui.controller.left_ch2.setValue(
+					media.ch2.crop.left * bitmap.width / media.width);
+				ctx.gui.controller.right_ch2.setValue(
+					media.ch2.crop.right * bitmap.width / media.width);
+				ctx.gui.controller.top_ch2.setValue(
+					media.ch2.crop.top * bitmap.height / media.height);
+				ctx.gui.controller.bot_ch2.setValue(
+					media.ch2.crop.bot * bitmap.height / media.height);
+			}
 		}
 	}
 
