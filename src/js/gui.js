@@ -30,7 +30,7 @@ export default function init_gui() {
 		).onChange(recalc_arealimits).disable();
 	ctx.gui.controller.area_b = ctx.gui.folder.viz.add(
 		ctr.tog, 'area_b', 0, 360 - ctr.tog.area_f, 1).name(
-			"Solid angle front [in °]"
+			"Solid angle back [in °]"
 		).onChange(recalc_arealimits).disable();
 
 	ctx.gui.folder.camera = ctx.gui.handle.addFolder('Camera').close();
@@ -108,7 +108,7 @@ export default function init_gui() {
 		"Gamepad deadzone"
 	);
 	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 2, 256, 1).name(
-		"Visualization subdivisions"
+		"Distortion-Viz subdivisions"
 	).onChange(redraw);
 	ctx.gui.folder.settings.add(ctx.gui, 'blur').name(
 		"Menu blur"
