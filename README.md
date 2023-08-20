@@ -17,12 +17,12 @@ Or just E-Mail me at mirrorball@frost.kiwi
 
 ## Features:
 
-View the projection of a Mirrorball with different colorful visualizations to understand how the math works. You can upload a
- * Photo
- * video,
+View the projection of a Mirrorball with different colorful visualizations to understand how the math works. You can project a:
+ * photo
+ * video
  * live webcam stream
  * capture card feed
- * 
+
 Any format, which your web browser can decode is supported. That should cover all important file types.
 
 ### Limitations
