@@ -19,11 +19,11 @@ const media_user = [
 		},
 		world_rotation: {
 			Yaw: 0,
-			Pitch: 0,
+			Pitch: 3,
 			Roll: 0
 		},
-		camera_inital: {
-			Yaw: 0,
+		camera_initial: {
+			Yaw: -70,
 			Pitch: 0
 		}
 	}

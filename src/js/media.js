@@ -107,7 +107,7 @@ export const user_media = {
 		Pitch: 0,
 		Roll: 0
 	},
-	camera_inital: {
+	camera_initial: {
 		Yaw: 0,
 		Pitch: 0
 	},
@@ -194,8 +194,8 @@ export function media_setup(bitmap, media) {
 	ctx.dom.statusMSG.innerText = "Transfering into GPU memory";
 
 	ctr.ch1.fov_deg = media.sphere_fov;
-	ctr.cam.rot_deg[0] = media.camera_inital.Pitch;
-	ctr.cam.rot_deg[1] = media.camera_inital.Yaw;
+	ctr.cam.rot_deg[0] = media.camera_initial.Pitch;
+	ctr.cam.rot_deg[1] = media.camera_initial.Yaw;
 	ctr.ch1.rot_deg[0] = media.world_rotation.Pitch;
 	ctr.ch1.rot_deg[1] = media.world_rotation.Yaw;
 	ctr.ch1.rot_deg[2] = media.world_rotation.Roll;
