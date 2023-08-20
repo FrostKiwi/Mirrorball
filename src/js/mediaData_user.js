@@ -65,7 +65,7 @@ const media_user = [
 		height: "2268",
 		submitter: "u/wwxxcc on Reddit",
 		submitter_link: "https://www.reddit.com/user/wwxxcc",
-		sphere_fov: 260,
+		sphere_fov: 240,
 		crop: {
 			top: 18,
 			bot: 296,
@@ -78,7 +78,7 @@ const media_user = [
 			Roll: 0
 		},
 		camera_initial: {
-			Yaw: 75,
+			Yaw: 45,
 			Pitch: 0
 		}
 	}
