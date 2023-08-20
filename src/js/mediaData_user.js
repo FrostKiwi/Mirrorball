@@ -54,6 +54,33 @@ const media_user = [
 			Yaw: -25,
 			Pitch: 25
 		}
+	},
+	{
+		type: "image",
+		title: "La Géode Theater in France",
+		path: "/media_user/france.jpg",
+		thumb: "/media_user/thumb/france.jpg",
+		fileSize: "2.42 MB",
+		width: "4032",
+		height: "2268",
+		submitter: "u/wwxxcc on Reddit",
+		submitter_link: "https://www.reddit.com/user/wwxxcc",
+		sphere_fov: 260,
+		crop: {
+			top: 18,
+			bot: 296,
+			left: 920,
+			right: 1154
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: -6,
+			Roll: 0
+		},
+		camera_initial: {
+			Yaw: 75,
+			Pitch: 0
+		}
 	}
 ];
 
