@@ -26,6 +26,34 @@ const media_user = [
 			Yaw: -70,
 			Pitch: 0
 		}
+	},
+	{
+		type: "image",
+		title: "Arnolfini portrait",
+		path: "/media_user/panini.jpg",
+		thumb: "/media_user/thumb/panini.jpg",
+		fileSize: "0.4 MB",
+		width: "1024",
+		height: "1024",
+		submitter: "Nature's Joints on Discord",
+		submitter_link: "https://discordapp.com/users/1142199521930137713",
+		source: "https://en.wikipedia.org/wiki/Arnolfini_Portrait#/media/File:The_Arnolfini_portrait_(1434).jpg",
+		sphere_fov: 160,
+		crop: {
+			top: 140,
+			bot: 184,
+			left: 153,
+			right: 162
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 0,
+			Roll: -2
+		},
+		camera_initial: {
+			Yaw: -25,
+			Pitch: 25
+		}
 	}
 ];
 
