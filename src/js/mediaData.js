@@ -665,7 +665,7 @@ const media = [
 		title: "ArchViz (3D-Render)",
 		path: "/media/archviz.jpg",
 		thumb: "/media/thumb/archviz.jpg",
-		fileSize: "1.55 MB",
+		fileSize: "1.33 MB",
 		width: "4096",
 		height: "4096",
 		sphere_fov: 360,
