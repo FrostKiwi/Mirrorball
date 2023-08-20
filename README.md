@@ -29,3 +29,8 @@ Any format, which your web browser can decode is supported. That should cover al
 Most of the official photo examples are 100 Megapixel photos scaled down to 8192² px resolution. The WebApp automatically downscales photos even further, if the user's device does not support that resolution. Even so, I changed all photos to 4096² px to make sure all devices show the projection. I had weird edge cases, where older iPhones support 8192² but refuse to upload the data to the VRAM, because of memory preassure, so just to be sure all photos are 4096² instead.
 
 Same goes for Video. All sources are 4096² but the WebApp only has 2048² videos. The reason is Windows's built in decoder being very weak: https://github.com/FrostKiwi/Mirrorball/issues/11.
+
+## Credits for other packages:
+The side controlbar is realized via @georgealways lil-gui https://github.com/georgealways/lil-gui
+The debug statistics in the settings tab are the evergreen stats.js https://github.com/mrdoob/stats.js by @mrdoob
+One key insight on state management to get redraws when the user is actually touching the interface and be a static page otherwise was provided by @Pomax in this StackOverflow answer: https://stackoverflow.com/questions/76633899/can-requestanimationframe-be-called-from-input-events-and-still-respect-refresh/76633986?noredirect=1#comment135118794_76633986
