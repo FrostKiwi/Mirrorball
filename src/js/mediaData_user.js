@@ -10,12 +10,12 @@ const media_user = [
 		submitter: "@zjquid on GitHub",
 		submitter_link: "https://github.com/zjquid",
 		source: "https://github.com/FrostKiwi/Mirrorball/pull/13#issuecomment-1684831330",
-		sphere_fov: 294,
+		sphere_fov: 290,
 		crop: {
-			top: 800,
-			bot: 1426,
-			left: 721,
-			right: 572
+			top: 878,
+			bot: 1481,
+			left: 776,
+			right: 635
 		},
 		world_rotation: {
 			Yaw: 0,
