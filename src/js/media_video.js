@@ -136,15 +136,32 @@ export function load_video(user_media) {
 	document.getElementById('spinner').style.display = 'block';
 	document.getElementById('statusMSG').innerText = "Starting video stream";
 	ctx.video = document.createElement('video');
+
+	ctx.video.onerror = function (e) {
+		console.error("Video error:", ctx.video.error);
+	};
+
+	ctx.video.onloadedmetadata = function () {
+		if (ctx.video.videoWidth === 0 || ctx.video.videoHeight === 0) {
+			console.error("Video might be invalid or unsupported");
+		}
+	};
+
 	ctx.video.src = user_media.path;
 	ctx.video.loop = true;
 	ctx.video.muted = true;
-	ctx.video.play();
-	if (ctx.gui.eruda) console.log("Started Video");
+
+	ctx.video.oncanplay = function () {
+		ctx.video.play().then(() => {
+			if (ctx.gui.eruda) console.log("Video started playing");
+		}).catch(error => {
+			console.error("Video play error:", error);
+		});
+	};
 
 	/* OnPlaying is called each loop, so have to guard against that */
-	ctx.video.oncanplaythrough = function () {
-		if (ctx.playing || !ctx.video) {
+	ctx.video.ontimeupdate = function () {
+		if (ctx.playing && ctx.video.currentTime > 0) {
 			if (ctx.gui.eruda) console.log("Loop, rejecting unneeded video setup");
 			return
 		};
