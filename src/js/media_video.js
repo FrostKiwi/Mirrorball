@@ -140,15 +140,21 @@ export function load_video(user_media) {
 	ctx.video.loop = true;
 	ctx.video.muted = true;
 	ctx.video.play();
+	if (ctx.gui.eruda) console.log("Started Video");
 
 	/* OnPlaying is called each loop, so have to guard against that */
-	ctx.video.onplaying = function () {
-		if (ctx.playing || !ctx.video) return;
+	ctx.video.oncanplaythrough = function () {
+		if (ctx.playing || !ctx.video) {
+			if (ctx.gui.eruda) console.log("Loop, rejecting unneeded video setup");
+			return
+		};
 		ctx.playing = true;
 
 		createImageBitmap(ctx.video).then(bitmap => {
+			if (ctx.gui.eruda) console.log("Starting Media Setup");
 			media_setup(bitmap, user_media);
 			if (!ctx.continous) {
+				if (ctx.gui.eruda) console.log("Starting Animation Loop");
 				ctx.continous = true;
 				/* Technically, 'last' variable is needed */
 				ctx.lastKeyUpdate = 0;
