@@ -35,7 +35,8 @@ The following contributions made the WebApp a possibility
 ## Programming
  * The side controlbar is realized via the package [lil-gui](https://github.com/georgealways/lil-gui), package author: [@georgealways](https://github.com/georgealways)
  * The debug statistics toggled in the settings tab is the evergreen [stats.js](https://github.com/mrdoob/stats.js), package author: [@mrdoob](https://github.com/mrdoob)
- * One key insight on state management to get redraws only when the user is actually touching the interface and be a static page otherwise was provided by [@Pomax](https://github.com/Pomax) in [this StackOverflow answer](https://stackoverflow.com/questions/76633899/can-requestanimationframe-be-called-from-input-events-and-still-respect-refresh/76633986?noredirect=1#comment135118794_76633986)
+ * Debug interface in the settings tab for tracking down bugs especially on iOS is provided by the awesome [eruda](https://github.com/liriliri/eruda), package author: [@liriliri](https://github.com/liriliri)
+ * One key insight on state management to get redraws only when the user is actually touching the interface and be a static page otherwise was provided by [@Pomax](https://github.com/Pomax) in [this StackOverflow answer](https://stackoverflow.com/a/76633986/6240779)
 ## User submissions
 The photos in the "User submissions" tab were provided by:
  * [@zjquid on GitHub](https://github.com/zjquid)
