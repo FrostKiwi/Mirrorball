@@ -226,7 +226,6 @@ export function media_setup(bitmap, media) {
 		ctx.gui.controller.world_yaw_ch2.updateDisplay();
 		ctx.gui.controller.world_roll_ch2.updateDisplay();
 	}
-
 	/* In case resize was performed due to GPU not supporting that size */
 	if (media.width != bitmap.width || media.height != bitmap.height) {
 		if (media.width && media.height) {
