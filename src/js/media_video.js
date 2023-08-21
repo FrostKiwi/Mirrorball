@@ -150,8 +150,7 @@ export function load_video(user_media) {
 		};
 		ctx.playing = true;
 
-		var bit_time;
-		if (ctx.gui.eruda) bit_time = performance.now()
+		if (ctx.gui.eruda) var bit_time = performance.now()
 		createImageBitmap(ctx.video).then(bitmap => {
 			if (ctx.gui.eruda)
 				console.log("Bitmap creation [ms]:",

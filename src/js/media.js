@@ -165,8 +165,7 @@ export async function load_from_url(media) {
 				"graphics memory right now."
 			let bitmap;
 
-			var bit2_time;
-			if (ctx.gui.eruda) bit2_time = performance.now()
+			if (ctx.gui.eruda) var bit2_time = performance.now()
 			/* Resize if outside GPU limits */
 			if (media.width > ctx.max_texsize ||
 				media.height > ctx.max_texsize) {
@@ -256,8 +255,8 @@ export function media_setup(bitmap, media) {
 			}
 		}
 	}
-	var tex_time;
-	if (ctx.gui.eruda) tex_time = performance.now()
+
+	if (ctx.gui.eruda) var tex_time = performance.now()
 	ctx.gl.deleteTexture(ctx.shaders.ch1.tex);
 	ctx.shaders.ch1.tex = ctx.gl.createTexture();
 	ctx.gl.bindTexture(ctx.gl.TEXTURE_2D, ctx.shaders.ch1.tex);
@@ -300,8 +299,7 @@ export function update_texture(bitmap) {
 		console.error("Bitmap and texture size mismatch");
 		return;
 	};
-	var vram_time;
-	if (ctx.gui.eruda) vram_time = performance.now()
+	if (ctx.gui.eruda) var vram_time = performance.now()
 	ctx.gl.texSubImage2D(ctx.gl.TEXTURE_2D, 0, 0, 0,
 		ctx.gl.RGB, ctx.gl.UNSIGNED_BYTE, bitmap);
 	if (ctx.gui.eruda)

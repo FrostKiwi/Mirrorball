@@ -83,8 +83,12 @@ ctx.animate_cont = function animate(time) {
 	/* Keys have to be polled for smooth operation */
 	key_input(time);
 
+	if (ctx.gui.eruda) var bit3_time = performance.now()
 	if (ctx.playing)
 		createImageBitmap(ctx.video).then(bitmap => {
+			if (ctx.gui.eruda)
+				console.log("Bitmap update [ms]:",
+					(performance.now() - bit3_time).toFixed(2));
 			update_texture(bitmap);
 		});
 
