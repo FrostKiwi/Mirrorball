@@ -38,4 +38,6 @@ The following contributions made the WebApp a possibility
  * One key insight on state management to get redraws only when the user is actually touching the interface and be a static page otherwise was provided by [@Pomax](https://github.com/Pomax) in [this StackOverflow answer](https://stackoverflow.com/questions/76633899/can-requestanimationframe-be-called-from-input-events-and-still-respect-refresh/76633986?noredirect=1#comment135118794_76633986)
 ## User submissions
 The photos in the "User submissions" tab were provided by:
- * [@zjquid](https://github.com/zjquid)
+ * [@zjquid on GitHub](https://github.com/zjquid)
+ * [Nature's Joints on Discord](https://discordapp.com/users/1142199521930137713)
+ * [u/wwxxcc on Reddit](https://www.reddit.com/user/wwxxcc)
