@@ -19,7 +19,8 @@ canvas {
 }
 
 .panel {
-	z-index: 1005; /* Display above the controls */
+	z-index: 1005;
+	/* Display above the controls */
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -76,4 +77,11 @@ canvas {
 
 .flip {
 	transform: scaleX(-1);
+}
+
+.lil-gui button {
+	height: 40px;
+	font-weight: bold;
+	color: rgb(255, 255, 255);
+	border: solid #48b3ff 5px;;
 }

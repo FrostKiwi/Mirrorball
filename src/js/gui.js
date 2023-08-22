@@ -5,7 +5,7 @@ import GUI from 'lil-gui';
 export default function init_gui() {
 	ctx.gui.handle = new GUI().hide();
 	ctx.gui.handle.title("Controls (Show / Hide)");
-	ctx.gui.handle.add(ctx.gui, 'menu').name("Select Media");
+	ctx.gui.handle.add(ctx.gui, 'menu').name("Open Main Menu");
 	ctx.gui.handle.add(ctr.tog, 'crop').name("Original").onChange(redraw);
 	ctx.gui.handle.add(ctr.tog, 'project').name("Projection").onChange(redraw);
 	ctx.gui.controller.alpha =
