@@ -20,6 +20,7 @@ The photos in the "User submissions" tab were provided by:
  * [@zjquid on GitHub](https://github.com/zjquid)
  * [Nature's Joints on Discord](https://discordapp.com/users/1142199521930137713)
  * [u/wwxxcc on Reddit](https://www.reddit.com/user/wwxxcc)
+ * [u/MagicList on Reddit](https://www.reddit.com/user/MagicList/) / [@CigamPower on Github](https://github.com/CigamPower/)
 
 ## Features:
 
