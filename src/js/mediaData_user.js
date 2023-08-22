@@ -84,7 +84,7 @@ const media_user = [
 	},
 	{
 		type: "image",
-		title: "Example submission from 大和小泉",
+		title: "Example submission in 大和小泉",
 		path: "/media_user/YamatoNoNezumi.jpg",
 		thumb: "/media_user/thumb/YamatoNoNezumi.jpg",
 		fileSize: "3.84 MB",
