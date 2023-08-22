@@ -19,7 +19,7 @@ const media = [
 			Pitch: 24,
 			Roll: 1
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -40,
 			Pitch: -10
 		}
@@ -44,7 +44,7 @@ const media = [
 			Pitch: 0,
 			Roll: 2
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -60,
 			Pitch: 0
 		}
@@ -69,7 +69,7 @@ const media = [
 			Pitch: -88,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -120,
 			Pitch: -40
 		}
@@ -94,7 +94,7 @@ const media = [
 			Pitch: -90,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -120,
 			Pitch: -35
 		}
@@ -119,7 +119,7 @@ const media = [
 			Pitch: -90,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -175,
 			Pitch: -45
 		}
@@ -144,7 +144,7 @@ const media = [
 			Pitch: 18,
 			Roll: 10
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 0,
 			Pitch: 0
 		}
@@ -169,7 +169,7 @@ const media = [
 			Pitch: 0,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -50,
 			Pitch: 0
 		}
@@ -195,7 +195,7 @@ const media = [
 			Pitch: 0,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 0,
 			Pitch: 0
 		}
@@ -221,7 +221,7 @@ const media = [
 			Pitch: 0,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -100,
 			Pitch: 0
 		}
@@ -246,7 +246,7 @@ const media = [
 			Pitch: -37,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -60,
 			Pitch: -50
 		}
@@ -271,7 +271,7 @@ const media = [
 			Pitch: 7,
 			Roll: 3
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -70,
 			Pitch: -23
 		}
@@ -296,7 +296,7 @@ const media = [
 			Pitch: -17,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 0,
 			Pitch: 0
 		}
@@ -321,7 +321,7 @@ const media = [
 			Pitch: 2,
 			Roll: -2.5
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -40,
 			Pitch: 0
 		},
@@ -360,7 +360,7 @@ const media = [
 			Pitch: 0,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 60,
 			Pitch: 0
 		},
@@ -399,7 +399,7 @@ const media = [
 			Pitch: -3,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 30,
 			Pitch: -20
 		},
@@ -438,7 +438,7 @@ const media = [
 			Pitch: 1,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 70,
 			Pitch: 0
 		},
@@ -477,7 +477,7 @@ const media = [
 			Pitch: 2,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 55,
 			Pitch: 0
 		}
@@ -502,7 +502,7 @@ const media = [
 			Pitch: 0,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 90,
 			Pitch: 0
 		}
@@ -527,7 +527,7 @@ const media = [
 			Pitch: 90,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -145,
 			Pitch: -10
 		}
@@ -552,7 +552,7 @@ const media = [
 			Pitch: -5,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 90,
 			Pitch: -20
 		}
@@ -577,7 +577,7 @@ const media = [
 			Pitch: -98,	
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -145,
 			Pitch: -30
 		}
@@ -602,7 +602,7 @@ const media = [
 			Pitch: 0,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 180,
 			Pitch: 0
 		},
@@ -641,7 +641,7 @@ const media = [
 			Pitch: 0,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: 180,
 			Pitch: 0
 		},
@@ -665,7 +665,7 @@ const media = [
 		title: "ArchViz (3D-Render)",
 		path: "/media/archviz.jpg",
 		thumb: "/media/thumb/archviz.jpg",
-		fileSize: "1.55 MB",
+		fileSize: "1.33 MB",
 		width: "4096",
 		height: "4096",
 		sphere_fov: 360,
@@ -680,7 +680,7 @@ const media = [
 			Pitch: 0,
 			Roll: 0
 		},
-		camera_inital: {
+		camera_initial: {
 			Yaw: -60,
 			Pitch: -10
 		}

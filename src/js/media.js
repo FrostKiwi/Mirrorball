@@ -1,5 +1,6 @@
 import { ctx, ctr, redraw } from './state.js';
 import media from './mediaData.js'
+import media_user from './mediaData_user.js'
 import { disable_video, load_video } from './media_video.js'
 import { recalc_croplimits, channel2_disable, channel2_enable } from './gui.js';
 
@@ -47,6 +48,52 @@ export function media_populate() {
 	});
 };
 
+export function media_populate_user() {
+	let mediaDiv = document.getElementById('media_user');
+	media_user.forEach(media => {
+		let card = document.createElement('div');
+		card.className = 'card';
+		card.onclick = function () {
+			if (ctx.loading) return;
+			load_from_url(media);
+			closeMenu();
+		};
+
+		let sourceLink = '';
+		if (media.source) {
+			sourceLink = `<p class="card-field">
+			<a href="${media.source}" class="source-link">Source</a></p>`;
+		}
+
+		let resizeWarn = '';
+		if (media.width > ctx.max_texsize || media.height > ctx.max_texsize) {
+			resizeWarn = `<p class="card-field">
+			<a class="value">
+			Size above your GPU limit of ${ctx.max_texsize} px²<br>
+			Image will be resized to fit that.
+			</p>`;
+		}
+
+		card.innerHTML = `
+			<div class="card-header">
+				<img src="img/${media.type}.svg" class="card-icon">
+				<h2 class="card-title">${media.title}</h2>
+			</div>
+			<img class="card-image" src="${media.thumb}" alt="Thumbnail">
+			<div class="card-description">
+				<p class="card-field">Submitter:
+					<span class="value"><a href="${media.submitter_link}" class="source-link">${media.submitter}</a></span></p>
+				<p class="card-field">File Size:
+					<span class="value">${media.fileSize}</span></p>
+				<p class="card-field">Dimensions:
+					<span class="value">${media.width}x${media.height}</span></p>
+				${resizeWarn}
+				${sourceLink}
+			</div>`;
+		mediaDiv.appendChild(card);
+	});
+};
+
 export const user_media = {
 	sphere_fov: 360,
 	crop: {
@@ -60,7 +107,7 @@ export const user_media = {
 		Pitch: 0,
 		Roll: 0
 	},
-	camera_inital: {
+	camera_initial: {
 		Yaw: 0,
 		Pitch: 0
 	},
@@ -117,6 +164,8 @@ export async function load_from_url(media) {
 				"but failed, propably low on\n" +
 				"graphics memory right now."
 			let bitmap;
+
+			if (ctx.gui.eruda) var bit2_time = performance.now()
 			/* Resize if outside GPU limits */
 			if (media.width > ctx.max_texsize ||
 				media.height > ctx.max_texsize) {
@@ -130,6 +179,10 @@ export async function load_from_url(media) {
 			}
 			else
 				bitmap = await createImageBitmap(blob);
+
+			if (ctx.gui.eruda)
+				console.log("Bitmap creation [ms]:",
+					(performance.now() - bit2_time).toFixed(2));
 
 			media_setup(bitmap, media);
 		} catch (err) {
@@ -147,8 +200,8 @@ export function media_setup(bitmap, media) {
 	ctx.dom.statusMSG.innerText = "Transfering into GPU memory";
 
 	ctr.ch1.fov_deg = media.sphere_fov;
-	ctr.cam.rot_deg[0] = media.camera_inital.Pitch;
-	ctr.cam.rot_deg[1] = media.camera_inital.Yaw;
+	ctr.cam.rot_deg[0] = media.camera_initial.Pitch;
+	ctr.cam.rot_deg[1] = media.camera_initial.Yaw;
 	ctr.ch1.rot_deg[0] = media.world_rotation.Pitch;
 	ctr.ch1.rot_deg[1] = media.world_rotation.Yaw;
 	ctr.ch1.rot_deg[2] = media.world_rotation.Roll;
@@ -179,7 +232,6 @@ export function media_setup(bitmap, media) {
 		ctx.gui.controller.world_yaw_ch2.updateDisplay();
 		ctx.gui.controller.world_roll_ch2.updateDisplay();
 	}
-
 	/* In case resize was performed due to GPU not supporting that size */
 	if (media.width != bitmap.width || media.height != bitmap.height) {
 		if (media.width && media.height) {
@@ -191,9 +243,20 @@ export function media_setup(bitmap, media) {
 				media.crop.top * bitmap.height / media.height);
 			ctx.gui.controller.bot.setValue(
 				media.crop.bot * bitmap.height / media.height);
+			if (media.ch2) {
+				ctx.gui.controller.left_ch2.setValue(
+					media.ch2.crop.left * bitmap.width / media.width);
+				ctx.gui.controller.right_ch2.setValue(
+					media.ch2.crop.right * bitmap.width / media.width);
+				ctx.gui.controller.top_ch2.setValue(
+					media.ch2.crop.top * bitmap.height / media.height);
+				ctx.gui.controller.bot_ch2.setValue(
+					media.ch2.crop.bot * bitmap.height / media.height);
+			}
 		}
 	}
 
+	if (ctx.gui.eruda) var tex_time = performance.now()
 	ctx.gl.deleteTexture(ctx.shaders.ch1.tex);
 	ctx.shaders.ch1.tex = ctx.gl.createTexture();
 	ctx.gl.bindTexture(ctx.gl.TEXTURE_2D, ctx.shaders.ch1.tex);
@@ -212,6 +275,9 @@ export function media_setup(bitmap, media) {
 
 	ctx.gl.texImage2D(ctx.gl.TEXTURE_2D, 0, ctx.gl.RGB, ctx.gl.RGB,
 		ctx.gl.UNSIGNED_BYTE, bitmap);
+	if (ctx.gui.eruda)
+		console.log("Texture creation [ms]:",
+			(performance.now() - tex_time).toFixed(2));
 	bitmap.close();
 	ctx.gui.handle.show();
 	ctx.dom.spinner.style.display = 'none';
@@ -233,8 +299,12 @@ export function update_texture(bitmap) {
 		console.error("Bitmap and texture size mismatch");
 		return;
 	};
+	if (ctx.gui.eruda) var vram_time = performance.now()
 	ctx.gl.texSubImage2D(ctx.gl.TEXTURE_2D, 0, 0, 0,
 		ctx.gl.RGB, ctx.gl.UNSIGNED_BYTE, bitmap);
+	if (ctx.gui.eruda)
+		console.log("Texture update [ms]:",
+			(performance.now() - vram_time).toFixed(2));
 	bitmap.close();
 }
 

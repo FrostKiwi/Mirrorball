@@ -12,6 +12,11 @@ import { key_input, setup_input, controller_input } from './input.js'
 ctx.canvas = document.querySelector("canvas");
 /* Since we draw over the whole screen, no need to flush */
 ctx.gl = ctx.canvas.getContext('webgl', { preserveDrawingBuffer: false });
+ctx.canvas.addEventListener('webglcontextlost', handleContextLost, false);
+
+function handleContextLost(event) {
+	ctx.dom.message.style.display = 'flex';
+}
 
 function main() {
 	if (ctx.gl)
@@ -78,8 +83,12 @@ ctx.animate_cont = function animate(time) {
 	/* Keys have to be polled for smooth operation */
 	key_input(time);
 
+	if (ctx.gui.eruda) var bit3_time = performance.now()
 	if (ctx.playing)
 		createImageBitmap(ctx.video).then(bitmap => {
+			if (ctx.gui.eruda)
+				console.log("Bitmap update [ms]:",
+					(performance.now() - bit3_time).toFixed(2));
 			update_texture(bitmap);
 		});
 
