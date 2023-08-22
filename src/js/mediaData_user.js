@@ -81,7 +81,35 @@ const media_user = [
 			Yaw: 45,
 			Pitch: 0
 		}
-	}
+	},
+	{
+		type: "image",
+		title: "Example submission from 大和小泉",
+		path: "/media_user/YamatoNoNezumi.jpg",
+		thumb: "/media_user/thumb/YamatoNoNezumi.jpg",
+		fileSize: "3.84 MB",
+		width: "4096",
+		height: "4096",
+		submitter: "@FrostKiwiOne on 𝕏",
+		submitter_link: "https://twitter.com/FrostKiwiOne",
+		source: "https://github.com/FrostKiwi/Mirrorball/pull/13/",
+		sphere_fov: 320,
+		crop: {
+			top: 30,
+			bot: 195,
+			left: 123,
+			right: 98
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 13,
+			Roll: 2
+		},
+		camera_initial: {
+			Yaw: 75,
+			Pitch: 0
+		}
+	},
 ];
 
 export default media_user;

@@ -11,10 +11,10 @@ Deceptively simple, it is an incredible intersection of Computer Science and Mat
 ## Video
 [![Watch the video](https://img.youtube.com/vi/rJPKTCdk-WI/0.jpg)](https://www.youtube.com/watch?v=rJPKTCdk-WI)
 
-## Photo contribution guide, regarding https://youtu.be/rJPKTCdk-WI?t=1822
-Basically, just fork, drag and drop the photo anywhere in the code, no matter the directory, no matter the size or format, commit and submit the Pull Request. I will move the photo to the correct place, input the required cropping and rotation numbers, create the thumbnail and make sure you are properly credited in any way you wish.
-Or just E-Mail me at mirrorball@frost.kiwi
+## Photo contribution guide, as per [announcement](https://youtu.be/rJPKTCdk-WI?t=1822)
+As shown in the sample Pull Request https://github.com/FrostKiwi/Mirrorball/pull/13, just commit the photo into any spot and mentioned how you want to be credited. To do so, you will need to fork this repo in the top right corner first. Then you can drag&drop the photo into the code. This will make GitHub officially credit you as contributor. I will move it to the correct folder ( ), crop, rotate the image and credit the author ( ) and generate the thumbnail ( ).
 
+If that's too troublesome: Just message me on any Social media or E-Mail me at mirrorball@frost.kiwi.
 ## Features:
 
 View the projection of a Mirrorball with different colorful visualizations to understand how the math works. You can project a:
