@@ -29,6 +29,62 @@ const media_user = [
 	},
 	{
 		type: "image",
+		title: "Winter 2005",
+		path: "/media_user/winter.jpg",
+		thumb: "/media_user/thumb/winter.jpg",
+		fileSize: "1.5 MB",
+		width: "1386",
+		height: "1386",
+		submitter: "u/MagicList on Reddit",
+		submitter_link: "https://www.reddit.com/user/MagicList/",
+		source: "https://github.com/FrostKiwi/Mirrorball/pull/14",
+		sphere_fov: 360,
+		crop: {
+			top: 0,
+			bot: 0,
+			left: 0,
+			right: 0
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: -90,
+			Roll: 0
+		},
+		camera_initial: {
+			Yaw: -60,
+			Pitch: 0
+		}
+	},
+	{
+		type: "image",
+		title: "House Tour 2005",
+		path: "/media_user/house.jpg",
+		thumb: "/media_user/thumb/house.jpg",
+		fileSize: "1.73 MB",
+		width: "1474",
+		height: "1474",
+		submitter: "u/MagicList on Reddit",
+		submitter_link: "https://www.reddit.com/user/MagicList/",
+		source: "https://github.com/FrostKiwi/Mirrorball/pull/14",
+		sphere_fov: 340,
+		crop: {
+			top: 9,
+			bot: 0,
+			left: 1,
+			right: 0
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 4,
+			Roll: 0
+		},
+		camera_initial: {
+			Yaw: 40,
+			Pitch: 0
+		}
+	},
+	{
+		type: "image",
 		title: "Arnolfini portrait",
 		path: "/media_user/panini.jpg",
 		thumb: "/media_user/thumb/panini.jpg",
