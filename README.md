@@ -5,7 +5,7 @@ https://github.com/FrostKiwi/Mirrorball/assets/60887273/a3a23182-7316-4ccd-8815-
 A combination of Video and WebApp ( https://mirrorball.frost.kiwi ). While watching, viewers can directly interact with examples and visualizations, on a second device or a separate browser tab.
 The audience will be taken on a journey through the history and maths on the topic of the "Mirrorball projection".
 
-Deceptively simple, it is an incredible intersection of Computer Science and Mathematics.
+Deceptively simple, it is an incredible intersection of Computer Science and Mathematics. This project has been made in conjuction with a paper, which you can read on arXiv: https://arxiv.org/abs/2308.10991
 
 
 ## Video
