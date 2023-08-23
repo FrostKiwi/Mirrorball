@@ -426,6 +426,7 @@ const media = [
 		fileSize: "13.3 MB",
 		width: "2048",
 		height: "2048",
+		source: "https://arxiv.org/abs/2308.10991",
 		sphere_fov: 330,
 		crop: {
 			top: 190,
@@ -465,6 +466,7 @@ const media = [
 		fileSize: "6.6 MB",
 		width: "2048",
 		height: "2048",
+		source: "https://arxiv.org/abs/2308.10991",
 		sphere_fov: 342,
 		crop: {
 			top: 19,
