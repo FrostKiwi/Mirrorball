@@ -9,7 +9,7 @@ export default function render() {
 		ctx.gl.clear(ctx.gl.COLOR_BUFFER_BIT);
 	ctx.gl.viewport(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-	/* Devision tree of all combinations of splitscreen rendering, point
+	/* Decision tree of all combinations of splitscreen rendering, point
 	   visualization and the second multifeed channel */
 	if (ctr.tog.crop && ctr.tog.project) {
 		if (ctx.canvas.width / ctx.canvas.height > 1) {
