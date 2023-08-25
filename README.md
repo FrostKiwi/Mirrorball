@@ -42,3 +42,4 @@ Same goes for Video. All sources are 4096² but the WebApp only has 2048² video
  * The debug statistics toggled in the settings tab is the evergreen [stats.js](https://github.com/mrdoob/stats.js), package author: [@mrdoob](https://github.com/mrdoob)
  * Debug interface in the settings tab for tracking down bugs especially on iOS is provided by the awesome [eruda](https://github.com/liriliri/eruda), package author: [@liriliri](https://github.com/liriliri)
  * One key insight on state management to get redraws only when the user is actually touching the interface and be a static page otherwise was provided by [@Pomax](https://github.com/Pomax) in [this StackOverflow answer](https://stackoverflow.com/a/76633986/6240779)
+ * Vector math performed via the package [gl-matrix](https://github.com/toji/gl-matrix), package author: [@toji](https://github.com/toji)
