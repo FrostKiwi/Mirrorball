@@ -687,7 +687,31 @@ const media = [
 			Pitch: -10
 		}
 	},
-
+	{
+		type: "image",
+		title: "Checkerboard",
+		path: "/media/tisch.jpg",
+		thumb: "/media/thumb/tisch.jpg",
+		fileSize: "2.41 MB",
+		width: "4000",
+		height: "4000",
+		sphere_fov: 320,
+		crop: {
+			top: 84,
+			bot: 150,
+			left: 116,
+			right: 118
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 34,
+			Roll: 1
+		},
+		camera_initial: {
+			Yaw: -52,
+			Pitch: 5
+		}
+	}
 ];
 
 export default media;
