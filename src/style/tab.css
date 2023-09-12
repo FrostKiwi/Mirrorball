@@ -10,7 +10,7 @@
 	background-color: inherit;
 	float: left;
 	border: none;
-	
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -68,6 +68,17 @@
 	overflow-y: auto;
 	gap: 20px;
 	box-sizing: border-box;
+}
+
+.youtube {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+}
+
+.youtube-wrapper {
+	flex: 1 1 auto;
+	overflow: hidden;
+	min-width: 40vh;
 }
 
 .msgcontent {
