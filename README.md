@@ -38,6 +38,13 @@ Most of the official photo examples are 100 Megapixel photos scaled down to 8192
 
 Same goes for Video. All sources are 4096² but the WebApp only has 2048² videos. The reason is Windows's built in decoder being very weak: https://github.com/FrostKiwi/Mirrorball/issues/11.
 
+## Build instructions
+If you want to run the code locally:
+ * Clone the repo
+ * Install [Node.js](https://nodejs.org/en)
+ * Run `npm install` in the repo's root directory to install the dependencies as defined by the [package.json](https://github.com/FrostKiwi/Mirrorball/blob/main/package.json) file
+ * Run `npx vite`, so [Vite](https://github.com/vitejs/vite) will start a local server to test the code on
+
 # Credits:
  * The side controlbar is realized via the package [lil-gui](https://github.com/georgealways/lil-gui), package author: [@georgealways](https://github.com/georgealways)
  * The debug statistics toggled in the settings tab is the evergreen [stats.js](https://github.com/mrdoob/stats.js), package author: [@mrdoob](https://github.com/mrdoob)
