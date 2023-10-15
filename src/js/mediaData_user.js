@@ -140,6 +140,33 @@ const media_user = [
 	},
 	{
 		type: "image",
+		title: "Glass Ball (180°, Not Mirror)",
+		path: "/media_user/glassball.jpg",
+		thumb: "/media_user/thumb/glassball.jpg",
+		fileSize: "0.1 MB",
+		width: "804",
+		height: "824",
+		submitter: "Иван via E-Mail",
+		submitter_link: "",
+		sphere_fov: 180,
+		crop: {
+			top: 28,
+			bot: 4,
+			left: 4,
+			right: 4
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 2,
+			Roll: 3
+		},
+		camera_initial: {
+			Yaw: 50,
+			Pitch: -30
+		}
+	},	
+	{
+		type: "image",
 		title: "Example submission in 大和小泉",
 		path: "/media_user/YamatoNoNezumi.jpg",
 		thumb: "/media_user/thumb/YamatoNoNezumi.jpg",

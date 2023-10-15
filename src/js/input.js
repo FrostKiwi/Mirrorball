@@ -102,13 +102,13 @@ export function controller_input(time) {
 			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
 
 		/* Source Mix via D-Pad Left-Right */
-		if (gp.buttons[14].pressed) {
+		if (gp.buttons[14] && gp.buttons[14].pressed) {
 			ctr.ch2.alpha -= 0.01;
 			if (ctr.ch2.alpha < 0)
 				ctr.ch2.alpha = 0;
 			ctx.gui.controller.alpha.updateDisplay();
 		}
-		if (gp.buttons[15].pressed) {
+		if (gp.buttons[15] && gp.buttons[15].pressed) {
 			ctr.ch2.alpha += 0.01;
 			if (ctr.ch2.alpha > 1)
 				ctr.ch2.alpha = 1;

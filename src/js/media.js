@@ -18,8 +18,9 @@ export function media_populate() {
 		let sourceLink = '';
 		if (media.source) {
 			sourceLink = `<p class="card-field">
-			<a href="${media.source}" class="source-link">Source</a></p>`;
+			<a href="${media.source}" class="source-link" onclick="event.stopPropagation()">Source</a></p>`;
 		}
+
 
 		let resizeWarn = '';
 		if (media.width > ctx.max_texsize || media.height > ctx.max_texsize) {
@@ -62,8 +63,9 @@ export function media_populate_user() {
 		let sourceLink = '';
 		if (media.source) {
 			sourceLink = `<p class="card-field">
-			<a href="${media.source}" class="source-link">Source</a></p>`;
+			<a href="${media.source}" class="source-link" onclick="event.stopPropagation()">Source</a></p>`;
 		}
+
 
 		let resizeWarn = '';
 		if (media.width > ctx.max_texsize || media.height > ctx.max_texsize) {
@@ -74,6 +76,11 @@ export function media_populate_user() {
 			</p>`;
 		}
 
+		/* Check if Link tag is needed */
+		let submitterContent = media.submitter_link
+			? `<a href="${media.submitter_link}" class="source-link" onclick="event.stopPropagation()">${media.submitter}</a>`
+			: media.submitter;
+
 		card.innerHTML = `
 			<div class="card-header">
 				<img src="img/${media.type}.svg" class="card-icon">
@@ -82,7 +89,7 @@ export function media_populate_user() {
 			<img class="card-image" src="${media.thumb}" alt="Thumbnail">
 			<div class="card-description">
 				<p class="card-field">Submitter:
-					<span class="value"><a href="${media.submitter_link}" class="source-link">${media.submitter}</a></span></p>
+					<span class="value">${submitterContent}</span></p>
 				<p class="card-field">File Size:
 					<span class="value">${media.fileSize}</span></p>
 				<p class="card-field">Dimensions:
