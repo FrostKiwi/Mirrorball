@@ -47,6 +47,9 @@ export let ctx = {
 		},
 		project: {
 			handle: null
+		},
+		latlong: {
+			handle: null
 		}
 	},
 	gui: {

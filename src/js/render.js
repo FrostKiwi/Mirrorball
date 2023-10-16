@@ -3,6 +3,7 @@ import update_camera from './update_camera.js'
 import render_crop from './render_crop.js'
 import render_border from './render_border.js'
 import render_project from './render_projection.js'
+import render_latlong from './render_latlong.js'
 
 export default function render() {
 	if (!ctr.tog.crop && !ctr.tog.project)
