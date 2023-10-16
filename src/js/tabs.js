@@ -65,6 +65,13 @@ export function setupTabs() {
 	document.getElementById('webcam').onclick = function () {
 		list_devices();
 	};
+	document.getElementById('export').onclick = function () {
+		var selectedFileType = document.querySelector('input[name="fileType"]:checked').value;
+	};
+
+	document.getElementById("imageWidthInput").max = ctx.max_texsize;
+	document.getElementById("imageHeightInput").max = ctx.max_texsize;
+
 	document.getElementById('tab_close').onclick = function () {
 		toggleMenu();
 	};

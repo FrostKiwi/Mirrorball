@@ -54,7 +54,7 @@
 			<div id="upload-image" class="card">
 				<div class="card-header">
 					<img src="style/img/upload.svg" class="card-icon">
-					<h2 class="card-title">Image</h2>
+					<h2 class="card-title">Load Image</h2>
 				</div>
 				<img class="card-image" src="style/img/file_image.svg" alt="Thumbnail">
 				<div class="card-description">
@@ -73,7 +73,7 @@
 			<div id="upload-video" class="card">
 				<div class="card-header">
 					<img src="style/img/upload.svg" class="card-icon">
-					<h2 class="card-title">Video</h2>
+					<h2 class="card-title">Load Video</h2>
 				</div>
 				<img class="card-image" src="style/img/file_video.svg" alt="Thumbnail">
 				<div class="card-description">
@@ -90,8 +90,8 @@
 			</div>
 			<div id="webcam" class="card">
 				<div class="card-header">
-					<img src="style/img/upload.svg" class="card-icon">
-					<h2 class="card-title">Webcam</h2>
+					<img src="style/img/plug.svg" class="card-icon">
+					<h2 class="card-title">Connect webcam</h2>
 				</div>
 				<img id="hide_on_device" class="card-image" src="style/img/camera.svg" alt="Thumbnail">
 				<div class="card-description">
@@ -117,6 +117,55 @@
 						regardless of framerate. <br>
 						On smartphones this may run <br>
 						at resolutions in excess of 4k
+					</p>
+				</div>
+			</div>
+
+			<div id="export" class="card">
+				<div class="card-header">
+					<img src="style/img/download.svg" class="card-icon">
+					<h2 class="card-title">Export Image</h2>
+				</div>
+				<img class="card-image" src="style/img/file_image.svg" alt="Thumbnail">
+				<div class="card-description">
+					<p class="card-field">
+						<span class="value">
+							Download current frame as file
+						</span><br>
+						<span class="value">
+							Projection:
+						</span><br>
+						<label onclick="event.stopPropagation()">
+							<input type="radio" name="projType" value="jpeg" checked>
+							Equirectangular / Lat-Long
+						</label>
+						<br>
+						<label onclick="event.stopPropagation()">
+							<input type="radio" name="projType" value="jpeg">
+							Screenshot / Rectilinear
+						</label><br>
+						<span class="value">
+							Filetype:
+						</span><br>
+						<label onclick="event.stopPropagation()">
+							<input type="radio" name="fileType" value="png" checked>
+							PNG
+						</label><br>
+						<label onclick="event.stopPropagation()">
+							<input type="radio" name="fileType" value="jpeg">
+							JPEG
+						</label><br>
+						<span class="value">
+							Resolution:
+						</span><br>
+						<label onclick="event.stopPropagation()">
+							Width:
+							<input type="number" id="imageWidthInput" name="imageWidth" min="1" value="2000">
+						</label>
+						<label onclick="event.stopPropagation()">
+							Height:
+							<input type="number" id="imageHeightInput" name="imageHeight" min="1" value="1000">
+						</label><br>
 					</p>
 				</div>
 			</div>
