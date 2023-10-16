@@ -1,9 +1,10 @@
-import { ctx, ctr } from './state.js';
+import { ctx, ctr, redraw } from './state.js';
 import update_camera from './update_camera.js'
 import render_crop from './render_crop.js'
 import render_border from './render_border.js'
 import render_project from './render_projection.js'
 import render_latlong from './render_latlong.js'
+import { resizeCanvasToDisplaySize } from './resize_canvas.js'
 
 export default function render() {
 	if (!ctr.tog.crop && !ctr.tog.project)
@@ -92,6 +93,14 @@ export default function render() {
 						ctx.canvas.width, ctx.canvas.height, ctr.ch2);
 			}
 		}
+	}
+	if (ctx.export) {
+		ctx.export = false;
+		if (document.querySelector('input[name="projType"]:checked').value == "latlong") {
+			render_latlong(ctr.ch1);
+		}
+		resizeCanvasToDisplaySize();
+		redraw();
 	}
 	ctx.stats.update();
 }

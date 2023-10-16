@@ -1,7 +1,7 @@
 import { ctx } from './state.js';
 import * as glm from 'gl-matrix';
 
-export default function render_latlong(width, height, channel) {
+export default function render_latlong(channel) {
 	const crop = {
 		x: (1 / ctx.shaders.ch1.w) *
 			(ctx.shaders.ch1.w / 2 + channel.crop.left /
@@ -18,14 +18,6 @@ export default function render_latlong(width, height, channel) {
 	}
 
 	ctx.gl.useProgram(ctx.shaders.latlong.handle);
-
-	/* Split-screen rendering */
-	if (width < ctx.canvas.width)
-		ctx.gl.uniform4f(ctx.shaders.latlong.split, 0.5, 0, 0.5, 1);
-	else if (height < ctx.canvas.height)
-		ctx.gl.uniform4f(ctx.shaders.latlong.split, 0, -0.5, 1, 0.5);
-	else
-		ctx.gl.uniform4f(ctx.shaders.latlong.split, 0, 0, 1, 1);
 
 	ctx.gl.uniform4f(ctx.shaders.latlong.crop, crop.x, crop.y, crop.w, crop.h);
 
@@ -63,4 +55,5 @@ export default function render_latlong(width, height, channel) {
 		ctx.gl.uniform1f(ctx.shaders.latlong.alpha, 1);
 
 	ctx.gl.drawArrays(ctx.gl.TRIANGLE_FAN, 0, 4);
+	ctx.gl.flush();
 }

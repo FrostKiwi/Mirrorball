@@ -26,6 +26,7 @@ export let ctx = {
 	lastKeyUpdate: 0,
 	lastControllerUpdate: 0,
 	canvasToDisplaySizeMap: null,
+	export: false,
 	shaders: {
 		ch1: {
 			tex: null,

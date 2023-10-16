@@ -1,4 +1,4 @@
-import { ctx, toggleMenu, toggleMessage } from './state.js';
+import { ctx, toggleMenu, toggleMessage, redraw } from './state.js';
 import { list_devices, upload_video } from './media_video.js'
 import { media_populate, media_populate_user, upload_image } from './media.js';
 
@@ -66,7 +66,8 @@ export function setupTabs() {
 		list_devices();
 	};
 	document.getElementById('export').onclick = function () {
-		var selectedFileType = document.querySelector('input[name="fileType"]:checked').value;
+		ctx.export = true;
+		redraw();
 	};
 
 	document.getElementById("imageWidthInput").max = ctx.max_texsize;
