@@ -94,6 +94,8 @@ export default function init_shaders(ctx, gl) {
 		scaler: gl.getUniformLocation(ctx.shaders.latlong.handle, "scalar"),
 		split: gl.getUniformLocation(ctx.shaders.latlong.handle, "split"),
 		crop: gl.getUniformLocation(ctx.shaders.latlong.handle, "crop"),
+		rotMat: gl.getUniformLocation(ctx.shaders.latlong.handle, "rotMat"),
+		alpha: gl.getUniformLocation(ctx.shaders.latlong.handle, "alpha"),
 		bgvbo: createBufferWithData(gl, unitquad_latlong)
 	});
 }

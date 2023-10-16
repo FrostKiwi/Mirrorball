@@ -1,4 +1,4 @@
-import { ctx, ctr } from './state.js';
+import { ctx } from './state.js';
 import * as glm from 'gl-matrix';
 
 export default function render_latlong(width, height, channel) {
@@ -41,6 +41,26 @@ export default function render_latlong(width, height, channel) {
 	/* As per formula */
 	const scalar = 1.0 / Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4.0);
 	ctx.gl.uniform1f(ctx.shaders.latlong.scaler, scalar);
+
+	/* Rotation */
+	const ch1_rot_x = glm.glMatrix.toRadian(channel.rot_deg[0]);
+	const ch1_rot_y = glm.glMatrix.toRadian(channel.rot_deg[1]);
+	const ch1_rot_z = glm.glMatrix.toRadian(channel.rot_deg[2]);
+
+	/* Mat3 rotations not supported, using Mat4 instead */
+	const tempMat = glm.mat4.create();
+	glm.mat4.rotateX(tempMat, tempMat, ch1_rot_x);
+	glm.mat4.rotateY(tempMat, tempMat, ch1_rot_y);
+	glm.mat4.rotateZ(tempMat, tempMat, ch1_rot_z);
+	
+	const rotMat = glm.mat3.create();
+	glm.mat3.fromMat4(rotMat, tempMat)
+	ctx.gl.uniformMatrix3fv(ctx.shaders.latlong.rotMat, false, rotMat);
+
+	if (channel.alpha)
+		ctx.gl.uniform1f(ctx.shaders.latlong.alpha, channel.alpha);
+	else
+		ctx.gl.uniform1f(ctx.shaders.latlong.alpha, 1);
 
 	ctx.gl.drawArrays(ctx.gl.TRIANGLE_FAN, 0, 4);
 }
