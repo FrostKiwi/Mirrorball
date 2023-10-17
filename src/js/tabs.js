@@ -65,9 +65,20 @@ export function setupTabs() {
 	document.getElementById('webcam').onclick = function () {
 		list_devices();
 	};
-	document.getElementById('export').onclick = function () {
+	document.getElementById('download').onclick = function () {
 		ctx.export = true;
+		ctx.redraw = true;
 		redraw();
+	};
+	document.getElementById('export').onclick = function () {
+		let hideElements = document.querySelectorAll('#hide_on_export');
+		hideElements.forEach(element => {
+			element.style.display = 'none';
+		});
+		let showElements = document.querySelectorAll('#show_on_export');
+		showElements.forEach(element => {
+			element.style.display = 'block';
+		});
 	};
 
 	document.getElementById("imageWidthInput").max = ctx.max_texsize;

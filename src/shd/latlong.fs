@@ -1,7 +1,9 @@
 #version 100
-precision mediump float;
-#define M_2SQRT2 2.8284271247461900976033774484194
+/* High float precision required, because angle calculation gets quite bad at
+   medium */
+precision highp float;
 
+#define M_2SQRT2 2.8284271247461900976033774484194
 uniform vec4 crop;
 uniform float scalar;
 uniform sampler2D sample_projection;
@@ -29,6 +31,6 @@ void main()
 		uv *= vec2(crop.z, crop.w);
 		uv.x = crop.x + uv.x;
 		uv.y = crop.y - uv.y;
-		gl_FragColor = texture2D(sample_projection, uv);
+		gl_FragColor = vec4(texture2D(sample_projection, uv).rgb, alpha);
 	}
 }

@@ -7,6 +7,15 @@ import render_latlong from './render_latlong.js'
 import { resizeCanvasToDisplaySize } from './resize_canvas.js'
 
 export default function render() {
+	/* In case of export, set canvas to user provided size */
+	if (ctx.export) {
+		let width = parseInt(document.getElementById('imageWidthInput').value, 10);
+		let height = parseInt(document.getElementById('imageHeightInput').value, 10);
+		/* Check if bigger than user set size */
+		ctx.canvas.width = (width > ctx.max_texsize) ? ctx.max_texsize : width;
+		ctx.canvas.height = (height > ctx.max_texsize) ? ctx.max_texsize : height;
+	}
+
 	if (!ctr.tog.crop && !ctr.tog.project)
 		ctx.gl.clear(ctx.gl.COLOR_BUFFER_BIT);
 	ctx.gl.viewport(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -94,13 +103,54 @@ export default function render() {
 			}
 		}
 	}
+	
 	if (ctx.export) {
 		ctx.export = false;
 		if (document.querySelector('input[name="projType"]:checked').value == "latlong") {
 			render_latlong(ctr.ch1);
+			if (ctr.ch2.alpha)
+				render_latlong(ctr.ch2);
 		}
+		screenshot();
 		resizeCanvasToDisplaySize();
+		ctx.redraw = true;
 		redraw();
 	}
 	ctx.stats.update();
+}
+
+function screenshot() {
+	const fileTypeValue = document.querySelector('input[name="fileType"]:checked').value;
+
+	let fileExtension = fileTypeValue;
+	if (fileTypeValue === 'jpeg') {
+		fileExtension = 'jpg';
+	}
+
+	let baseName;
+	const projType = document.querySelector('input[name="projType"]:checked').value;
+	if (projType === "latlong") {
+		baseName = "Equirectangular";
+	} else if (projType === "rect") {
+		baseName = "Screenshot";
+	}
+
+	const width = ctx.canvas.width;
+	const height = ctx.canvas.height;
+	const fileName = `${baseName}_${width}x${height}.${fileExtension}`;
+
+	ctx.canvas.toBlob((blob) => {
+		const url = URL.createObjectURL(blob);
+
+		const a = document.createElement('a');
+		a.style.display = 'none';
+		a.href = url;
+		a.download = fileName;
+
+		document.body.appendChild(a);
+		a.click();
+
+		document.body.removeChild(a);
+		URL.revokeObjectURL(url);
+	}, `image/${fileTypeValue}`);
 }

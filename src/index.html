@@ -26,7 +26,7 @@
 				User Submissions
 			</button>
 			<button class="tablinks" id="tab_connect">
-				Userfile or device
+				Upload & Export
 			</button>
 			<button class="closeTab" id="tab_close">
 				<img src="style/img/xmark.svg">
@@ -129,43 +129,51 @@
 				<img class="card-image" src="style/img/file_image.svg" alt="Thumbnail">
 				<div class="card-description">
 					<p class="card-field">
-						<span class="value">
-							Download current frame as file
-						</span><br>
-						<span class="value">
-							Projection:
-						</span><br>
-						<label onclick="event.stopPropagation()">
-							<input type="radio" name="projType" value="latlong" checked>
-							Equirectangular / Lat-Long
-						</label>
-						<br>
-						<label onclick="event.stopPropagation()">
-							<input type="radio" name="projType" value="rect">
-							Screenshot / Rectilinear
-						</label><br>
-						<span class="value">
-							Filetype:
-						</span><br>
-						<label onclick="event.stopPropagation()">
-							<input type="radio" name="fileType" value="png" checked>
-							PNG
-						</label><br>
-						<label onclick="event.stopPropagation()">
-							<input type="radio" name="fileType" value="jpeg">
-							JPEG
-						</label><br>
-						<span class="value">
-							Resolution:
-						</span><br>
-						<label onclick="event.stopPropagation()">
-							Width:
-							<input type="number" id="imageWidthInput" name="imageWidth" min="1" value="2000">
-						</label><br>
-						<label onclick="event.stopPropagation()">
-							Height:
-							<input type="number" id="imageHeightInput" name="imageHeight" min="1" value="1000">
-						</label><br>
+						<span id="hide_on_export">
+							<span class="value">
+								Download current frame as file
+							</span><br>
+							For use in other software as<br>
+							Equirectangular / Lat-Long or <br>
+							as a high-resolution Screenshot
+						</span>
+						<span id="show_on_export" class="hidden">
+							<span class="value">
+								Projection:
+							</span><br>
+							<label onclick="event.stopPropagation()">
+								<input type="radio" name="projType" value="latlong" checked>
+								Equirectangular / Lat-Long
+							</label>
+							<br>
+							<label onclick="event.stopPropagation()">
+								<input type="radio" name="projType" value="rect">
+								Screenshot / Rectilinear
+							</label><br>
+							<span class="value">
+								Filetype:
+							</span><br>
+							<label onclick="event.stopPropagation()">
+								<input type="radio" name="fileType" value="jpeg" checked>
+								JPEG
+							</label><br>
+							<label onclick="event.stopPropagation()">
+								<input type="radio" name="fileType" value="png">
+								PNG
+							</label><br>
+							<span class="value">
+								Resolution:
+							</span><br>
+							<label onclick="event.stopPropagation()">
+								Width:
+								<input type="number" id="imageWidthInput" name="imageWidth" min="1" value="2048">
+							</label><br>
+							<label onclick="event.stopPropagation()">
+								Height:
+								<input type="number" id="imageHeightInput" name="imageHeight" min="1" value="1024">
+							</label><br>
+							<button id="download" type="button" class="stream">Download Image</button>
+						</span>
 					</p>
 				</div>
 			</div>
