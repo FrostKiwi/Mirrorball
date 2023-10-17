@@ -12,6 +12,15 @@ Deceptively simple, it is an incredible intersection of Computer Science and Mat
 [![Watch the video](https://img.youtube.com/vi/rJPKTCdk-WI/0.jpg)](https://www.youtube.com/watch?v=rJPKTCdk-WI)
 [![日本語版](https://img.youtube.com/vi/cmZcnhFycw8/0.jpg)](https://www.youtube.com/watch?v=cmZcnhFycw8)
 
+## Features:
+View the projection of a Mirrorball with different colorful visualizations to understand how the math works. You can project a:
+ * photo
+ * video
+ * live webcam stream
+ * capture card feed
+
+Any format, which your web browser can decode is supported. That should cover all important file types. You can also export as a Equirectangular projection for use in other panorama software.
+
 ## Photo contribution guide, as per [announcement](https://youtu.be/rJPKTCdk-WI?t=1822)
 As shown in the sample Pull Request https://github.com/FrostKiwi/Mirrorball/pull/13, just commit the photo into any spot and mention how you want to be credited. To do so, you will need to fork this repo in the top right corner first. Then you can drag&drop the photo into the code. This will make GitHub officially credit you as contributor. I will move it to the correct folder ([Example commit](https://github.com/FrostKiwi/Mirrorball/commit/fc696841a197b9f00680e48aa3a2fbd5eec38d4b)), crop, rotate the image and credit the author ([Example Commit](https://github.com/FrostKiwi/Mirrorball/commit/425070687f39233e1583a73c37c2872e4ef9cbee)) and generate the thumbnail ([Example commit](https://github.com/FrostKiwi/Mirrorball/commit/e66261f7d8b7e00373bb9fd14e14ae6c9e90fc53)).
 
@@ -22,16 +31,6 @@ The photos in the "User submissions" tab were provided by:
  * [Nature's Joints on Discord](https://discordapp.com/users/1142199521930137713)
  * [u/wwxxcc on Reddit](https://www.reddit.com/user/wwxxcc)
  * [u/MagicList on Reddit](https://www.reddit.com/user/MagicList/) / [@CigamPower on Github](https://github.com/CigamPower/)
-
-## Features:
-
-View the projection of a Mirrorball with different colorful visualizations to understand how the math works. You can project a:
- * photo
- * video
- * live webcam stream
- * capture card feed
-
-Any format, which your web browser can decode is supported. That should cover all important file types.
 
 ### Limitations
 Most of the official photo examples are 100 Megapixel photos scaled down to 8192² px resolution. The WebApp automatically downscales photos even further, if the user's device does not support that resolution. Even so, I changed all photos to 4096² px to make sure all devices show the projection. I had weird edge cases, where older iPhones support 8192² but refuse to upload the data to the VRAM, because of memory preassure, so just to be sure all photos are 4096² instead.
