@@ -31,6 +31,7 @@ The photos in the "User submissions" tab were provided by:
  * [Nature's Joints on Discord](https://discordapp.com/users/1142199521930137713)
  * [u/wwxxcc on Reddit](https://www.reddit.com/user/wwxxcc)
  * [u/MagicList on Reddit](https://www.reddit.com/user/MagicList/) / [@CigamPower on Github](https://github.com/CigamPower/)
+ * Иван via E-Mail
 
 ### Limitations
 Most of the official photo examples are 100 Megapixel photos scaled down to 8192² px resolution. The WebApp automatically downscales photos even further, if the user's device does not support that resolution. Even so, I changed all photos to 4096² px to make sure all devices show the projection. I had weird edge cases, where older iPhones support 8192² but refuse to upload the data to the VRAM, because of memory preassure, so just to be sure all photos are 4096² instead.
