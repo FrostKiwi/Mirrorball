@@ -1,4 +1,3 @@
-#version 100
 precision mediump float;
 varying vec2 tex;
 varying vec2 circle;

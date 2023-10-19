@@ -1,4 +1,3 @@
-#version 100
 precision mediump float;
 uniform vec3 color;
 varying vec2 vtx_fs;

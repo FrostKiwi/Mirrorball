@@ -1,4 +1,3 @@
-#version 100
 attribute vec2 pos;
 attribute vec3 rayvtx;
 varying vec3 Ray;

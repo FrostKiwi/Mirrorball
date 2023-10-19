@@ -1,4 +1,3 @@
-#version 100
 #define M_2xSQRT2 2.8284271247461900976033774484194
 /* High float precision required, because angle calculation gets quite bad at
    medium */

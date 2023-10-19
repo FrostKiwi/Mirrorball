@@ -1,4 +1,3 @@
-#version 100
 varying vec2 tex;
 varying vec2 circle;
 uniform float aspect_w;

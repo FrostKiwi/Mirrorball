@@ -1,5 +1,3 @@
-#version 100
-
 varying vec2 tex;
 attribute vec2 vtx;
 attribute vec2 coord;

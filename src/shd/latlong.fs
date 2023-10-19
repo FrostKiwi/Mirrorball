@@ -1,4 +1,3 @@
-#version 100
 /* High float precision required, because angle calculation gets quite bad at
    medium */
 precision highp float;
