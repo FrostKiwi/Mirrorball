@@ -1,3 +1,7 @@
+#ifdef USE_DERIVATIVES
+#extension GL_OES_standard_derivatives : enable
+#endif
+
 precision mediump float;
 varying vec2 tex;
 varying vec2 circle;
