@@ -1,7 +1,7 @@
 import { ctx } from './state.js';
 import * as glm from 'gl-matrix';
 
-const POINT_SIZE = 0.02;
+const POINT_SIZE = 0.025;
 const COLOR_TOPLEFT = glm.vec3.fromValues(1, 0, 1);
 const COLOR_TOPRIGHT = glm.vec3.fromValues(1, 1, 0);
 const COLOR_BOTLEFT = glm.vec3.fromValues(0, 1, 1);

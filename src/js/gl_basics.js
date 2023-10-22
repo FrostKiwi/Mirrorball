@@ -68,11 +68,20 @@ export function compile_and_link(gl, vertex, fragment) {
 
 export function print_glinfo() {
 	console.log(
-		"WebGL Version: " + ctx.gl.getParameter(ctx.gl.VERSION) + '\n' +
-		"Vendor: " + ctx.gl.getParameter(ctx.gl.VENDOR) + '\n' +
-		"Renderer: " + ctx.gl.getParameter(ctx.gl.RENDERER) + '\n' +
-		"GLSL Version: " +
+		"%cWebGL Version: %c" + ctx.gl.getParameter(ctx.gl.VERSION) + '\n' +
+		"%cVendor: %c" + ctx.gl.getParameter(ctx.gl.VENDOR) + '\n' +
+		"%cRenderer: %c" + ctx.gl.getParameter(ctx.gl.RENDERER) + '\n' +
+		"%cGLSL Version: %c" +
 		ctx.gl.getParameter(ctx.gl.SHADING_LANGUAGE_VERSION) + '\n' +
-		"Max tex-size: " +
-		ctx.gl.getParameter(ctx.gl.MAX_TEXTURE_SIZE) + "px²");
+		"%cMax tex-size: %c" +
+		ctx.gl.getParameter(ctx.gl.MAX_TEXTURE_SIZE) + "px²" + '\n' +
+		"%cAvailable Extensions: %c" + '\n' +
+		ctx.gl.getSupportedExtensions().join('\n'),
+		'color: orange', 'color: unset',
+		'color: orange', 'color: unset',
+		'color: orange', 'color: unset',
+		'color: orange', 'color: unset',
+		'color: orange', 'color: unset',
+		'color: orange', 'color: unset'
+	);
 }

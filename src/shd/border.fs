@@ -10,8 +10,8 @@ uniform float alpha;
 void main()
 {
 #ifdef USE_DERIVATIVES
-	float dist = length(vtx_fs) - 0.9;
-	float smoothedAlpha = dist / length(vec2(dFdx(dist), dFdy(dist)));
+	float dist = length(vtx_fs) - 0.8;
+	float smoothedAlpha = 1.5 * dist / fwidth(dist);
 	gl_FragColor = vec4(color, alpha - smoothedAlpha);
 #else
 	if (length(vtx_fs) < 1.0)
