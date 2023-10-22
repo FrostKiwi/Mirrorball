@@ -19,26 +19,19 @@ uniform float alpha;
 void main()
 {
 	vec3 R = normalize(Ray);
-	/* Scalar precalculated on CPU */
 	vec2 dist = scalar * R.xy / (M_2xSQRT2 * sqrt(R.z + 1.0));
-	/* Extra scalar branch to prevent artifacts from bad GPU float precision */
-	/* Should switch to using multiple shaders instead of branching */
-	if (length(dist) >= 0.5 && scalar > 1.0)
-		/* Should use Antialiased drawing via screen space derivatives, which is
-		   WebGL 1.0 compatibile. But I didn't implement an extension check yet,
-		   so just to be sure let's draw it without anti-aliasing to be sure. */
-		gl_FragColor = vec4(0.0, 0.0, 0.0, alpha);
+
+	float blind_spot = length(dist) - 0.5;
+
+	float smoothedAlpha = clamp(0.5 - blind_spot / (fwidth(blind_spot)), 0.0, 1.0);
+
+	vec2 uv = dist * vec2(crop.z, crop.w);
+	uv.x = crop.x + uv.x;
+	uv.y = crop.y - uv.y;
+	if (area_toggle && length(dist * scalar_rcp) < area_f)
+		gl_FragColor = mix(vec4(0.0, 0.0, 0.0, alpha), vec4(texture2D(sample_projection, uv).rgb, alpha) * vec4(0.5, 1, 0.5, alpha), smoothedAlpha);
+	else if (area_toggle && length(dist * scalar_rcp) > area_b)
+		gl_FragColor = mix(vec4(0.0, 0.0, 0.0, alpha), vec4(texture2D(sample_projection, uv).rgb, alpha) * vec4(1, 0.5, 0.5, alpha), smoothedAlpha);
 	else
-	{
-		/* Scale from NDC to UV space */
-		vec2 uv = dist * vec2(crop.z, crop.w);
-		uv.x = crop.x + uv.x;
-		uv.y = crop.y - uv.y;
-		if (area_toggle && length(dist * scalar_rcp) < area_f)
-			gl_FragColor = vec4(texture2D(sample_projection, uv).rgb, alpha) * vec4(0.5, 1, 0.5, alpha);
-		else if (area_toggle && length(dist * scalar_rcp) > area_b)
-			gl_FragColor = vec4(texture2D(sample_projection, uv).rgb, alpha) * vec4(1, 0.5, 0.5, alpha);
-		else
-			gl_FragColor = vec4(texture2D(sample_projection, uv).rgb, alpha);
-	}
+		gl_FragColor = mix(vec4(0.0, 0.0, 0.0, alpha), vec4(texture2D(sample_projection, uv).rgb, alpha), smoothedAlpha);
 }
