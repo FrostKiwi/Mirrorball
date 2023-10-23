@@ -33,8 +33,9 @@ void main()
     vec4 redColor = baseColor * vec4(1, 0.5, 0.5, alpha);
     vec4 blackColor = vec4(0.0, 0.0, 0.0, alpha);
 
-    float factorGreen = 1.0 - smoothstep(area_f - 0.01, area_f, length(dist * scalar_rcp));
-    float factorRed = smoothstep(area_b, area_b + 0.01, length(dist * scalar_rcp));
+    float edgeWidth = 0.0001;
+    float factorGreen = clamp((area_f - length(dist * scalar_rcp)) / edgeWidth, 0.0, 1.0);
+    float factorRed = clamp((length(dist * scalar_rcp) - area_b) / edgeWidth, 0.0, 1.0);
     float factorBlack = 1.0 - smoothedAlpha;
 
     gl_FragColor = baseColor;
