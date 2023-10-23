@@ -11,7 +11,6 @@ uniform float area_toggle;
 uniform float area_f;
 uniform float area_b;
 uniform float alpha;
-uniform float scalar;
 uniform float scalar_rcp;
 
 void main()

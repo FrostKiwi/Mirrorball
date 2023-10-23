@@ -41,7 +41,7 @@ const media = [
 		},
 		world_rotation: {
 			Yaw: 0,
-			Pitch: 0,
+			Pitch: -1,
 			Roll: 2
 		},
 		camera_initial: {

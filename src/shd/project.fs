@@ -23,7 +23,11 @@ void main()
 	vec2 iRay_scaled = scalar * iRay;
 
 	float blind_spot = length(iRay_scaled) - 0.5;
-	float smoothedAlpha = clamp(0.5 - blind_spot / (fwidth(blind_spot)), 0.0, 1.0);
+	float smoothedAlpha;
+	if (scalar == 1.0)
+		smoothedAlpha = 1.0;
+	else
+		smoothedAlpha = clamp(0.5 - blind_spot / (fwidth(blind_spot)), 0.0, 1.0);
 
 	vec2 uv = iRay_scaled * vec2(crop.z, crop.w);
 	uv.x = crop.x + uv.x;
