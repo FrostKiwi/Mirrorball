@@ -48,10 +48,8 @@ export default function render_project(width, height, channel) {
 
 	/* As per formula */
 	const scalar = 1.0 / Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4.0);
-	const scalar_rcp = Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4.0);
 	ctx.gl.uniform1f(ctx.shaders.project.scaler, scalar);
-	ctx.gl.uniform1f(ctx.shaders.project.scaler_rcp, scalar_rcp);
-	ctx.gl.uniform1i(ctx.shaders.project.area_toggle, ctr.tog.area);
+	ctx.gl.uniform1f(ctx.shaders.project.area_toggle, ctr.tog.area);
 	ctx.gl.uniform1f(ctx.shaders.project.area_f,
 		Math.sin(glm.glMatrix.toRadian(ctr.tog.area_f) / 4.0) / 2.0);
 	ctx.gl.uniform1f(ctx.shaders.project.area_b,

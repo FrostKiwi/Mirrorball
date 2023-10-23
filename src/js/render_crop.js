@@ -25,10 +25,10 @@ export default function render_crop(width, height, channel) {
 		ctx.gl.uniform4f(ctx.shaders.crop.split, 0, 0, 1, 1);
 
 	ctx.gl.uniform4f(ctx.shaders.crop.crop, crop.x, crop.y, crop.w, crop.h);
-	ctx.gl.uniform1i(ctx.shaders.crop.mask_toggle, ctr.tog.mask);
+	ctx.gl.uniform1f(ctx.shaders.crop.mask_toggle, ctr.tog.mask);
 
 	/* For the Area visualization */
-	ctx.gl.uniform1i(ctx.shaders.crop.area_toggle, ctr.tog.area);
+	ctx.gl.uniform1f(ctx.shaders.crop.area_toggle, ctr.tog.area);
 	/* As per formula */
 	/* Reciprocal here to save on GPU division */
 	const scalar_rcp = Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4.0);

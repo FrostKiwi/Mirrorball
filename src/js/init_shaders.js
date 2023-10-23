@@ -84,7 +84,6 @@ export default function init_shaders(ctx, gl) {
 		pos: gl.getAttribLocation(ctx.shaders.project.handle, "pos"),
 		viewray: gl.getAttribLocation(ctx.shaders.project.handle, "rayvtx"),
 		scaler: gl.getUniformLocation(ctx.shaders.project.handle, "scalar"),
-		scaler_rcp: gl.getUniformLocation(ctx.shaders.project.handle, "scalar_rcp"),
 		alpha: gl.getUniformLocation(ctx.shaders.project.handle, "alpha"),
 		crop: gl.getUniformLocation(ctx.shaders.project.handle, "crop"),
 		split: gl.getUniformLocation(ctx.shaders.project.handle, "split"),
