@@ -18,20 +18,27 @@ uniform float alpha;
 
 void main()
 {
-	vec3 R = normalize(Ray);
-	vec2 dist = scalar * R.xy / (M_2xSQRT2 * sqrt(R.z + 1.0));
+    vec3 R = normalize(Ray);
+    vec2 dist = scalar * R.xy / (M_2xSQRT2 * sqrt(R.z + 1.0));
 
-	float blind_spot = length(dist) - 0.5;
+    float blind_spot = length(dist) - 0.5;
+    float smoothedAlpha = clamp(0.5 - blind_spot / (fwidth(blind_spot)), 0.0, 1.0);
 
-	float smoothedAlpha = clamp(0.5 - blind_spot / (fwidth(blind_spot)), 0.0, 1.0);
+    vec2 uv = dist * vec2(crop.z, crop.w);
+    uv.x = crop.x + uv.x;
+    uv.y = crop.y - uv.y;
 
-	vec2 uv = dist * vec2(crop.z, crop.w);
-	uv.x = crop.x + uv.x;
-	uv.y = crop.y - uv.y;
-	if (area_toggle && length(dist * scalar_rcp) < area_f)
-		gl_FragColor = mix(vec4(0.0, 0.0, 0.0, alpha), vec4(texture2D(sample_projection, uv).rgb, alpha) * vec4(0.5, 1, 0.5, alpha), smoothedAlpha);
-	else if (area_toggle && length(dist * scalar_rcp) > area_b)
-		gl_FragColor = mix(vec4(0.0, 0.0, 0.0, alpha), vec4(texture2D(sample_projection, uv).rgb, alpha) * vec4(1, 0.5, 0.5, alpha), smoothedAlpha);
-	else
-		gl_FragColor = mix(vec4(0.0, 0.0, 0.0, alpha), vec4(texture2D(sample_projection, uv).rgb, alpha), smoothedAlpha);
+    vec4 baseColor = vec4(texture2D(sample_projection, uv).rgb, alpha);
+    vec4 greenColor = baseColor * vec4(0.5, 1, 0.5, alpha);
+    vec4 redColor = baseColor * vec4(1, 0.5, 0.5, alpha);
+    vec4 blackColor = vec4(0.0, 0.0, 0.0, alpha);
+
+    float factorGreen = 1.0 - smoothstep(area_f - 0.01, area_f, length(dist * scalar_rcp));
+    float factorRed = smoothstep(area_b, area_b + 0.01, length(dist * scalar_rcp));
+    float factorBlack = 1.0 - smoothedAlpha;
+
+    gl_FragColor = baseColor;
+    gl_FragColor = mix(gl_FragColor, greenColor, factorGreen);
+    gl_FragColor = mix(gl_FragColor, redColor, factorRed);
+    gl_FragColor = mix(gl_FragColor, blackColor, factorBlack);
 }
