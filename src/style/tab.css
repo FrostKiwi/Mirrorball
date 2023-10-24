@@ -70,6 +70,32 @@
 	box-sizing: border-box;
 }
 
+.landingpage {
+	width: 80vw;
+	width: 80svw;
+	padding: 10px 25px;
+	padding-top: 5px;
+	animation: fadeEffect 0.25s;
+	overflow-y: auto;
+	box-sizing: border-box;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+	justify-content: center;
+}
+
+.landingpage h1 {
+	margin: unset;
+	font-size: 24px;
+}
+
+.youtube-box {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+
 .youtube {
 	width: 100%;
 	aspect-ratio: 16 / 9;
@@ -78,7 +104,13 @@
 .youtube-wrapper {
 	flex: 1 1 auto;
 	overflow: hidden;
-	min-width: 40vh;
+}
+
+.links {
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
 }
 
 .msgcontent {
