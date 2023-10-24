@@ -7,19 +7,23 @@ import render_latlong from './render_latlong.js'
 import { resizeCanvasToDisplaySize } from './resize_canvas.js'
 
 /* Decision tree for visualization and the 2nd multi-feed channel */
-function renderShaders(width, height, channel){
-	update_camera(width, height, channel);
-	if (ctr.tog.crop) {
-		render_crop(width, height, channel);
-		if (ctr.tog.viz)
-			render_border(true, ctr.tog.viz_subdiv,
-				width, height, channel);
-	}
-	if (ctr.tog.project) {
-		render_project(width, height, channel);
-		if (ctr.tog.viz)
-			render_border(false, ctr.tog.viz_subdiv,
-				width, height, channel);
+function renderShaders(width, height, channel) {
+	if (ctr.tog.latlong)
+		render_latlong(channel);
+	else {
+		update_camera(width, height, channel);
+		if (ctr.tog.crop) {
+			render_crop(width, height, channel);
+			if (ctr.tog.viz)
+				render_border(true, ctr.tog.viz_subdiv,
+					width, height, channel);
+		}
+		if (ctr.tog.project) {
+			render_project(width, height, channel);
+			if (ctr.tog.viz)
+				render_border(false, ctr.tog.viz_subdiv,
+					width, height, channel);
+		}
 	}
 }
 
@@ -48,7 +52,7 @@ export default function render() {
 		else
 			/* Horizontal split-screen rendering */
 			quadWidth /= 2;
-			
+
 	renderShaders(quadWidth, quadHeight, ctr.ch1);
 	if (ctr.ch2.alpha)
 		renderShaders(quadWidth, quadHeight, ctr.ch2);

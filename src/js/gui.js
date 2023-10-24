@@ -48,6 +48,10 @@ export default function init_gui() {
 		ctx.gui.handle.addFolder('Image and projection setup').close();
 
 	/* Sphere's FOV / Distortion correction */
+	ctx.gui.folder.setup.add(ctr.tog, 'latlong').name(
+		"Equirectangular preview"
+	).onChange(toggleLatlong);
+	
 	ctx.gui.controller.img_fov =
 		ctx.gui.folder.setup.add(ctr.ch1, 'fov_deg', 180, 360, 1).name(
 			"Sphere's FOV [in °]"
@@ -123,9 +127,6 @@ export default function init_gui() {
 	ctx.gui.folder.debug.add(ctx.gui, 'eruda').name(
 		"Eruda debug console"
 	).onChange(eruda_toggle);
-	
-	/* Debug print */
-	/* ctx.gui.folder.debug.add(ctx.gui, 'state').name(" state"); */
 }
 
 function toggleStats(value) {
@@ -222,6 +223,15 @@ function toggleBlur(value) {
 		document.documentElement.style.setProperty('--blur', 'blur(calc(1vw + 1vh))');
 	else
 		document.documentElement.style.setProperty('--blur', 'none');
+}
+
+function toggleLatlong(value) {
+	if (value) {
+	}
+	else {
+	}
+	if (!ctx.loading)
+		redraw();
 }
 
 function toggleArea(value) {

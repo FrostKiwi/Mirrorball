@@ -22,12 +22,13 @@ export default function init_shaders(ctx, gl) {
 		ctx.shaders.crop.handle = compile_and_link(gl, crop_vs, '#define USE_DERIVATIVES\n' + crop_fs);
 		ctx.shaders.border.handle = compile_and_link(gl, border_vs, '#define USE_DERIVATIVES\n' + border_fs);
 		ctx.shaders.project.handle = compile_and_link(gl, project_vs, '#define USE_DERIVATIVES\n' + project_fs);
+		ctx.shaders.latlong.handle = compile_and_link(gl, latlong_vs, '#define USE_DERIVATIVES\n' + latlong_fs);
 	} else {
 		ctx.shaders.crop.handle = compile_and_link(gl, crop_vs, crop_fs);
 		ctx.shaders.border.handle = compile_and_link(gl, border_vs, border_fs);
 		ctx.shaders.project.handle = compile_and_link(gl, project_vs, project_fs);
+		ctx.shaders.latlong.handle = compile_and_link(gl, latlong_vs, latlong_fs);
 	}
-	ctx.shaders.latlong.handle = compile_and_link(gl, latlong_vs, latlong_fs);
 
 
 	const unitquadtex = new Float32Array([

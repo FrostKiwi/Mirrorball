@@ -98,7 +98,8 @@ export let ctr = {
 		area_b: 90,
 		viz: false,
 		viz_subdiv: 16,
-		mask: false
+		mask: false,
+		latlong: false
 	},
 	/* Media channels */
 	ch1: {
@@ -144,7 +145,8 @@ let prev = {
 		project: true,
 		viz: false,
 		viz_subdiv: 16,
-		mask: false
+		mask: false,
+		latlong: false
 	},
 	/* Media channels */
 	ch1: {
@@ -244,6 +246,10 @@ export function redraw() {
 	else if (prev.tog.viz_subdiv !== ctr.tog.viz_subdiv) {
 		ctx.redraw = true;
 		prev.tog.viz_subdiv = ctr.tog.viz_subdiv;
+	}
+	else if (prev.tog.latlong !== ctr.tog.latlong) {
+		ctx.redraw = true;
+		prev.tog.latlong = ctr.tog.latlong;
 	}
 	else if (prev.cam.fov.cur !== ctr.cam.fov.cur) {
 		ctx.redraw = true;
