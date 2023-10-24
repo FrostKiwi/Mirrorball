@@ -17,7 +17,10 @@ export default function render_project(width, height, channel) {
 				1 - channel.crop.bot / 1)
 	}
 
-	ctx.gl.useProgram(ctx.shaders.project.handle);
+	if (ctr.tog.antialias)
+		ctx.gl.useProgram(ctx.shaders.project.handle_AA);
+	else
+		ctx.gl.useProgram(ctx.shaders.project.handle);
 
 	/* Split-screen rendering */
 	if (width < ctx.canvas.width)

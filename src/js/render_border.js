@@ -1,4 +1,4 @@
-import { ctx } from './state.js';
+import { ctx, ctr } from './state.js';
 import * as glm from 'gl-matrix';
 
 const POINT_SIZE = 0.025;
@@ -80,7 +80,10 @@ export default function render_border(project_points, subdiv, width, height,
 	channel) {
 	const aspect = width / height;
 
-	ctx.gl.useProgram(ctx.shaders.border.handle);
+	if (ctr.tog.antialias)
+		ctx.gl.useProgram(ctx.shaders.border.handle_AA);
+	else
+		ctx.gl.useProgram(ctx.shaders.border.handle);
 
 	ctx.gl.bindBuffer(ctx.gl.ARRAY_BUFFER, ctx.shaders.border.quadvbo);
 	ctx.gl.enableVertexAttribArray(ctx.shaders.border.vtx);

@@ -1,4 +1,4 @@
-import { ctx } from './state.js';
+import { ctr, ctx } from './state.js';
 import { load_from_url, update_texture } from './media.js';
 import media from './mediaData.js';
 import { print_glinfo } from './gl_basics.js'
@@ -38,7 +38,7 @@ function init() {
 	/* Input handlers */
 
 	init_gui();
-	init_shaders(ctx, ctx.gl);
+	init_shaders(ctx, ctr, ctx.gl);
 	/* Add the stats */
 	document.body.appendChild(ctx.stats.dom);
 	document.body.appendChild(ctx.stats_events.dom);

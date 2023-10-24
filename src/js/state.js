@@ -40,17 +40,21 @@ export let ctx = {
 			-1.0, -1.0, 0.0, 0.0, 0.0
 		]),
 		border: {
-			handle: null
+			handle: null,
+			handle_AA: null
 		},
 		crop: {
 			handle: null,
+			handle_AA: null,
 			mask: false
 		},
 		project: {
-			handle: null
+			handle: null,
+			handle_AA: null
 		},
 		latlong: {
-			handle: null
+			handle: null,
+			handle_AA: null
 		}
 	},
 	gui: {
@@ -99,7 +103,8 @@ export let ctr = {
 		viz: false,
 		viz_subdiv: 16,
 		mask: false,
-		latlong: false
+		latlong: false,
+		antialias: true
 	},
 	/* Media channels */
 	ch1: {
@@ -146,7 +151,8 @@ let prev = {
 		viz: false,
 		viz_subdiv: 16,
 		mask: false,
-		latlong: false
+		latlong: false,
+		antialias: true
 	},
 	/* Media channels */
 	ch1: {
@@ -250,6 +256,10 @@ export function redraw() {
 	else if (prev.tog.latlong !== ctr.tog.latlong) {
 		ctx.redraw = true;
 		prev.tog.latlong = ctr.tog.latlong;
+	}
+	else if (prev.tog.antialias !== ctr.tog.antialias) {
+		ctx.redraw = true;
+		prev.tog.antialias = ctr.tog.antialias;
 	}
 	else if (prev.cam.fov.cur !== ctr.cam.fov.cur) {
 		ctx.redraw = true;

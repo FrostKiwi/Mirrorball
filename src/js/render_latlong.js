@@ -1,4 +1,4 @@
-import { ctx } from './state.js';
+import { ctx, ctr } from './state.js';
 import * as glm from 'gl-matrix';
 
 export default function render_latlong(channel) {
@@ -17,7 +17,10 @@ export default function render_latlong(channel) {
 				1 - channel.crop.bot / 1)
 	}
 
-	ctx.gl.useProgram(ctx.shaders.latlong.handle);
+	if (ctr.tog.antialias)
+		ctx.gl.useProgram(ctx.shaders.latlong.handle_AA);
+	else
+		ctx.gl.useProgram(ctx.shaders.latlong.handle);
 
 	ctx.gl.uniform4f(ctx.shaders.latlong.crop, crop.x, crop.y, crop.w, crop.h);
 
@@ -44,7 +47,7 @@ export default function render_latlong(channel) {
 	glm.mat4.rotateX(tempMat, tempMat, rot_x);
 	glm.mat4.rotateY(tempMat, tempMat, rot_y);
 	glm.mat4.rotateZ(tempMat, tempMat, rot_z);
-	
+
 	const rotMat = glm.mat3.create();
 	glm.mat3.fromMat4(rotMat, tempMat)
 	ctx.gl.uniformMatrix3fv(ctx.shaders.latlong.rotMat, false, rotMat);

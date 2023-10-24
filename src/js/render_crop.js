@@ -14,7 +14,10 @@ export default function render_crop(width, height, channel) {
 		h: (1 / ctx.shaders.ch1.h) * postcrop_h
 	}
 
-	ctx.gl.useProgram(ctx.shaders.crop.handle);
+	if (ctr.tog.antialias)
+		ctx.gl.useProgram(ctx.shaders.crop.handle_AA);
+	else
+		ctx.gl.useProgram(ctx.shaders.crop.handle);
 
 	/* Split-Screen rendering */
 	if (width < ctx.canvas.width)

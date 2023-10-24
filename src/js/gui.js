@@ -1,5 +1,6 @@
 import { ctx, ctr, redraw } from './state.js';
 import { print_glinfo } from './gl_basics.js'
+import { updateShaderAttributes } from './init_shaders.js';
 import GUI from 'lil-gui';
 
 export default function init_gui() {
@@ -104,6 +105,17 @@ export default function init_gui() {
 		ctx.gui.folder.settings.add(ctx.gui, 'fullscreen').name(
 			"Fullscreen not supported by browser"
 		).disable();
+
+	if (ctx.gl.getExtension('OES_standard_derivatives')){
+		ctx.gui.folder.settings.add(ctr.tog, 'antialias').name(
+			"Analytical Anti-Aliasing"
+		).onChange(toggleAA);
+	} else {
+		ctr.tog.antialias = false; 
+		ctx.gui.folder.settings.add(ctr.tog, 'antialias').name(
+			"Anti-Aliasing Unsupported"
+		).disable();
+	}
 
 	ctx.gui.folder.settings.add(ctx.gui, 'gamepad', 1, 4, 1, 1).name(
 		"Choose Gamepad"
@@ -230,6 +242,12 @@ function toggleLatlong(value) {
 	}
 	else {
 	}
+	if (!ctx.loading)
+		redraw();
+}
+
+function toggleAA() {
+	updateShaderAttributes(ctx, ctr, ctx.gl);
 	if (!ctx.loading)
 		redraw();
 }
