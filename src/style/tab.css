@@ -15,10 +15,12 @@
 	align-items: center;
 	justify-content: center;
 
+	font-size: 12px;
+
 	height: 50px;
 	outline: none;
 	cursor: pointer;
-	padding: 14px 16px;
+	padding: 8px;
 	transition: 0.3s;
 	border-radius: calc(1vw + 1vh) calc(1vw + 1vh) 0 0;
 	background-color: #00000044;
@@ -47,6 +49,7 @@
 }
 
 .tab .closeTab {
+	padding: 12px 14px;
 	background-color: #AA000044;
 	display: flex;
 	align-items: center;
