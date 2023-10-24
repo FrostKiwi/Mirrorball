@@ -74,7 +74,6 @@
 	width: 80vw;
 	width: 80svw;
 	padding: 10px 25px;
-	padding-top: 5px;
 	animation: fadeEffect 0.25s;
 	overflow-y: auto;
 	box-sizing: border-box;
@@ -87,13 +86,14 @@
 .landingpage h1 {
 	margin: unset;
 	font-size: 24px;
+	display: none;
 }
 
 .youtube-box {
 	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
-	gap: 20px;
+	gap: 10px;
 }
 
 .youtube {
