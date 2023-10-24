@@ -16,13 +16,13 @@ export default function init_gui() {
 
 	/* Visualizations */
 	ctx.gui.folder.viz = ctx.gui.handle.addFolder('Visualizations').open();
-	ctx.gui.folder.viz.add(ctr.tog, 'mask').name(
+	ctx.gui.controller.mask = ctx.gui.folder.viz.add(ctr.tog, 'mask').name(
 		"Ball Mask"
 	).onChange(redraw);
-	ctx.gui.folder.viz.add(ctr.tog, 'viz').name(
+	ctx.gui.controller.viz = ctx.gui.folder.viz.add(ctr.tog, 'viz').name(
 		"Mapping and Distortion"
 	).onChange(redraw);
-	ctx.gui.folder.viz.add(ctr.tog, 'area').name(
+	ctx.gui.controller.area = ctx.gui.folder.viz.add(ctr.tog, 'area').name(
 		"Projection Area (Solid Angle)"
 	).onChange(toggleArea);
 	ctx.gui.controller.area_f = ctx.gui.folder.viz.add(
@@ -52,7 +52,7 @@ export default function init_gui() {
 	ctx.gui.folder.setup.add(ctr.tog, 'latlong').name(
 		"Equirectangular preview"
 	).onChange(toggleLatlong);
-	
+
 	ctx.gui.controller.img_fov =
 		ctx.gui.folder.setup.add(ctr.ch1, 'fov_deg', 180, 360, 1).name(
 			"Sphere's FOV [in °]"
@@ -106,12 +106,12 @@ export default function init_gui() {
 			"Fullscreen not supported by browser"
 		).disable();
 
-	if (ctx.gl.getExtension('OES_standard_derivatives')){
+	if (ctx.gl.getExtension('OES_standard_derivatives')) {
 		ctx.gui.folder.settings.add(ctr.tog, 'antialias').name(
 			"Analytical Anti-Aliasing"
 		).onChange(toggleAA);
 	} else {
-		ctr.tog.antialias = false; 
+		ctr.tog.antialias = false;
 		ctx.gui.folder.settings.add(ctr.tog, 'antialias').name(
 			"Anti-Aliasing Unsupported"
 		).disable();
@@ -239,8 +239,22 @@ function toggleBlur(value) {
 
 function toggleLatlong(value) {
 	if (value) {
+		ctx.gui.controller.mask.disable();
+		ctx.gui.controller.viz.disable();
+		ctx.gui.controller.area.disable();
+		if (ctr.tog.area) {
+			ctx.gui.controller.area_f.disable();
+			ctx.gui.controller.area_b.disable();
+		}
 	}
 	else {
+		ctx.gui.controller.mask.enable();
+		ctx.gui.controller.viz.enable();
+		ctx.gui.controller.area.enable();
+		if (ctr.tog.area) {
+			ctx.gui.controller.area_f.enable();
+			ctx.gui.controller.area_b.enable();
+		}
 	}
 	if (!ctx.loading)
 		redraw();
