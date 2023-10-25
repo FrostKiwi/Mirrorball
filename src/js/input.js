@@ -1,4 +1,5 @@
 import { ctx, ctr, redraw } from './state.js';
+import { toggleMapping } from './state.js';
 
 let keyState = {};
 const usedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW',
@@ -90,6 +91,20 @@ export function controller_input(time) {
 	if (gamepads[ctx.gui.gamepad - 1]) {
 		const gp = gamepads[ctx.gui.gamepad - 1];
 
+
+		for (let i = 0; i < gp.buttons.length; i++) {
+			if (gp.buttons[i].pressed) {
+				console.log(`Mapped ??? to button ${i}`);
+				return;
+			}
+		}
+		for (let i = 0; i < gp.axes.length; i++) {
+			if (Math.abs(gp.axes[i]) > 0.5) {  // If any axis is moved significantly
+				console.log(`Mapped ??? to axis ${i}`);
+				return;
+			}
+		}
+
 		const rotationSpeed = 0.25;
 		const zoomSpeed = 0.125;
 
@@ -148,6 +163,7 @@ export function setup_input() {
 
 	/* Set controller to enable continous mode */
 	window.addEventListener("gamepadconnected", (e) => {
+		toggleMapping();
 		if (!ctx.continous && !ctx.playing && !ctx.controller) {
 			ctx.controller = true;
 			ctx.continous = true;

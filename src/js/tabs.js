@@ -1,4 +1,4 @@
-import { ctx, toggleMenu, toggleMessage, redraw } from './state.js';
+import { ctx, toggleMenu, toggleMessage, redraw, toggleMapping } from './state.js';
 import { list_devices, upload_video } from './media_video.js'
 import { media_populate, media_populate_user, upload_image } from './media.js';
 
@@ -107,6 +107,10 @@ export function setupTabs() {
 
 	document.getElementById('message_close').onclick = function () {
 		toggleMessage();
+	};
+
+	document.getElementById('mapping_close').onclick = function () {
+		toggleMapping();
 	};
 
 	ctx.dom.message.style.display = 'none';
