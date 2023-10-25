@@ -100,6 +100,7 @@ function launch_stream(deviceId) {
 	};
 
 	ctx.video = document.createElement('video');
+	ctx.video.setAttribute('playsinline', '');
 
 	navigator.mediaDevices.getUserMedia(constraints)
 		.then(stream => {
@@ -136,6 +137,7 @@ export function load_video(user_media) {
 	document.getElementById('spinner').style.display = 'block';
 	document.getElementById('statusMSG').innerText = "Starting video stream";
 	ctx.video = document.createElement('video');
+	ctx.video.setAttribute('playsinline', '');
 	ctx.video.src = user_media.path;
 	ctx.video.loop = true;
 	ctx.video.muted = true;
