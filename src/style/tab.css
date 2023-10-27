@@ -120,6 +120,35 @@
 	padding: 10px 25px;
 }
 
+.msgcontent h2 {
+	margin: unset;
+	font-size: 16px;
+}
+
+.control-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* Maybe default is fine (?) */
+.msgcontent button{
+	
+}
+
+.msgcontent .card-icon {
+	display: block;
+	width: 50px;
+	/* Adjust this value to be greater than the widest icon's width */
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.control-item button {
+	flex-grow: 1;
+	/* this will make the buttons stretch to fill the remaining space */
+}
+
 /* Go from zero to full opacity */
 @keyframes fadeEffect {
 	from {

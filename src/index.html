@@ -221,18 +221,33 @@
 	<div style="display: none;" id="mapping" class="panel">
 		<div class="tab">
 			<button id="tab" style="width: 100%;">
-				<img src="style/img/gamepad.svg" class="card-icon" style="filter: invert(100%)"> Gamepad Mapping
+				<img src="style/img/gamepad.svg" class="card-icon" style="filter: invert(100%)">Gamepad connected
 			</button>
 			<button class="closeTab" id="mapping_close">
 				<img src="style/img/xmark.svg">
 			</button>
 		</div>
 		<div id="msg" class="msgcontent">
-			Map the controls of your gamepad:<br>
-			<button id="mapLeftX">Map Left Analog Stick X Axis</button><br>
-			<button id="mapLeftY">Map Left Analog Stick Y Axis</button><br>
-			<button id="mapRightX">Map Right Analog Stick X Axis</button><br>
-			<button id="mapRightY">Map Right Analog Stick Y Axis</button>
+			<h2>Map the controls of your gamepad.</h2>
+			Both Analog sticks and gamepad buttons are fine.<br>
+			Click the button below and wiggle the analog stick or<br>
+			press the gamepad button to map that function.<br>
+			<div class="control-item">
+				<img src="style/img/arrows-left-right.svg" class="card-icon" style="filter: invert(100%)">
+				<button id="camX">Rotate Camera Left/Right</button>
+			</div>
+			<div class="control-item">
+				<img src="style/img/arrows-up-down.svg" class="card-icon" style="filter: invert(100%)">
+				<button id="camY">Tilt Camera Up/Down</button>
+			</div>
+			<div class="control-item">
+				<img src="style/img/less-than.svg" class="card-icon" style="filter: invert(100%)">
+				<button id="zoom">Zoom Camera</button>
+			</div>
+			<div class="control-item">
+				<img src="style/img/percent.svg" class="card-icon" style="filter: invert(100%)">
+				<button id="mix">Multi-Source Mix</button>
+			</div>
 		</div>
 	</div>
 </body>
