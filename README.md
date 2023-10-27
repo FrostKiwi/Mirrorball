@@ -1,18 +1,16 @@
 # Mathematical Magic Mirrorball
-https://github.com/FrostKiwi/Mirrorball/assets/60887273/a3a23182-7316-4ccd-8815-1c75ede86622
-
+| 🇬🇧 English | 🇯🇵 日本語 |
+| ------------- | ------------- |
+| [![Watch the video](https://img.youtube.com/vi/rJPKTCdk-WI/0.jpg)](https://www.youtube.com/watch?v=rJPKTCdk-WI)  | [![日本語版](https://img.youtube.com/vi/cmZcnhFycw8/0.jpg)](https://www.youtube.com/watch?v=cmZcnhFycw8)  |
 
 A combination of Video and WebApp ( https://mirrorball.frost.kiwi ). While watching, viewers can directly interact with examples and visualizations, on a second device or a separate browser tab.
 The audience will be taken on a journey through the history and maths on the topic of the "Mirrorball projection".
 
 Deceptively simple, it is an incredible intersection of Computer Science and Mathematics. This project has been made in conjuction with a paper, which you can read on arXiv: https://arxiv.org/abs/2308.10991
 
-
-## Video
-[![Watch the video](https://img.youtube.com/vi/rJPKTCdk-WI/0.jpg)](https://www.youtube.com/watch?v=rJPKTCdk-WI)
-[![日本語版](https://img.youtube.com/vi/cmZcnhFycw8/0.jpg)](https://www.youtube.com/watch?v=cmZcnhFycw8)
-
 ## Features:
+https://github.com/FrostKiwi/Mirrorball/assets/60887273/a3a23182-7316-4ccd-8815-1c75ede86622
+
 View the projection of a Mirrorball with different colorful visualizations to understand how the math works. You can project a:
  * photo
  * video
@@ -32,11 +30,6 @@ The photos in the "User submissions" tab were provided by:
  * [u/wwxxcc on Reddit](https://www.reddit.com/user/wwxxcc)
  * [u/MagicList on Reddit](https://www.reddit.com/user/MagicList/) / [@CigamPower on Github](https://github.com/CigamPower/)
  * Иван via E-Mail
-
-### Limitations
-Most of the official photo examples are 100 Megapixel photos scaled down to 8192² px resolution. The WebApp automatically downscales photos even further, if the user's device does not support that resolution. Even so, I changed all photos to 4096² px to make sure all devices show the projection. I had weird edge cases, where older iPhones support 8192² but refuse to upload the data to the VRAM, because of memory preassure, so just to be sure all photos are 4096² instead.
-
-Same goes for Video. All sources are 4096² but the WebApp only has 2048² videos. The reason is Windows's built in decoder being very weak: https://github.com/FrostKiwi/Mirrorball/issues/11.
 
 ## Build instructions
 If you want to run the code locally:
