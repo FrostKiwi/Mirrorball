@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "gl-matrix": "^3.4.3",
-    "lil-gui": "^0.18.2",
+    "lil-gui": "^0.19.0",
     "stats.js": "^0.17.0"
   }
 }

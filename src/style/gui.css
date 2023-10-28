@@ -7,10 +7,3 @@
 	backdrop-filter: var(--blur);
 	-webkit-backdrop-filter: var(--blur);
 }
-
-/* Fix as per: 
-   https: //github.com/georgealways/lil-gui/issues/109#issuecomment-1611658861
- */
-.lil-gui:not(.root) {
-	background-color: transparent;
-}
