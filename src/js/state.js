@@ -27,6 +27,7 @@ export let ctx = {
 	lastControllerUpdate: 0,
 	canvasToDisplaySizeMap: null,
 	export: false,
+	multichannel: false,
 	shaders: {
 		ch1: {
 			tex: null,
@@ -70,7 +71,24 @@ export let ctx = {
 		folder: {},
 		showStats: false,
 		showEventStats: false,
-		gamepad: 1
+		gamepad: 1,
+		setupPad: enableMapping
+	},
+	gamepad: {
+		mapping: null,
+		currentMappingFunction: null,
+		yaw_axis: null,
+		yaw_btn_inc: null,
+		yaw_btn_dec: null,
+		pitch_axis: null,
+		pitch_btn_inc: null,
+		pitch_btn_dec: null,
+		zoom_axis: null,
+		zoom_btn_inc: null,
+		zoom_btn_dec: null,
+		mix_axis: null,
+		mix_btn_inc: null,
+		mix_btn_dec: null
 	},
 	cam: {
 		fov: {
@@ -81,6 +99,7 @@ export let ctx = {
 	dom: {
 		menu: document.getElementById('menu'),
 		message: document.getElementById('message'),
+		mapping: document.getElementById('mapping'),
 		spinner: document.getElementById('spinner'),
 		statusMSG: document.getElementById('statusMSG'),
 		filesize: document.getElementById('filesize')
@@ -306,6 +325,14 @@ export function toggleMessage() {
 		ctx.dom.message.style.display = 'flex';
 	else
 		ctx.dom.message.style.display = 'none';
+}
+
+export function enableMapping() {
+	ctx.dom.mapping.style.display = 'flex';
+}
+
+export function disableMapping() {
+	ctx.dom.mapping.style.display = 'none';
 }
 
 function toggle_fullscreen() {

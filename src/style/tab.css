@@ -120,6 +120,61 @@
 	padding: 10px 25px;
 }
 
+.explanation-text {
+	text-align: justify;
+	max-width: 500px;
+}
+
+.msgcontent h2 {
+	margin: unset;
+	font-size: 16px;
+}
+
+.control-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 5px;
+}
+
+.grey-text {
+	color: #AAA;
+	font-weight: lighter;
+}
+
+button {
+	background-color: #333;
+	border: 1px solid #888;
+	color: #FFF;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+button:hover {
+	background-color: #555;
+}
+
+button:active {
+	background-color: #222;
+	border: 1px solid #666;
+	transform: scale(0.97);
+	transition: 0s;
+}
+
+.msgcontent .card-icon {
+	display: block;
+	width: 50px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.control-item button {
+	flex-grow: 1;
+	/* this will make the buttons stretch to fill the remaining space */
+}
+
 /* Go from zero to full opacity */
 @keyframes fadeEffect {
 	from {
@@ -134,4 +189,89 @@
 .closeTab img {
 	filter: invert(1);
 	opacity: 0.8;
+}
+
+/* Styles for the select dropdown */
+.list {
+	max-width: 500px;
+	width: 100%;
+	margin-bottom: 4px;
+	background-color: #333;
+	border: 1px solid #888;
+	color: #FFF;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.list:hover {
+	background-color: #555;
+}
+
+.list:active {
+	background-color: #222;
+	border: 1px solid #666;
+	transform: scale(0.97);
+	transition: 0s;
+}
+
+/* Style the dropdown options */
+.list option {
+	background-color: #333;
+	color: #FFF;
+}
+
+.list option:hover,
+.list option:checked,
+.list option:focus {
+	background-color: #555;
+}
+
+input[type="range"] {
+	width: 80%;
+	/* Adjust based on preference */
+	margin: 10px 0;
+	cursor: pointer;
+	background-color: #333;
+	border-radius: 5px;
+	outline: none;
+	transition: 0.3s;
+	-webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	width: 20px;
+	height: 20px;
+	background-color: #555;
+	border: 1px solid #888;
+	border-radius: 5px;
+	cursor: pointer;
+	-webkit-appearance: none;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+	background-color: #777;
+}
+
+input[type="range"]::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	background-color: #555;
+	border: 1px solid #888;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+	background-color: #777;
+}
+
+input[type="range"]::-ms-thumb {
+	width: 20px;
+	height: 20px;
+	background-color: #555;
+	border: 1px solid #888;
+	border-radius: 5px;
+	cursor: pointer;
 }

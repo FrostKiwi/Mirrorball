@@ -1,4 +1,4 @@
-import { ctx, toggleMenu, toggleMessage, redraw } from './state.js';
+import { ctx, toggleMenu, toggleMessage, redraw, disableMapping } from './state.js';
 import { list_devices, upload_video } from './media_video.js'
 import { media_populate, media_populate_user, upload_image } from './media.js';
 
@@ -65,6 +65,15 @@ export function setupTabs() {
 	document.getElementById('webcam').onclick = function () {
 		list_devices();
 	};
+	document.getElementById('deadzoneSlider').addEventListener('input', function () {
+		ctx.gui.deadzone = parseFloat(this.value);
+		document.getElementById('deadzoneValue').innerText = ctx.gui.deadzone;
+	});
+	document.getElementById('gamepadlist').addEventListener('change', function (event) {
+		const selectedIndex = event.target.selectedIndex;
+		ctx.gui.gamepad = selectedIndex;
+	});
+
 	document.getElementById('download').onclick = function () {
 		ctx.export = true;
 		ctx.redraw = true;
@@ -107,6 +116,10 @@ export function setupTabs() {
 
 	document.getElementById('message_close').onclick = function () {
 		toggleMessage();
+	};
+
+	document.getElementById('mapping_close').onclick = function () {
+		disableMapping();
 	};
 
 	ctx.dom.message.style.display = 'none';
