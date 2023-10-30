@@ -106,6 +106,11 @@ export default function init_gui() {
 			"Fullscreen not supported by browser"
 		).disable();
 
+	ctx.gui.controller.gamepad =
+		ctx.gui.folder.settings.add(ctx.gui, 'setupPad')
+			.name("Setup Gamepad")
+			.disable();
+
 	if (ctx.gl.getExtension('OES_standard_derivatives')) {
 		ctx.gui.folder.settings.add(ctr.tog, 'antialias').name(
 			"Analytical Anti-Aliasing"
@@ -117,12 +122,6 @@ export default function init_gui() {
 		).disable();
 	}
 
-	ctx.gui.folder.settings.add(ctx.gui, 'gamepad', 1, 4, 1, 1).name(
-		"Choose Gamepad"
-	);
-	ctx.gui.folder.settings.add(ctx.gui, 'deadzone', 0, 0.75).name(
-		"Gamepad deadzone"
-	);
 	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 2, 256, 1).name(
 		"Distortion-Viz subdivisions"
 	).onChange(redraw);

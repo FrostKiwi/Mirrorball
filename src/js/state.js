@@ -70,9 +70,12 @@ export let ctx = {
 		folder: {},
 		showStats: false,
 		showEventStats: false,
-		gamepad: 1
+		gamepad: 1,
+		setupPad: enableMapping
 	},
 	gamepad: {
+		mapping: null,
+		currentMappingFunction: null,
 		yaw_axis: null,
 		yaw_btn_inc: null,
 		yaw_btn_dec: null,

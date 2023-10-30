@@ -65,6 +65,15 @@ export function setupTabs() {
 	document.getElementById('webcam').onclick = function () {
 		list_devices();
 	};
+	document.getElementById('deadzoneSlider').addEventListener('input', function () {
+		ctx.gui.deadzone = parseFloat(this.value);
+		document.getElementById('deadzoneValue').innerText = ctx.gui.deadzone;
+	});
+	document.getElementById('gamepadlist').addEventListener('change', function (event) {
+		const selectedIndex = event.target.selectedIndex;
+		ctx.gui.gamepad = selectedIndex;
+	});
+
 	document.getElementById('download').onclick = function () {
 		ctx.export = true;
 		ctx.redraw = true;
