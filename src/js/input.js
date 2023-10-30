@@ -1,5 +1,4 @@
-import { ctx, ctr, redraw } from './state.js';
-import { toggleMapping } from './state.js';
+import { ctx, ctr, redraw, enableMapping } from './state.js';
 
 let keyState = {};
 const usedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW',
@@ -163,7 +162,7 @@ export function setup_input() {
 
 	/* Set controller to enable continous mode */
 	window.addEventListener("gamepadconnected", (e) => {
-		toggleMapping();
+		enableMapping();
 		if (!ctx.continous && !ctx.playing && !ctx.controller) {
 			ctx.controller = true;
 			ctx.continous = true;
@@ -175,6 +174,30 @@ export function setup_input() {
 			ctx.controller = true;
 		}
 	});
+
+	document.getElementById('camX').addEventListener('click',
+		function (event) {
+			console.log("Function for Mapping Yaw ");
+		}
+	);
+
+	document.getElementById('camY').addEventListener('click',
+		function (event) {
+			console.log("Function for Mapping Pitch ");
+		}
+	);
+
+	document.getElementById('zoom').addEventListener('click',
+		function (event) {
+			console.log("Function for Mapping Zoom ");
+		}
+	);
+
+	document.getElementById('mix').addEventListener('click',
+		function (event) {
+			console.log("Function for Mapping Mix ");
+		}
+	);
 
 	window.addEventListener("gamepaddisconnected", (e) => {
 		ctx.controller = false;

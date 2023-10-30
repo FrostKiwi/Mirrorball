@@ -1,4 +1,4 @@
-import { ctx, toggleMenu, toggleMessage, redraw, toggleMapping } from './state.js';
+import { ctx, toggleMenu, toggleMessage, redraw, disableMapping } from './state.js';
 import { list_devices, upload_video } from './media_video.js'
 import { media_populate, media_populate_user, upload_image } from './media.js';
 
@@ -110,7 +110,7 @@ export function setupTabs() {
 	};
 
 	document.getElementById('mapping_close').onclick = function () {
-		toggleMapping();
+		disableMapping();
 	};
 
 	ctx.dom.message.style.display = 'none';

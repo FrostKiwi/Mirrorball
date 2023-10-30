@@ -72,6 +72,20 @@ export let ctx = {
 		showEventStats: false,
 		gamepad: 1
 	},
+	gamepad: {
+		yaw_axis: null,
+		yaw_btn_inc: null,
+		yaw_btn_dec: null,
+		pitch_axis: null,
+		pitch_btn_inc: null,
+		pitch_btn_dec: null,
+		zoom_axis: null,
+		zoom_btn_inc: null,
+		zoom_btn_dec: null,
+		mix_axis: null,
+		mix_btn_inc: null,
+		mix_btn_dec: null
+	},
 	cam: {
 		fov: {
 			min: 10,
@@ -309,11 +323,12 @@ export function toggleMessage() {
 		ctx.dom.message.style.display = 'none';
 }
 
-export function toggleMapping() {
-	if (ctx.dom.mapping.style.display === 'none')
-		ctx.dom.mapping.style.display = 'flex';
-	else
-		ctx.dom.mapping.style.display = 'none';
+export function enableMapping() {
+	ctx.dom.mapping.style.display = 'flex';
+}
+
+export function disableMapping() {
+	ctx.dom.mapping.style.display = 'none';
 }
 
 function toggle_fullscreen() {
