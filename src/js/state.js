@@ -27,6 +27,7 @@ export let ctx = {
 	lastControllerUpdate: 0,
 	canvasToDisplaySizeMap: null,
 	export: false,
+	multichannel: false,
 	shaders: {
 		ch1: {
 			tex: null,

@@ -330,7 +330,7 @@ function channel2_setup() {
 }
 
 export function channel2_disable() {
-	ctx.gui.folder
+	ctx.multichannel = false;
 	ctx.gui.controller.alpha.setValue(0);
 	ctx.gui.folder.ch2.close();
 	ctx.gui.controller.alpha.disable();
@@ -345,6 +345,7 @@ export function channel2_disable() {
 }
 
 export function channel2_enable() {
+	ctx.multichannel = true;
 	ctx.gui.controller.alpha.enable();
 	ctx.gui.controller.img_fov_ch2.enable();
 	ctx.gui.controller.top_ch2.enable();

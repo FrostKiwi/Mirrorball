@@ -221,27 +221,13 @@ export function controller_input(time) {
 		let mul = (ctr.cam.fov.cur - ctx.cam.fov.min) /
 			(ctx.cam.fov.max - ctx.cam.fov.min) + 0.1;
 
-		/* Source Mix via D-Pad Left-Right */
-		if (gp.buttons[14] && gp.buttons[14].pressed) {
-			ctr.ch2.alpha -= 0.01;
-			if (ctr.ch2.alpha < 0)
-				ctr.ch2.alpha = 0;
-			ctx.gui.controller.alpha.updateDisplay();
-		}
-		if (gp.buttons[15] && gp.buttons[15].pressed) {
-			ctr.ch2.alpha += 0.01;
-			if (ctr.ch2.alpha > 1)
-				ctr.ch2.alpha = 1;
-			ctx.gui.controller.alpha.updateDisplay();
-		}
-
 		let yaw = 0.0;
 		if (ctx.gamepad.yaw_axis != null) {
 			yaw = gp.axes[ctx.gamepad.yaw_axis];
 		} else {
 			if (ctx.gamepad.yaw_btn_inc != null && ctx.gamepad.yaw_btn_dec != null) {
 				yaw += gp.buttons[ctx.gamepad.yaw_btn_inc].pressed ? 1.0 : 0.0;
-				yaw += gp.buttons[ctx.gamepad.yaw_btn_dec].pressed ? -1.0 : 0.0;
+				yaw -= gp.buttons[ctx.gamepad.yaw_btn_dec].pressed ? 1.0 : 0.0;
 			}
 		}
 		let pitch = 0.0;
@@ -249,8 +235,8 @@ export function controller_input(time) {
 			pitch = gp.axes[ctx.gamepad.pitch_axis];
 		} else {
 			if (ctx.gamepad.pitch_btn_inc != null && ctx.gamepad.pitch_btn_dec != null) {
-				pitch = gp.buttons[ctx.gamepad.pitch_btn_inc].pressed ? 1.0 : 0.0;
-				pitch = gp.buttons[ctx.gamepad.pitch_btn_dec].pressed ? -1.0 : 0.0;
+				pitch += gp.buttons[ctx.gamepad.pitch_btn_inc].pressed ? 1.0 : 0.0;
+				pitch -= gp.buttons[ctx.gamepad.pitch_btn_dec].pressed ? 1.0 : 0.0;
 			}
 		}
 		let zoom = 0.0;
@@ -258,8 +244,8 @@ export function controller_input(time) {
 			zoom = gp.axes[ctx.gamepad.zoom_axis];
 		} else {
 			if (ctx.gamepad.zoom_btn_inc != null && ctx.gamepad.zoom_btn_dec != null) {
-				zoom = gp.buttons[ctx.gamepad.zoom_btn_inc].pressed ? 1.0 : 0.0;
-				zoom = gp.buttons[ctx.gamepad.zoom_btn_dec].pressed ? -1.0 : 0.0;
+				zoom += gp.buttons[ctx.gamepad.zoom_btn_inc].pressed ? 1.0 : 0.0;
+				zoom -= gp.buttons[ctx.gamepad.zoom_btn_dec].pressed ? 1.0 : 0.0;
 			}
 		}
 		let mix = 0.0;
@@ -267,8 +253,8 @@ export function controller_input(time) {
 			mix = gp.axes[ctx.gamepad.mix_axis];
 		} else {
 			if (ctx.gamepad.mix_btn_inc != null && ctx.gamepad.mix_btn_dec != null) {
-				mix = gp.buttons[ctx.gamepad.mix_btn_inc].pressed ? 1.0 : 0.0;
-				mix = gp.buttons[ctx.gamepad.mix_btn_dec].pressed ? -1.0 : 0.0;
+				mix -= gp.buttons[ctx.gamepad.mix_btn_inc].pressed ? 1.0 : 0.0;
+				mix += gp.buttons[ctx.gamepad.mix_btn_dec].pressed ? 1.0 : 0.0;
 			}
 		}
 		/* Get exponential scaling gamepad curve via the axes' magnitude, so the
@@ -290,6 +276,17 @@ export function controller_input(time) {
 			ctr.cam.fov.cur +=
 				zoom * Math.pow(zoom, 4) * zoomSpeed * mul *
 				deltaTime;
+
+		if (ctx.multichannel) {
+			if (Math.abs(mix) > ctx.gui.deadzone) {
+				ctr.ch2.alpha += mix * 0.05;
+				if (ctr.ch2.alpha < 0)
+					ctr.ch2.alpha = 0;
+				if (ctr.ch2.alpha > 1)
+					ctr.ch2.alpha = 1;
+				ctx.gui.controller.alpha.updateDisplay();
+			}
+		}
 
 		update_degrees();
 	}
@@ -346,7 +343,7 @@ export function setup_input() {
 			ctx.gamepad.yaw_axis = null;
 			ctx.gamepad.yaw_btn_inc = null;
 			ctx.gamepad.yaw_btn_dec = null;
-			document.getElementById('camX_mapping').innerText = 'Unmapped';
+			document.getElementById('camX_mapping').innerText = 'Waiting for input';
 		}
 	);
 
@@ -357,7 +354,7 @@ export function setup_input() {
 			ctx.gamepad.pitch_axis = null;
 			ctx.gamepad.pitch_btn_inc = null;
 			ctx.gamepad.pitch_btn_dec = null;
-			document.getElementById('camY_mapping').innerText = 'Unmapped';
+			document.getElementById('camY_mapping').innerText = 'Waiting for input';
 		}
 	);
 
@@ -368,7 +365,7 @@ export function setup_input() {
 			ctx.gamepad.Zoom_axis = null;
 			ctx.gamepad.Zoom_btn_inc = null;
 			ctx.gamepad.Zoom_btn_dec = null;
-			document.getElementById('zoom_mapping').innerText = 'Unmapped';
+			document.getElementById('zoom_mapping').innerText = ' Waiting for input';
 		}
 	);
 
@@ -379,7 +376,7 @@ export function setup_input() {
 			ctx.gamepad.mix_axis = null;
 			ctx.gamepad.mix_btn_inc = null;
 			ctx.gamepad.mix_btn_dec = null;
-			document.getElementById('mix_mapping').innerText = 'Unmapped';
+			document.getElementById('mix_mapping').innerText = 'Waiting for input';
 		}
 	);
 
