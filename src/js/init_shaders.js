@@ -3,7 +3,6 @@ import { compile_and_link } from './gl_basics.js'
 /* Colorful dot distortion Shader */
 import border_vs from '/shd/border.vs?raw'
 import border_fs from '/shd/border.fs?raw'
-import border_AA_fs from '/shd/border_antialias.fs?raw'
 
 /* Original image Shader for setup and preview */
 import crop_vs from '/shd/crop.vs?raw'
@@ -32,7 +31,6 @@ export default function init_shaders(ctx, ctr, gl) {
 	/* Analytical Anti-Aliasing versions, if derivatives supported */
 	if (gl.getExtension('OES_standard_derivatives')) {
 		ctx.shaders.crop.handle_AA = compile_and_link(gl, crop_vs, crop_AA_fs);
-		ctx.shaders.border.handle_AA = compile_and_link(gl, border_vs, border_AA_fs);
 		ctx.shaders.project.handle_AA = compile_and_link(gl, project_vs, project_AA_fs);
 		ctx.shaders.latlong.handle_AA = compile_and_link(gl, latlong_vs, latlong_AA_fs);
 	} else {
@@ -91,13 +89,15 @@ export function updateShaderAttributes(ctx, ctr, gl) {
 	});
 
 	Object.assign(ctx.shaders.border, {
-		vtx: gl.getAttribLocation(ctx.shaders.border['handle' + aaSuffix], "vtx"),
-		scale: gl.getUniformLocation(ctx.shaders.border['handle' + aaSuffix], "scale"),
-		alpha: gl.getUniformLocation(ctx.shaders.border['handle' + aaSuffix], "alpha"),
+		vtx: gl.getAttribLocation(ctx.shaders.border.handle, "vtx"),
+		pxsize: gl.getUniformLocation(ctx.shaders.border.handle, "pxsize"),
+		pxsize_rcp: gl.getUniformLocation(ctx.shaders.border.handle, "pxsize_rcp"),
+		scale: gl.getUniformLocation(ctx.shaders.border.handle, "scale"),
+		alpha: gl.getUniformLocation(ctx.shaders.border.handle, "alpha"),
 		transform:
-			gl.getUniformLocation(ctx.shaders.border['handle' + aaSuffix], "transform"),
-		color: gl.getUniformLocation(ctx.shaders.border['handle' + aaSuffix], "color"),
-		split: gl.getUniformLocation(ctx.shaders.border['handle' + aaSuffix], "split"),
+			gl.getUniformLocation(ctx.shaders.border.handle, "transform"),
+		color: gl.getUniformLocation(ctx.shaders.border.handle, "color"),
+		split: gl.getUniformLocation(ctx.shaders.border.handle, "split"),
 		quadvbo: createBufferWithData(gl, unitquad_small)
 	});
 

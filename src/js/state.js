@@ -42,7 +42,6 @@ export let ctx = {
 		]),
 		border: {
 			handle: null,
-			handle_AA: null
 		},
 		crop: {
 			handle: null,

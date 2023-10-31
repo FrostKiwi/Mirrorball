@@ -1,7 +1,7 @@
 import { ctx, ctr } from './state.js';
 import * as glm from 'gl-matrix';
 
-const POINT_SIZE = 0.025;
+const POINT_SIZE = 0.022;
 const COLOR_TOPLEFT = glm.vec3.fromValues(1, 0, 1);
 const COLOR_TOPRIGHT = glm.vec3.fromValues(1, 1, 0);
 const COLOR_BOTLEFT = glm.vec3.fromValues(0, 1, 1);
@@ -80,10 +80,7 @@ export default function render_border(project_points, subdiv, width, height,
 	channel) {
 	const aspect = width / height;
 
-	if (ctr.tog.antialias)
-		ctx.gl.useProgram(ctx.shaders.border.handle_AA);
-	else
-		ctx.gl.useProgram(ctx.shaders.border.handle);
+	ctx.gl.useProgram(ctx.shaders.border.handle);
 
 	ctx.gl.bindBuffer(ctx.gl.ARRAY_BUFFER, ctx.shaders.border.quadvbo);
 	ctx.gl.enableVertexAttribArray(ctx.shaders.border.vtx);
@@ -106,6 +103,9 @@ export default function render_border(project_points, subdiv, width, height,
 		2 * Float32Array.BYTES_PER_ELEMENT, 0);
 	ctx.gl.uniform2f(ctx.shaders.border.scale,
 		POINT_SIZE / aspect, POINT_SIZE);
+	/* Calculate pixel size ( and reciprocal to remove a shader division ) */
+	ctx.gl.uniform1f(ctx.shaders.border.pxsize, (2.0 / ctx.canvas.height) / POINT_SIZE);
+	ctx.gl.uniform1f(ctx.shaders.border.pxsize_rcp, 1.0 / ((2.0 / ctx.canvas.height) / POINT_SIZE));
 
 	if (channel.alpha)
 		ctx.gl.uniform1f(ctx.shaders.border.alpha, channel.alpha);
@@ -147,6 +147,14 @@ export default function render_border(project_points, subdiv, width, height,
 		   instanced rendering extension compatability just now. WebGL 1.0
 		   without extensions should work. (Except NPOT textures) */
 
+		/* Diagonal, Bottom-left -> Top-right */
+		interp_border_pts(ray_botleft, ray_topright,
+			subdiv * aspect * Math.SQRT2, aspect_ratio,
+			COLOR_BOTLEFT, COLOR_TOPRIGHT, true, channel);
+		/* Diagonal, Top-left -> Bottom-right */
+		interp_border_pts(ray_topleft, ray_botright,
+			subdiv * aspect * Math.SQRT2, aspect_ratio,
+			COLOR_TOPLEFT, COLOR_BOTRIGHT, true, channel);
 		/* Top */
 		interp_border_pts(ray_topleft, ray_topright, subdiv * aspect,
 			aspect_ratio, COLOR_TOPLEFT, COLOR_TOPRIGHT, false, channel);
@@ -159,14 +167,6 @@ export default function render_border(project_points, subdiv, width, height,
 		/* Left */
 		interp_border_pts(ray_botleft, ray_topleft, subdiv, aspect_ratio,
 			COLOR_BOTLEFT, COLOR_TOPLEFT, false, channel);
-		/* Diagonal, Bottom-left -> Top-right */
-		interp_border_pts(ray_botleft, ray_topright,
-			subdiv * aspect * Math.SQRT2, aspect_ratio,
-			COLOR_BOTLEFT, COLOR_TOPRIGHT, true, channel);
-		/* Diagonal, Top-left -> Bottom-right */
-		interp_border_pts(ray_topleft, ray_botright,
-			subdiv * aspect * Math.SQRT2, aspect_ratio,
-			COLOR_TOPLEFT, COLOR_BOTRIGHT, true, channel);
 	} else {
 		/* Split-Screen rendering */
 		if (width < ctx.canvas.width)
@@ -181,6 +181,12 @@ export default function render_border(project_points, subdiv, width, height,
 		const botright = glm.vec2.fromValues(1, -1);
 		const botleft = glm.vec2.fromValues(-1, -1);
 
+		/* Diagonal, Bottom-left -> Top-right */
+		interp_border_pts_smp(botleft, topright, subdiv * aspect * Math.SQRT2,
+			COLOR_BOTLEFT, COLOR_TOPRIGHT, true);
+		/* Diagonal, Top-left -> Bottom-right */
+		interp_border_pts_smp(topleft, botright, subdiv * aspect * Math.SQRT2,
+			COLOR_TOPLEFT, COLOR_BOTRIGHT, true);
 		/* Top */
 		interp_border_pts_smp(topleft, topright, subdiv * aspect,
 			COLOR_TOPLEFT, COLOR_TOPRIGHT, false);
@@ -193,11 +199,5 @@ export default function render_border(project_points, subdiv, width, height,
 		/* Left */
 		interp_border_pts_smp(botleft, topleft, subdiv,
 			COLOR_BOTLEFT, COLOR_TOPLEFT, false);
-		/* Diagonal, Bottom-left -> Top-right */
-		interp_border_pts_smp(botleft, topright, subdiv * aspect * Math.SQRT2,
-			COLOR_BOTLEFT, COLOR_TOPRIGHT, true);
-		/* Diagonal, Top-left -> Bottom-right */
-		interp_border_pts_smp(topleft, botright, subdiv * aspect * Math.SQRT2,
-			COLOR_TOPLEFT, COLOR_BOTRIGHT, true);
 	}
 }
