@@ -122,7 +122,7 @@ export default function init_gui() {
 		).disable();
 	}
 
-	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 2, 256, 1).name(
+	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 2, 64, 1).name(
 		"Distortion-Viz subdivisions"
 	).onChange(redraw);
 	ctx.gui.folder.settings.add(ctx.gui, 'blur').name(
