@@ -1,4 +1,4 @@
-# Mathematical Magic Mirrorball
+# 🔮 Mathematical Magic Mirrorball 🪄
 | 🇬🇧 English | 🇯🇵 日本語 |
 | ------------- | ------------- |
 | [![Watch the video](https://img.youtube.com/vi/rJPKTCdk-WI/0.jpg)](https://www.youtube.com/watch?v=rJPKTCdk-WI)  | [![日本語版](https://img.youtube.com/vi/cmZcnhFycw8/0.jpg)](https://www.youtube.com/watch?v=cmZcnhFycw8)  |
@@ -9,7 +9,9 @@ The audience will be taken on a journey through the history and maths on the top
 Deceptively simple, it is an incredible intersection of Computer Science and Mathematics. This project has been made in conjuction with a paper, which you can read on arXiv: https://arxiv.org/abs/2308.10991
 
 ## Features:
-https://github.com/FrostKiwi/Mirrorball/assets/60887273/a3a23182-7316-4ccd-8815-1c75ede86622
+| Discover the Mirror Ball Projection with colorful visualizations | Export to Equirectangular / Lat-Long and play around with rotations |
+| ------------- | ------------- |
+| <video src="https://github.com/FrostKiwi/Mirrorball/assets/60887273/a3a23182-7316-4ccd-8815-1c75ede86622"> | <video src="https://github.com/FrostKiwi/Mirrorball/assets/60887273/321b781b-a91e-42f6-941b-c6c7ee3ad6a4"> |
 
 View the projection of a Mirrorball with different colorful visualizations to understand how the math works. You can project a:
  * photo
