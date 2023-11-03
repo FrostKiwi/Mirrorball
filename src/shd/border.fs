@@ -17,7 +17,7 @@ void main()
 	float smoothedAlpha_black = dist * pxsize_rcp;
 	/* Need to clamp, but only one direciton, so using max. Logically it should
 	   be min, but the SDF works the other way around. */
-	float smoothedAlpha_color = max((dist + 0.2) * pxsize_rcp, 0.0);
+	float smoothedAlpha_color = max((dist + pxsize) * pxsize_rcp, 0.0);
 
 	/* Add a slight gradient */
 	vec3 gradient = color * ((vtx_fs.y + 1.5) * 0.5);
