@@ -37,6 +37,10 @@ export default function render_crop(width, height, channel) {
 	const scalar_rcp = Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4.0);
 	ctx.gl.uniform1f(ctx.shaders.crop.scalar_rcp, scalar_rcp);
 
+	/* Calculate pixel size ( and reciprocal to remove a shader division ) */
+	ctx.gl.uniform1f(ctx.shaders.crop.pxsize, 2.0 / ctx.canvas.height);
+	ctx.gl.uniform1f(ctx.shaders.crop.pxsize_rcp, 1.0 / (2.0 / ctx.canvas.height));
+
 	ctx.gl.uniform1f(ctx.shaders.crop.area_f,
 		Math.sin(glm.glMatrix.toRadian(ctr.tog.area_f) / 4.0));
 	ctx.gl.uniform1f(ctx.shaders.crop.area_b,

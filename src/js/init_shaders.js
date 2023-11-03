@@ -78,6 +78,8 @@ export function updateShaderAttributes(ctx, ctr, gl) {
 		aspect_w: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "aspect_w"),
 		aspect_h: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "aspect_h"),
 		crop: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "crop"),
+		pxsize: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "pxsize"),
+		pxsize_rcp: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "pxsize_rcp"),
 		split: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "split"),
 		mask_toggle:
 			gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "mask_toggle"),
