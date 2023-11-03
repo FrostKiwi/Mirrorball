@@ -7,8 +7,10 @@ export default function init_gui() {
 	ctx.gui.handle = new GUI().hide();
 	ctx.gui.handle.title("Controls (Show / Hide)");
 	ctx.gui.handle.add(ctx.gui, 'menu').name("Open Main Menu");
-	ctx.gui.handle.add(ctr.tog, 'crop').name("Original").onChange(redraw);
-	ctx.gui.handle.add(ctr.tog, 'project').name("Projection").onChange(redraw);
+	ctx.gui.controller.crop =
+		ctx.gui.handle.add(ctr.tog, 'crop').name("Original").onChange(redraw);
+	ctx.gui.controller.proj =
+		ctx.gui.handle.add(ctr.tog, 'project').name("Projection").onChange(redraw);
 	ctx.gui.controller.alpha =
 		ctx.gui.handle.add(ctr.ch2, 'alpha', 0, 1, 0.1).name(
 			"Multi-Source Mix"
@@ -241,6 +243,11 @@ function toggleLatlong(value) {
 		ctx.gui.controller.mask.disable();
 		ctx.gui.controller.viz.disable();
 		ctx.gui.controller.area.disable();
+		ctx.gui.controller.cam_fov.disable();
+		ctx.gui.controller.cam_yaw.disable();
+		ctx.gui.controller.cam_pitch.disable();
+		ctx.gui.controller.crop.disable();
+		ctx.gui.controller.proj.disable();
 		if (ctr.tog.area) {
 			ctx.gui.controller.area_f.disable();
 			ctx.gui.controller.area_b.disable();
@@ -250,6 +257,11 @@ function toggleLatlong(value) {
 		ctx.gui.controller.mask.enable();
 		ctx.gui.controller.viz.enable();
 		ctx.gui.controller.area.enable();
+		ctx.gui.controller.cam_fov.enable();
+		ctx.gui.controller.cam_yaw.enable();
+		ctx.gui.controller.cam_pitch.enable();
+		ctx.gui.controller.crop.enable();
+		ctx.gui.controller.proj.enable();
 		if (ctr.tog.area) {
 			ctx.gui.controller.area_f.enable();
 			ctx.gui.controller.area_b.enable();
