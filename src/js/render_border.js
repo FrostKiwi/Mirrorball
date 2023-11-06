@@ -101,12 +101,20 @@ export default function render_border(project_points, subdiv, width, height,
 
 	ctx.gl.vertexAttribPointer(ctx.shaders.border.vtx, 2, ctx.gl.FLOAT, false,
 		2 * Float32Array.BYTES_PER_ELEMENT, 0);
-	ctx.gl.uniform2f(ctx.shaders.border.scale,
-		POINT_SIZE / aspect, POINT_SIZE);
-	/* Calculate pixel size ( and reciprocal to remove a shader division ) */
-	ctx.gl.uniform1f(ctx.shaders.border.pxsize, (2.0 / ctx.canvas.height) / POINT_SIZE);
-	ctx.gl.uniform1f(ctx.shaders.border.pxsize_rcp, 1.0 / ((2.0 / ctx.canvas.height) / POINT_SIZE));
 
+	/* Calculate pixel size ( and reciprocal to remove a shader division ) */
+	if (height < ctx.canvas.height) {
+		ctx.gl.uniform2f(ctx.shaders.border.scale,
+			POINT_SIZE * 2 / aspect, POINT_SIZE * 2);
+		subdiv /= 2;
+		ctx.gl.uniform1f(ctx.shaders.border.pxsize, (2.0 / ctx.canvas.height) / POINT_SIZE);
+		ctx.gl.uniform1f(ctx.shaders.border.pxsize_rcp, 1.0 / ((2.0 / ctx.canvas.height) / POINT_SIZE));
+	} else {
+		ctx.gl.uniform2f(ctx.shaders.border.scale,
+			POINT_SIZE / aspect, POINT_SIZE);
+		ctx.gl.uniform1f(ctx.shaders.border.pxsize, (2.0 / ctx.canvas.height) / POINT_SIZE);
+		ctx.gl.uniform1f(ctx.shaders.border.pxsize_rcp, 1.0 / ((2.0 / ctx.canvas.height) / POINT_SIZE));
+	}
 	if (channel.alpha)
 		ctx.gl.uniform1f(ctx.shaders.border.alpha, channel.alpha);
 	else
