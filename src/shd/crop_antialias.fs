@@ -14,8 +14,10 @@ uniform float pxsize_rcp;
 
 void main()
 {
+	/* Screen Space derivative free AA. Technically it ignores the crop's aspect
+	   ratio, but its such an edge case (heh) */
     float circleLength = length(circle);
-    float blind_spot = circleLength - (1.0 - pxsize);
+    float blind_spot = circleLength - (1.0 - (pxsize * 0.5));
     
     float smoothedAlpha = clamp(0.5 - blind_spot * pxsize_rcp, 0.0, 1.0);
 

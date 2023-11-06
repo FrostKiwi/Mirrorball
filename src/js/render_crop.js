@@ -37,24 +37,33 @@ export default function render_crop(width, height, channel) {
 	const scalar_rcp = Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4.0);
 	ctx.gl.uniform1f(ctx.shaders.crop.scalar_rcp, scalar_rcp);
 
-	/* Calculate pixel size ( and reciprocal to remove a shader division ) */
-	ctx.gl.uniform1f(ctx.shaders.crop.pxsize, 2.0 / ctx.canvas.height);
-	ctx.gl.uniform1f(ctx.shaders.crop.pxsize_rcp, 1.0 / (2.0 / ctx.canvas.height));
-
 	ctx.gl.uniform1f(ctx.shaders.crop.area_f,
 		Math.sin(glm.glMatrix.toRadian(ctr.tog.area_f) / 4.0));
 	ctx.gl.uniform1f(ctx.shaders.crop.area_b,
 		Math.sin(glm.glMatrix.toRadian(360 - ctr.tog.area_b) / 4.0));
 
+	let aspect_h;
 	if (postcrop_h / postcrop_w > height / width) {
 		ctx.gl.uniform1f(ctx.shaders.crop.aspect_h, 1.0);
+		aspect_h = 1;
 		ctx.gl.uniform1f(
 			ctx.shaders.crop.aspect_w,
 			(postcrop_w / postcrop_h) / (width / height));
 	} else {
+		aspect_h = (postcrop_h / postcrop_w) / (height / width);
 		ctx.gl.uniform1f(ctx.shaders.crop.aspect_h,
-			(postcrop_h / postcrop_w) / (height / width));
+			aspect_h);
 		ctx.gl.uniform1f(ctx.shaders.crop.aspect_w, 1.0);
+	}
+
+	/* Calculate pixel size ( and reciprocal to remove a shader division ) */
+	console.log(aspect_h);
+	if (height < ctx.canvas.height) {
+		ctx.gl.uniform1f(ctx.shaders.crop.pxsize, (4.0 / aspect_h) / ctx.canvas.height);
+		ctx.gl.uniform1f(ctx.shaders.crop.pxsize_rcp, 1.0 / ((4.0 / aspect_h) / ctx.canvas.height));
+	} else {
+		ctx.gl.uniform1f(ctx.shaders.crop.pxsize, (2.0 / aspect_h) / ctx.canvas.height);
+		ctx.gl.uniform1f(ctx.shaders.crop.pxsize_rcp, 1.0 / ((2.0 / aspect_h) / ctx.canvas.height));
 	}
 
 	if (channel.alpha)
