@@ -14,7 +14,7 @@ void main()
 	float dist = length(vtx_fs) - (1.0 - pxsize);
 
 	/* Using reciprocal to avoid division */
-	float smoothedAlpha_black = dist * pxsize_rcp;
+	float smoothedAlpha_black = max(dist * pxsize_rcp, 0.0);
 	/* Need to clamp, but only one direciton, so using max. Logically it should
 	   be min, but the SDF works the other way around. */
 	float smoothedAlpha_color = max((dist + pxsize) * pxsize_rcp, 0.0);

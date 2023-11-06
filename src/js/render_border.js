@@ -111,7 +111,7 @@ export default function render_border(project_points, subdiv, width, height,
 		ctx.gl.uniform2f(ctx.shaders.border.scale,
 			POINT_SIZE / aspect, POINT_SIZE);
 	}
-	
+
 	ctx.gl.uniform1f(ctx.shaders.border.pxsize, (2.0 / ctx.canvas.height) / POINT_SIZE);
 	ctx.gl.uniform1f(ctx.shaders.border.pxsize_rcp, 1.0 / ((2.0 / ctx.canvas.height) / POINT_SIZE));
 
@@ -189,23 +189,26 @@ export default function render_border(project_points, subdiv, width, height,
 		const botright = glm.vec2.fromValues(1, -1);
 		const botleft = glm.vec2.fromValues(-1, -1);
 
-		/* Diagonal, Bottom-left -> Top-right */
-		interp_border_pts_smp(botleft, topright, subdiv * aspect * Math.SQRT2,
-			COLOR_BOTLEFT, COLOR_TOPRIGHT, true);
-		/* Diagonal, Top-left -> Bottom-right */
-		interp_border_pts_smp(topleft, botright, subdiv * aspect * Math.SQRT2,
-			COLOR_TOPLEFT, COLOR_BOTRIGHT, true);
-		/* Top */
-		interp_border_pts_smp(topleft, topright, subdiv * aspect,
-			COLOR_TOPLEFT, COLOR_TOPRIGHT, false);
-		/* Right */
-		interp_border_pts_smp(topright, botright, subdiv,
-			COLOR_TOPRIGHT, COLOR_BOTRIGHT, false);
-		/* Bottom */
-		interp_border_pts_smp(botright, botleft, subdiv * aspect,
-			COLOR_BOTRIGHT, COLOR_BOTLEFT, false);
-		/* Left */
-		interp_border_pts_smp(botleft, topleft, subdiv,
-			COLOR_BOTLEFT, COLOR_TOPLEFT, false);
+		ctx.gl.uniform1f(ctx.shaders.border.alpha, 1);
+		if (!ctr.ch2.alpha || ctr.ch2.alpha && channel.alpha) {
+			/* Diagonal, Bottom-left -> Top-right */
+			interp_border_pts_smp(botleft, topright, subdiv * aspect * Math.SQRT2,
+				COLOR_BOTLEFT, COLOR_TOPRIGHT, true);
+			/* Diagonal, Top-left -> Bottom-right */
+			interp_border_pts_smp(topleft, botright, subdiv * aspect * Math.SQRT2,
+				COLOR_TOPLEFT, COLOR_BOTRIGHT, true);
+			/* Top */
+			interp_border_pts_smp(topleft, topright, subdiv * aspect,
+				COLOR_TOPLEFT, COLOR_TOPRIGHT, false);
+			/* Right */
+			interp_border_pts_smp(topright, botright, subdiv,
+				COLOR_TOPRIGHT, COLOR_BOTRIGHT, false);
+			/* Bottom */
+			interp_border_pts_smp(botright, botleft, subdiv * aspect,
+				COLOR_BOTRIGHT, COLOR_BOTLEFT, false);
+			/* Left */
+			interp_border_pts_smp(botleft, topleft, subdiv,
+				COLOR_BOTLEFT, COLOR_TOPLEFT, false);
+		}
 	}
 }

@@ -54,7 +54,6 @@ export default function render_crop(width, height, channel) {
 	}
 
 	/* Calculate pixel size ( and reciprocal to remove a shader division ) */
-	console.log(aspect_h);
 	if (height < ctx.canvas.height) {
 		ctx.gl.uniform1f(ctx.shaders.crop.pxsize, (4.0 / aspect_h) / ctx.canvas.height);
 		ctx.gl.uniform1f(ctx.shaders.crop.pxsize_rcp, 1.0 / ((4.0 / aspect_h) / ctx.canvas.height));
