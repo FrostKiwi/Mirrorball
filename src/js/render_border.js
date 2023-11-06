@@ -163,6 +163,9 @@ export default function render_border(project_points, subdiv, width, height,
 		interp_border_pts(ray_topleft, ray_botright,
 			subdiv * aspect * Math.SQRT2, aspect_ratio,
 			COLOR_TOPLEFT, COLOR_BOTRIGHT, true, channel);
+		/* Left */
+		interp_border_pts(ray_botleft, ray_topleft, subdiv, aspect_ratio,
+			COLOR_BOTLEFT, COLOR_TOPLEFT, false, channel);
 		/* Top */
 		interp_border_pts(ray_topleft, ray_topright, subdiv * aspect,
 			aspect_ratio, COLOR_TOPLEFT, COLOR_TOPRIGHT, false, channel);
@@ -172,9 +175,6 @@ export default function render_border(project_points, subdiv, width, height,
 		/* Bottom */
 		interp_border_pts(ray_botright, ray_botleft, subdiv * aspect,
 			aspect_ratio, COLOR_BOTRIGHT, COLOR_BOTLEFT, false, channel);
-		/* Left */
-		interp_border_pts(ray_botleft, ray_topleft, subdiv, aspect_ratio,
-			COLOR_BOTLEFT, COLOR_TOPLEFT, false, channel);
 	} else {
 		/* Split-Screen rendering */
 		if (width < ctx.canvas.width)
