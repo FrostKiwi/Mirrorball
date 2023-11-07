@@ -4,17 +4,17 @@ const media_user = [
 		title: "Railing at a University<br>in Ростов-на-Дону 🇷🇺",
 		path: "/media_user/university.jpg",
 		thumb: "/media_user/thumb/university.jpg",
-		fileSize: "2.2 MB",
-		width: "4080",
-		height: "2296",
+		fileSize: "1.0 MB",
+		width: "2048",
+		height: "2048",
 		submitter: "Сергей via E-Mail",
 		submitter_link: "",
-		sphere_fov: 320,
+		sphere_fov: 310,
 		crop: {
-			top: 182,
-			bot: 308,
-			left: 822,
-			right: 1451
+			top: 92,
+			bot: 157,
+			left: 121,
+			right: 126
 		},
 		world_rotation: {
 			Yaw: -4,
@@ -107,6 +107,34 @@ const media_user = [
 		},
 		camera_initial: {
 			Yaw: 40,
+			Pitch: 0
+		}
+	},
+	{
+		type: "image",
+		title: "Halloween Decoration<br>in Baltimore 🇺🇸",
+		path: "/media_user/halloween.jpg",
+		thumb: "/media_user/thumb/halloween.jpg",
+		fileSize: "1.17 MB",
+		width: "2048",
+		height: "2048",
+		submitter: "Chesapeake on moth.monster",
+		submitter_link: "https://moth.monster/about/",
+		source: "https://github.com/FrostKiwi/Mirrorball/pull/17",
+		sphere_fov: 270,
+		crop: {
+			top: 184,
+			bot: 167,
+			left: 214,
+			right: 130
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 6,
+			Roll: 0
+		},
+		camera_initial: {
+			Yaw: -65,
 			Pitch: 0
 		}
 	},
