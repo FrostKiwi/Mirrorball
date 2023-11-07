@@ -3,8 +3,9 @@
     "vite": "^4.3.9"
   },
   "dependencies": {
+    "country-flag-emoji-polyfill": "^0.1.4",
     "gl-matrix": "^3.4.3",
-    "lil-gui": "^0.19.0",
+    "lil-gui": "^0.19.1",
     "stats.js": "^0.17.0"
   }
 }

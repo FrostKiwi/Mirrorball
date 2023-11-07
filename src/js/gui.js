@@ -113,17 +113,6 @@ export default function init_gui() {
 			.name("Setup Gamepad")
 			.disable();
 
-	if (ctx.gl.getExtension('OES_standard_derivatives')) {
-		ctx.gui.folder.settings.add(ctr.tog, 'antialias').name(
-			"Analytical Anti-Aliasing"
-		).onChange(toggleAA);
-	} else {
-		ctr.tog.antialias = false;
-		ctx.gui.folder.settings.add(ctr.tog, 'antialias').name(
-			"Anti-Aliasing Unsupported"
-		).disable();
-	}
-
 	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 2, 64, 1).name(
 		"Distortion-Viz subdivisions"
 	).onChange(redraw);
@@ -267,12 +256,6 @@ function toggleLatlong(value) {
 			ctx.gui.controller.area_b.enable();
 		}
 	}
-	if (!ctx.loading)
-		redraw();
-}
-
-function toggleAA() {
-	updateShaderAttributes(ctx, ctr, ctx.gl);
 	if (!ctx.loading)
 		redraw();
 }

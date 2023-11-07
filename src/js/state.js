@@ -45,7 +45,6 @@ export let ctx = {
 		},
 		crop: {
 			handle: null,
-			handle_AA: null,
 			mask: false
 		},
 		project: {

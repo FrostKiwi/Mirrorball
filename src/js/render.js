@@ -64,6 +64,7 @@ export default function render() {
 			if (ctr.ch2.alpha)
 				render_latlong(ctr.ch2);
 		}
+		ctx.gl.finish();
 		screenshot();
 		resizeCanvasToDisplaySize();
 		ctx.redraw = true;

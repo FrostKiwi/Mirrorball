@@ -58,5 +58,4 @@ export default function render_latlong(channel) {
 		ctx.gl.uniform1f(ctx.shaders.latlong.alpha, 1);
 
 	ctx.gl.drawArrays(ctx.gl.TRIANGLE_FAN, 0, 4);
-	ctx.gl.finish();
 }

@@ -8,6 +8,7 @@ import init_shaders from './init_shaders.js'
 import render from './render.js'
 import { setupTabs } from './tabs.js';
 import { key_input, setup_input, controller_input } from './input.js'
+import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
 
 ctx.canvas = document.querySelector("canvas");
 /* Since we draw over the whole screen, no need to flush */
@@ -30,6 +31,7 @@ function main() {
 }
 
 function init() {
+	polyfillCountryFlagEmojis();
 	ctx.canvasToDisplaySizeMap = new Map([[ctx.canvas, [300, 150]]]);
 	const resizeObserver = new ResizeObserver(onResize);
 	resizeObserver.observe(ctx.canvas, { box: 'content-box' });

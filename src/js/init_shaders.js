@@ -7,7 +7,6 @@ import border_fs from '/shd/border.fs?raw'
 /* Original image Shader for setup and preview */
 import crop_vs from '/shd/crop.vs?raw'
 import crop_fs from '/shd/crop.fs?raw'
-import crop_AA_fs from '/shd/crop_antialias.fs?raw'
 
 /* Main projection Shader */
 import project_vs from '/shd/project.vs?raw'
@@ -30,17 +29,16 @@ function createBufferWithData(gl, data) {
 export default function init_shaders(ctx, ctr, gl) {
 	/* Analytical Anti-Aliasing versions, if derivatives supported */
 	if (gl.getExtension('OES_standard_derivatives')) {
-		ctx.shaders.crop.handle_AA = compile_and_link(gl, crop_vs, crop_AA_fs);
 		ctx.shaders.project.handle_AA = compile_and_link(gl, project_vs, project_AA_fs);
 		ctx.shaders.latlong.handle_AA = compile_and_link(gl, latlong_vs, latlong_AA_fs);
 	} else {
 		ctr.tog.antialias = false;
+		ctx.shaders.project.handle = compile_and_link(gl, project_vs, project_fs);
+		ctx.shaders.latlong.handle = compile_and_link(gl, latlong_vs, latlong_fs);
 	}
 
 	ctx.shaders.crop.handle = compile_and_link(gl, crop_vs, crop_fs);
 	ctx.shaders.border.handle = compile_and_link(gl, border_vs, border_fs);
-	ctx.shaders.project.handle = compile_and_link(gl, project_vs, project_fs);
-	ctx.shaders.latlong.handle = compile_and_link(gl, latlong_vs, latlong_fs);
 
 	updateShaderAttributes(ctx, ctr, gl);
 }
@@ -71,20 +69,22 @@ export function updateShaderAttributes(ctx, ctr, gl) {
 	   all attributes. */
 	const aaSuffix = ctr.tog.antialias ? '_AA' : '';
 	Object.assign(ctx.shaders.crop, {
-		vtx: gl.getAttribLocation(ctx.shaders.crop['handle' + aaSuffix], "vtx"),
-		coord: gl.getAttribLocation(ctx.shaders.crop['handle' + aaSuffix], "coord"),
-		alpha: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "alpha"),
-		scalar_rcp: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "scalar_rcp"),
-		aspect_w: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "aspect_w"),
-		aspect_h: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "aspect_h"),
-		crop: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "crop"),
-		split: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "split"),
+		vtx: gl.getAttribLocation(ctx.shaders.crop.handle, "vtx"),
+		coord: gl.getAttribLocation(ctx.shaders.crop.handle, "coord"),
+		alpha: gl.getUniformLocation(ctx.shaders.crop.handle, "alpha"),
+		scalar_rcp: gl.getUniformLocation(ctx.shaders.crop.handle, "scalar_rcp"),
+		aspect_w: gl.getUniformLocation(ctx.shaders.crop.handle, "aspect_w"),
+		aspect_h: gl.getUniformLocation(ctx.shaders.crop.handle, "aspect_h"),
+		crop: gl.getUniformLocation(ctx.shaders.crop.handle, "crop"),
+		pxsize: gl.getUniformLocation(ctx.shaders.crop.handle, "pxsize"),
+		pxsize_rcp: gl.getUniformLocation(ctx.shaders.crop.handle, "pxsize_rcp"),
+		split: gl.getUniformLocation(ctx.shaders.crop.handle, "split"),
 		mask_toggle:
-			gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "mask_toggle"),
+			gl.getUniformLocation(ctx.shaders.crop.handle, "mask_toggle"),
 		area_toggle:
-			gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "area_toggle"),
-		area_f: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "area_f"),
-		area_b: gl.getUniformLocation(ctx.shaders.crop['handle' + aaSuffix], "area_b"),
+			gl.getUniformLocation(ctx.shaders.crop.handle, "area_toggle"),
+		area_f: gl.getUniformLocation(ctx.shaders.crop.handle, "area_f"),
+		area_b: gl.getUniformLocation(ctx.shaders.crop.handle, "area_b"),
 		bgvbo: createBufferWithData(gl, unitquadtex)
 	});
 
