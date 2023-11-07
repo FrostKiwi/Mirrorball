@@ -1,7 +1,34 @@
 const media_user = [
 	{
 		type: "image",
-		title: "IAH airport in Houston",
+		title: "Railing at a University<br>in Ростов-на-Дону 🇷🇺",
+		path: "/media_user/university.jpg",
+		thumb: "/media_user/thumb/university.jpg",
+		fileSize: "2.2 MB",
+		width: "4080",
+		height: "2296",
+		submitter: "Сергей via E-Mail",
+		submitter_link: "",
+		sphere_fov: 320,
+		crop: {
+			top: 182,
+			bot: 308,
+			left: 822,
+			right: 1451
+		},
+		world_rotation: {
+			Yaw: -4,
+			Pitch: 25,
+			Roll: 4
+		},
+		camera_initial: {
+			Yaw: -80,
+			Pitch: 10
+		}
+	},
+	{
+		type: "image",
+		title: "IAH airport in Houston 🇺🇸",
 		path: "/media_user/airport.jpg",
 		thumb: "/media_user/thumb/airport.jpg",
 		fileSize: "2.7 MB",
@@ -29,7 +56,7 @@ const media_user = [
 	},
 	{
 		type: "image",
-		title: "Winter 2005",
+		title: "Winter 2005 in Virginia 🇺🇸",
 		path: "/media_user/winter.jpg",
 		thumb: "/media_user/thumb/winter.jpg",
 		fileSize: "1.5 MB",
@@ -57,7 +84,7 @@ const media_user = [
 	},
 	{
 		type: "image",
-		title: "House Tour 2005",
+		title: "House Tour 2005 in Virginia 🇺🇸",
 		path: "/media_user/house.jpg",
 		thumb: "/media_user/thumb/house.jpg",
 		fileSize: "1.73 MB",
@@ -85,7 +112,7 @@ const media_user = [
 	},
 	{
 		type: "image",
-		title: "Arnolfini portrait",
+		title: "Arnolfini portrait 🇧🇪",
 		path: "/media_user/panini.jpg",
 		thumb: "/media_user/thumb/panini.jpg",
 		fileSize: "0.4 MB",
@@ -113,7 +140,7 @@ const media_user = [
 	},
 	{
 		type: "image",
-		title: "La Géode Theater in France",
+		title: "La Géode Theater 🇫🇷",
 		path: "/media_user/france.jpg",
 		thumb: "/media_user/thumb/france.jpg",
 		fileSize: "2.42 MB",
@@ -140,13 +167,13 @@ const media_user = [
 	},
 	{
 		type: "image",
-		title: "Glass Ball (180°, Not Mirror)",
+		title: "Glass Ball (180°, Not Mirror) 🇷🇺",
 		path: "/media_user/glassball.jpg",
 		thumb: "/media_user/thumb/glassball.jpg",
 		fileSize: "0.1 MB",
 		width: "804",
 		height: "824",
-		submitter: "Иван via E-Mail",
+		submitter: "Anonymous via E-Mail",
 		submitter_link: "",
 		sphere_fov: 180,
 		crop: {
@@ -167,7 +194,7 @@ const media_user = [
 	},	
 	{
 		type: "image",
-		title: "Example submission in 大和小泉",
+		title: "Example in 大和小泉 🇯🇵",
 		path: "/media_user/YamatoNoNezumi.jpg",
 		thumb: "/media_user/thumb/YamatoNoNezumi.jpg",
 		fileSize: "3.84 MB",
