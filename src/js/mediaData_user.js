@@ -68,18 +68,18 @@ const media_user = [
 		source: "https://github.com/FrostKiwi/Mirrorball/pull/14",
 		sphere_fov: 340,
 		crop: {
-			top: 9,
-			bot: 0,
+			top: 5,
+			bot: -25,
 			left: 1,
 			right: 0
 		},
 		world_rotation: {
 			Yaw: 0,
-			Pitch: 4,
+			Pitch: 2,
 			Roll: 0
 		},
 		camera_initial: {
-			Yaw: 40,
+			Yaw: -90,
 			Pitch: 0
 		}
 	},
