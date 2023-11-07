@@ -30,8 +30,10 @@ The photos in the "User submissions" tab were provided by:
  * [@zjquid on GitHub](https://github.com/zjquid)
  * [Nature's Joints on Discord](https://discordapp.com/users/1142199521930137713)
  * [u/wwxxcc on Reddit](https://www.reddit.com/user/wwxxcc)
- * [u/MagicList on Reddit](https://www.reddit.com/user/MagicList/) / [@CigamPower on Github](https://github.com/CigamPower/)
- * Иван via E-Mail
+ * [u/MagicList on Reddit](https://www.reddit.com/user/MagicList/) / [@CigamPower on GitHub](https://github.com/CigamPower/)
+ * Anonymous via E-Mail
+ * Сергей via E-Mail
+ * [Chesapeake](https://moth.monster/about/) / [@mothdotmonster on GitHub](https://github.com/mothdotmonster)
 
 ## Build instructions
 If you want to run the code locally:
