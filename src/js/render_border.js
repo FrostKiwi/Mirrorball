@@ -1,7 +1,6 @@
 import { ctx, ctr } from './state.js';
 import * as glm from 'gl-matrix';
 
-const POINT_SIZE = 0.022;
 const COLOR_TOPLEFT = glm.vec3.fromValues(1, 0, 1);
 const COLOR_TOPRIGHT = glm.vec3.fromValues(1, 1, 0);
 const COLOR_BOTLEFT = glm.vec3.fromValues(0, 1, 1);
@@ -102,6 +101,8 @@ export default function render_border(project_points, subdiv, width, height,
 	ctx.gl.vertexAttribPointer(ctx.shaders.border.vtx, 2, ctx.gl.FLOAT, false,
 		2 * Float32Array.BYTES_PER_ELEMENT, 0);
 
+
+	let POINT_SIZE = ctr.tog.viz_size;
 	/* Calculate pixel size ( and reciprocal to remove a shader division ) */
 	if (height < ctx.canvas.height) {
 		ctx.gl.uniform2f(ctx.shaders.border.scale,

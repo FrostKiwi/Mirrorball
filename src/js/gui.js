@@ -116,6 +116,9 @@ export default function init_gui() {
 	ctx.gui.folder.settings.add(ctr.tog, 'viz_subdiv', 2, 64, 1).name(
 		"Distortion-Viz subdivisions"
 	).onChange(redraw);
+	ctx.gui.folder.settings.add(ctr.tog, 'viz_size', 0.005, 0.25, 0.001).name(
+		"Distortion-Viz size"
+	).onChange(redraw);
 	ctx.gui.folder.settings.add(ctx.gui, 'blur').name(
 		"Menu blur"
 	).onChange(toggleBlur);

@@ -119,6 +119,7 @@ export let ctr = {
 		area_b: 90,
 		viz: false,
 		viz_subdiv: 16,
+		viz_size: 0.022,
 		mask: false,
 		latlong: false,
 		antialias: true
@@ -167,6 +168,7 @@ let prev = {
 		project: true,
 		viz: false,
 		viz_subdiv: 16,
+		viz_size: 0.022,
 		mask: false,
 		latlong: false,
 		antialias: true
@@ -269,6 +271,10 @@ export function redraw() {
 	else if (prev.tog.viz_subdiv !== ctr.tog.viz_subdiv) {
 		ctx.redraw = true;
 		prev.tog.viz_subdiv = ctr.tog.viz_subdiv;
+	}
+	else if (prev.tog.viz_size !== ctr.tog.viz_size) {
+		ctx.redraw = true;
+		prev.tog.viz_size = ctr.tog.viz_size;
 	}
 	else if (prev.tog.latlong !== ctr.tog.latlong) {
 		ctx.redraw = true;
