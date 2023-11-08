@@ -28,11 +28,17 @@ void main()
 		smoothedAlpha = 1.0;
 	else
 		smoothedAlpha = clamp(0.5 - blind_spot / (fwidth(blind_spot)), 0.0, 1.0);
-		
-	float factorBlack = alpha - smoothedAlpha;
+
 
 	uv *= vec2(crop.z, crop.w);
 	uv.x = crop.x + uv.x;
 	uv.y = crop.y - uv.y;
-	gl_FragColor = vec4(texture2D(sample_projection, uv).rgb, 1.0 - factorBlack);
+
+	vec3 blackColor = vec3(0.0);
+	float factorBlack = 1.0 - smoothedAlpha;
+	vec3 baseColor = texture2D(sample_projection, uv).rgb;
+	vec3 finalColor = baseColor * (1.0 - factorBlack) +
+                      blackColor * factorBlack;
+
+	gl_FragColor = vec4(finalColor, alpha);
 }
