@@ -1,6 +1,6 @@
 import { ctx, toggleMenu, toggleMessage, redraw, disableMapping } from './state.js';
 import { list_devices, upload_video } from './media_video.js'
-import { media_populate, media_populate_user, upload_image } from './media.js';
+import { media_populate, media_populate_user, upload_images } from './media.js';
 
 // As per https://www.w3schools.com/howto/howto_js_tabs.asp
 export function openTab(evt, tabname) {
@@ -57,7 +57,7 @@ export function setupTabs() {
 		}
 	);
 	document.getElementById('upload-image').onclick = function () {
-		upload_image();
+		upload_images();
 	};
 	document.getElementById('upload-video').onclick = function () {
 		upload_video();

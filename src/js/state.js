@@ -14,6 +14,7 @@ export let ctx = {
 	stats_events: new Stats(),
 	redraw: false,
 	continous: false,
+	filename: null,
 	animate: null,
 	video: null,
 	controller: false,

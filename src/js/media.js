@@ -3,6 +3,7 @@ import media from './mediaData.js'
 import media_user from './mediaData_user.js'
 import { disable_video, load_video } from './media_video.js'
 import { recalc_croplimits, channel2_disable, channel2_enable } from './gui.js';
+import render from './render.js';
 
 export function media_populate() {
 	let mediaDiv = document.getElementById('media');
@@ -139,6 +140,67 @@ export function upload_image() {
 	}
 	file_selector.click();
 };
+
+function processImage(file) {
+	URL.createObjectURL(file);
+	load_from_url(user_media);
+	/* ctx.export = true;
+	render(); */
+}
+
+export function upload_images() {
+	if (ctx.loading) return;
+	const file_selector = document.createElement('input');
+	file_selector.type = 'file';
+	file_selector.accept = 'image/*';
+	file_selector.multiple = true;
+	file_selector.onchange = async function (event) {
+		const files = event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			user_media.path = URL.createObjectURL(files[i]);
+			user_media.type = "image";
+			user_media.ch2 = false;
+			user_media.sphere_fov = 342;
+			user_media.crop = {
+				top: 19 * 2,
+				bot: 14 * 2,
+				left: 7 * 2,
+				right: 13 * 2
+			};
+			user_media.world_rotation = {
+				Yaw: 0,
+				Pitch: 2,
+				Roll: 0
+			};
+			user_media.width = 4096;
+			user_media.height = 4096;
+			ctx.filename = files[i].name;
+			console.log(user_media.name);
+
+			await load_from_url(user_media);
+			ctx.export = true;
+			render();
+		}
+	};
+	file_selector.click();
+};
+/* export function upload_images() {
+	if (ctx.loading) return;
+
+	const fileSelector = document.createElement('input');
+	fileSelector.type = 'file';
+	fileSelector.accept = 'image/*';
+	fileSelector.multiple = true; // Allow multiple file selection
+
+	fileSelector.onchange = function (event) {
+		const files = event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			processImage(files[i]); // Process each image
+		}
+	};
+
+	fileSelector.click();
+}; */
 
 export async function load_from_url(media) {
 	ctx.loading = true;
