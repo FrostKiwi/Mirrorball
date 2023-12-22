@@ -9,7 +9,9 @@ import render from './render.js'
 import { setupTabs } from './tabs.js';
 import { key_input, setup_input, controller_input } from './input.js'
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+import WebXRPolyfill from 'webxr-polyfill';
 
+const polyfill = new WebXRPolyfill();
 ctx.canvas = document.querySelector("canvas");
 /* Since we draw over the whole screen, no need to flush */
 ctx.gl = ctx.canvas.getContext('webgl', { preserveDrawingBuffer: false });
@@ -18,6 +20,16 @@ ctx.canvas.addEventListener('webglcontextlost', handleContextLost, false);
 function handleContextLost(event) {
 	ctx.dom.message.style.display = 'flex';
 }
+
+function initWebXR() {
+	if (!navigator.xr) {
+		console.log("WebXR not available");
+		return;
+	}
+	console.log(polyfill);
+	console.log(navigator.xr.requestDevice());
+}
+
 
 function main() {
 	if (ctx.gl)
@@ -62,6 +74,7 @@ function init() {
 	load_from_url(media[0]);
 
 	setup_input();
+	initWebXR();
 }
 
 /* Loop for animation only needs to happen event based. Aka photo mode with

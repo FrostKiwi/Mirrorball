@@ -40,13 +40,13 @@ export default function render_latlong(channel) {
 	/* Rotation */
 	const rot_x = glm.glMatrix.toRadian(channel.rot_deg[0]);
 	const rot_y = -glm.glMatrix.toRadian(channel.rot_deg[1]);
-	const rot_z = glm.glMatrix.toRadian(channel.rot_deg[2]);
+	const rot_z = -glm.glMatrix.toRadian(channel.rot_deg[2]);
 
 	/* Mat3 rotations not supported, using Mat4 instead */
 	const tempMat = glm.mat4.create();
-	glm.mat4.rotateX(tempMat, tempMat, rot_x);
-	glm.mat4.rotateY(tempMat, tempMat, rot_y);
 	glm.mat4.rotateZ(tempMat, tempMat, rot_z);
+	glm.mat4.rotateY(tempMat, tempMat, rot_y);
+	glm.mat4.rotateX(tempMat, tempMat, rot_x);
 
 	const rotMat = glm.mat3.create();
 	glm.mat3.fromMat4(rotMat, tempMat)
