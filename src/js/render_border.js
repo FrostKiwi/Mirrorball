@@ -137,19 +137,19 @@ export default function render_border(project_points, subdiv, width, height,
 			ctx.shaders.viewrays[4],
 		);
 		const ray_topright = glm.vec3.fromValues(
-			ctx.shaders.viewrays[7],
-			ctx.shaders.viewrays[8],
-			ctx.shaders.viewrays[9],
+			ctx.shaders.viewrays[2 + 8],
+			ctx.shaders.viewrays[3 + 8],
+			ctx.shaders.viewrays[4 + 8],
 		);
 		const ray_botright = glm.vec3.fromValues(
-			ctx.shaders.viewrays[12],
-			ctx.shaders.viewrays[13],
-			ctx.shaders.viewrays[14],
+			ctx.shaders.viewrays[2 + 8 * 2],
+			ctx.shaders.viewrays[3 + 8 * 2],
+			ctx.shaders.viewrays[4 + 8 * 2],
 		);
 		const ray_botleft = glm.vec3.fromValues(
-			ctx.shaders.viewrays[17],
-			ctx.shaders.viewrays[18],
-			ctx.shaders.viewrays[19],
+			ctx.shaders.viewrays[2 + 8 * 3],
+			ctx.shaders.viewrays[3 + 8 * 3],
+			ctx.shaders.viewrays[4 + 8 * 3],
 		);
 
 		/* TODO: Should use instanced rendering, but don't wanna check for
