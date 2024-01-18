@@ -20,7 +20,7 @@ export default function update_camera(width, height, channel) {
 	const ch1_rot_z = glm.glMatrix.toRadian(channel.rot_deg[2]);
 
 	/* Update View-Rays */
-	for (let i = 0; i < 4 * 5; i += 5) {
+	for (let i = 0; i < 4 * 8; i += 8) {
 		let vec = glm.vec3.fromValues(
 			ctx.shaders.viewrays[i] * half_aspect,
 			ctx.shaders.viewrays[i + 1] * 0.5,
@@ -36,10 +36,17 @@ export default function update_camera(width, height, channel) {
 		glm.vec3.rotateX(vec, vec, zero, ch1_rot_x);
 		glm.vec3.rotateY(vec, vec, zero, ch1_rot_y);
 		glm.vec3.rotateZ(vec, vec, zero, ch1_rot_z);
-
+		
 		/* Assign to the buffer */
 		ctx.shaders.viewrays[i + 2] = vec[0];
 		ctx.shaders.viewrays[i + 3] = vec[1];
 		ctx.shaders.viewrays[i + 4] = vec[2];
+
+		/* Blind spot */
+		glm.vec3.rotateY(vec, vec, zero, glm.glMatrix.toRadian(-180));
+		/* Assign to the buffer */
+		ctx.shaders.viewrays[i + 5] = -vec[0];
+		ctx.shaders.viewrays[i + 6] = vec[1];
+		ctx.shaders.viewrays[i + 7] = vec[2];
 	}
 }

@@ -34,6 +34,7 @@ export default function render_project(width, height, channel) {
 
 	ctx.gl.enableVertexAttribArray(ctx.shaders.project.pos);
 	ctx.gl.enableVertexAttribArray(ctx.shaders.project.viewray);
+	ctx.gl.enableVertexAttribArray(ctx.shaders.project.viewray_blind);
 
 	ctx.gl.bindBuffer(ctx.gl.ARRAY_BUFFER, ctx.shaders.project.rayvbo);
 	ctx.gl.bufferData(ctx.gl.ARRAY_BUFFER, ctx.shaders.viewrays,
@@ -41,18 +42,28 @@ export default function render_project(width, height, channel) {
 
 	ctx.gl.vertexAttribPointer(
 		ctx.shaders.project.pos, 2, ctx.gl.FLOAT, false,
-		5 * Float32Array.BYTES_PER_ELEMENT, 0
+		8 * Float32Array.BYTES_PER_ELEMENT, 0
 	);
+
 	ctx.gl.vertexAttribPointer(
 		ctx.shaders.project.viewray, 3, ctx.gl.FLOAT, false,
-		5 * Float32Array.BYTES_PER_ELEMENT,
+		8 * Float32Array.BYTES_PER_ELEMENT,
 		2 * Float32Array.BYTES_PER_ELEMENT
+	);
+
+	ctx.gl.vertexAttribPointer(
+		ctx.shaders.project.viewray_blind, 3, ctx.gl.FLOAT, false,
+		8 * Float32Array.BYTES_PER_ELEMENT,
+		5 * Float32Array.BYTES_PER_ELEMENT
 	);
 
 	/* As per formula */
 	const scalar = 1.0 / Math.sin(glm.glMatrix.toRadian(channel.fov_deg) / 4.0);
+	const scalar_blind = 1.0 / Math.sin(glm.glMatrix.toRadian(360-channel.fov_deg) / 4.0);
 	ctx.gl.uniform1f(ctx.shaders.project.scaler, scalar);
+	ctx.gl.uniform1f(ctx.shaders.project.scaler_blind, scalar_blind);
 	ctx.gl.uniform1f(ctx.shaders.project.area_toggle, ctr.tog.area);
+	ctx.gl.uniform1f(ctx.shaders.project.mask_toggle, ctr.tog.mask);
 	ctx.gl.uniform1f(ctx.shaders.project.area_f,
 		Math.sin(glm.glMatrix.toRadian(ctr.tog.area_f) / 4.0) / 2.0);
 	ctx.gl.uniform1f(ctx.shaders.project.area_b,

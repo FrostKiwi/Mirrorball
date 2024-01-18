@@ -104,12 +104,16 @@ export function updateShaderAttributes(ctx, ctr, gl) {
 	Object.assign(ctx.shaders.project, {
 		pos: gl.getAttribLocation(ctx.shaders.project['handle' + aaSuffix], "pos"),
 		viewray: gl.getAttribLocation(ctx.shaders.project['handle' + aaSuffix], "rayvtx"),
+		viewray_blind: gl.getAttribLocation(ctx.shaders.project['handle' + aaSuffix], "rayvtx_blind"),
 		scaler: gl.getUniformLocation(ctx.shaders.project['handle' + aaSuffix], "scalar"),
+		scaler_blind: gl.getUniformLocation(ctx.shaders.project['handle' + aaSuffix], "scalar_blind"),
 		alpha: gl.getUniformLocation(ctx.shaders.project['handle' + aaSuffix], "alpha"),
 		crop: gl.getUniformLocation(ctx.shaders.project['handle' + aaSuffix], "crop"),
 		split: gl.getUniformLocation(ctx.shaders.project['handle' + aaSuffix], "split"),
 		area_toggle:
 			gl.getUniformLocation(ctx.shaders.project['handle' + aaSuffix], "area_toggle"),
+		mask_toggle:
+			gl.getUniformLocation(ctx.shaders.project['handle' + aaSuffix], "mask_toggle"),
 		area_f: gl.getUniformLocation(ctx.shaders.project['handle' + aaSuffix], "area_f"),
 		area_b: gl.getUniformLocation(ctx.shaders.project['handle' + aaSuffix], "area_b"),
 		rayvbo: gl.createBuffer()
