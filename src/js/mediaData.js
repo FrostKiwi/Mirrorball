@@ -50,6 +50,45 @@ const media = [
 		}
 	},
 	{
+		type: "video",
+		title: "Color + Thermal<br>Hot Tea, Cold Ice Cream",
+		path: "/media/icecream.mp4",
+		thumb: "/media/thumb/icecream.jpg",
+		fileSize: "19.1 MB",
+		width: "2048",
+		height: "2048",
+		sphere_fov: 340,
+		crop: {
+			top: 293/2,
+			bot: 19/2,
+			left: 298/2,
+			right: 17/2
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 2,
+			Roll: 0
+		},
+		camera_initial: {
+			Yaw: 90,
+			Pitch: -10
+		},
+		ch2: {
+			sphere_fov: 320,
+			crop: {
+				top: 21/2,
+				bot: 3135/2,
+				left: 7/2,
+				right: 3134/2
+			},
+			world_rotation: {
+				Yaw: -9,
+				Pitch: 1,
+				Roll: 0
+			},
+		}
+	},
+	{
 		type: "image",
 		title: "Eletronics store",
 		path: "/media/store.jpg",
