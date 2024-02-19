@@ -1,6 +1,8 @@
 import { ctr, ctx } from './state.js';
 import { load_from_url, update_texture } from './media.js';
 import media from './mediaData.js';
+import { closeMenu } from './media.js';
+import media_user from './mediaData_user.js';
 import { print_glinfo } from './gl_basics.js'
 import init_gui from './gui.js';
 import { onResize } from './resize_canvas.js'
@@ -59,7 +61,40 @@ function init() {
 	ctx.gl.pixelStorei(ctx.gl.UNPACK_ALIGNMENT, 1);
 
 	setupTabs();
-	load_from_url(media[0]);
+
+	/* URL Handling */
+	const params = new URLSearchParams(window.location.search);
+	if (params.get('menu') === 'false') {
+		closeMenu();
+	}
+
+	if (params.has('path')) {
+		const pathValue = params.get('path');
+		let found = false;
+
+		for (const item of media) {
+			if (item.path.includes(pathValue)) {
+				load_from_url(item);
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			for (const item of media_user) {
+				if (item.path.includes(pathValue)) {
+					load_from_url(item);
+					found = true;
+					break;
+				}
+			}
+		}
+
+		if (!found) {
+			load_from_url(media[0]);
+		}
+	} else {
+		load_from_url(media[0]);
+	}
 
 	setup_input();
 }
