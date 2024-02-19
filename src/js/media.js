@@ -21,6 +21,8 @@ export function media_populate() {
 			<a href="${media.source}" class="source-link" onclick="event.stopPropagation()">Source</a></p>`;
 		}
 
+		let directLink = `<p class="card-field">
+			<a href="?path=${media.path}&menu=false" class="source-link" onclick="event.stopPropagation()">Direct Link</a></p>`;
 
 		let resizeWarn = '';
 		if (media.width > ctx.max_texsize || media.height > ctx.max_texsize) {
@@ -44,6 +46,7 @@ export function media_populate() {
 					<span class="value">${media.width}x${media.height}</span></p>
 				${resizeWarn}
 				${sourceLink}
+				${directLink}
 			</div>`;
 		mediaDiv.appendChild(card);
 	});
@@ -65,6 +68,9 @@ export function media_populate_user() {
 			sourceLink = `<p class="card-field">
 			<a href="${media.source}" class="source-link" onclick="event.stopPropagation()">Source</a></p>`;
 		}
+
+		let directLink = `<p class="card-field">
+			<a href="?path=${media.path}&menu=false" class="source-link" onclick="event.stopPropagation()">Direct Link</a></p>`;
 
 
 		let resizeWarn = '';
@@ -96,6 +102,7 @@ export function media_populate_user() {
 					<span class="value">${media.width}x${media.height}</span></p>
 				${resizeWarn}
 				${sourceLink}
+				${directLink}				
 			</div>`;
 		mediaDiv.appendChild(card);
 	});
