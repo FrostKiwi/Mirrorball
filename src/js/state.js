@@ -1,5 +1,6 @@
 import * as glm from 'gl-matrix';
 import Stats from 'stats.js';
+import { transform_image_sequence } from './media.js'
 
 /* Like a bit of an ugly drawer, a piece of global state to keep track of webapp
    state across all functions. The nice thing to do would be of course to make
@@ -61,6 +62,7 @@ export let ctx = {
 		menu: toggleMenu,
 		blur: true,
 		fullscreen: toggle_fullscreen,
+		imageSeqExport: transform_image_sequence,
 		state: dump_state,
 		controller: {},
 		crop_negative: false,
@@ -68,6 +70,7 @@ export let ctx = {
 		deadzone: 0.1,
 		folder: {},
 		showStats: false,
+		ch2Export: false,
 		showEventStats: false,
 		gamepad: 1,
 		setupPad: enableMapping

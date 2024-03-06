@@ -3,6 +3,7 @@ import media from './mediaData.js'
 import media_user from './mediaData_user.js'
 import { disable_video, load_video } from './media_video.js'
 import { recalc_croplimits, channel2_disable, channel2_enable } from './gui.js';
+import render from './render.js';
 
 export function media_populate() {
 	let mediaDiv = document.getElementById('media');
@@ -146,6 +147,56 @@ export function upload_image() {
 	}
 	file_selector.click();
 };
+
+export function transform_image_sequence() {
+	if (ctx.loading) return;
+	const file_selector = document.createElement('input');
+	file_selector.type = 'file';
+	file_selector.accept = 'image/*';
+	file_selector.multiple = true;
+	file_selector.onchange = async function (event) {
+		const files = event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			/* Load images with current cropping */
+			user_media.path = URL.createObjectURL(files[i]);
+			user_media.type = "image";
+			user_media.sphere_fov = ctr.ch1.fov_deg;
+			user_media.crop = ctr.ch1.crop;
+			user_media.world_rotation = {
+				Yaw: ctr.ch1.rot_deg[1],
+				Pitch: ctr.ch1.rot_deg[0],
+				Roll: ctr.ch1.rot_deg[2]
+			};
+
+			user_media.ch2 = ctx.gui.ch2Export;
+			if (user_media.ch2) {
+				user_media.ch2 = {};
+				user_media.ch2.crop = ctr.ch2.crop;
+				user_media.ch2.sphere_fov = ctr.ch2.fov_deg;
+				user_media.ch2.world_rotation = {
+					Yaw: ctr.ch2.rot_deg[1],
+					Pitch: ctr.ch2.rot_deg[0],
+					Roll: ctr.ch2.rot_deg[2]
+				};
+			}
+
+			await load_from_url(user_media);
+			URL.revokeObjectURL(user_media.path);
+			ctx.filename = files[i].name;
+			ctx.export = true;
+			render();
+			if (user_media.ch2) {
+				ctr.ch2.alpha = 1.0;
+				ctx.filename = "Thermal_" + files[i].name;
+				ctx.export = true;
+				render();
+				ctr.ch2.alpha = 0.0;
+			}
+		}
+		ctx.filename = false;
+	};
+	file_selector.click();
+}
 
 export async function load_from_url(media) {
 	ctx.loading = true;

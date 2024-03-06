@@ -91,7 +91,10 @@ function screenshot() {
 
 	const width = ctx.canvas.width;
 	const height = ctx.canvas.height;
-	const fileName = `${baseName}_${width}x${height}.${fileExtension}`;
+	let fileName = `${baseName}_${width}x${height}.${fileExtension}`;
+	if(ctx.filename){
+		fileName = `${ctx.filename}.${fileExtension}`;
+	}
 
 	ctx.canvas.toBlob((blob) => {
 		const url = URL.createObjectURL(blob);

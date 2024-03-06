@@ -1,6 +1,5 @@
 import { ctx, ctr, redraw } from './state.js';
 import { print_glinfo } from './gl_basics.js'
-import { updateShaderAttributes } from './init_shaders.js';
 import GUI from 'lil-gui';
 
 export default function init_gui() {
@@ -132,6 +131,12 @@ export default function init_gui() {
 	ctx.gui.folder.debug.add(ctx.gui, 'eruda').name(
 		"Eruda debug console"
 	).onChange(eruda_toggle);
+
+	ctx.gui.folder.experimental = ctx.gui.folder.debug.addFolder('Experimental').close();
+	ctx.gui.folder.experimental.add(ctx.gui, 'ch2Export').name(
+		"Export both channels"
+	);
+	ctx.gui.folder.experimental.add(ctx.gui, 'imageSeqExport').name("Video to Images");
 }
 
 function toggleStats(value) {
