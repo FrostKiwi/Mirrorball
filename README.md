@@ -6,7 +6,7 @@
 A combination of Video and WebApp ( https://mirrorball.frost.kiwi ). While watching, viewers can directly interact with examples and visualizations, on a second device or a separate browser tab.
 The audience will be taken on a journey through the history and maths on the topic of the "Mirrorball projection".
 
-Deceptively simple, it is an incredible intersection of Computer Science and Mathematics. This project has been made in conjuction with a paper, which you can read on arXiv: https://arxiv.org/abs/2308.10991
+Deceptively simple, it is an incredible intersection of Computer Science and Mathematics. This project has been made in conjuction with a paper in pre-print, which you can read on arXiv: https://arxiv.org/abs/2308.10991 . The paper was submitted to [IJAT](https://www.fujipress.jp/ijat/).
 
 ## Features:
 | Discover the Mirror Ball Projection with colorful visualizations | Export to Equirectangular / Lat-Long and play around with rotations |
