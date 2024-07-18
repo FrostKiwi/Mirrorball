@@ -524,6 +524,46 @@ const media = [
 		}
 	},
 	{
+		type: "video",
+		title: "Color + Thermal CNC Milling",
+		path: "/media/milling.mp4",
+		thumb: "/media/thumb/milling.jpg",
+		fileSize: "25 MB",
+		width: "2048",
+		height: "2048",
+		source: "https://arxiv.org/abs/2308.10991",
+		sphere_fov: 327,
+		crop: {
+			top: 362,
+			bot: 8,
+			left: 355,
+			right: 13
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 27,
+			Roll: 0
+		},
+		camera_initial: {
+			Yaw: -80,
+			Pitch: 0
+		},
+		ch2: {
+			sphere_fov: 279,
+			crop: {
+				top: 0,
+				bot: 1354,
+				left: 0,
+				right: 1341
+			},
+			world_rotation: {
+				Yaw: -7.5,
+				Pitch: -6,
+				Roll: 0.5
+			},
+		}
+	},
+	{
 		type: "image",
 		title: "Roof",
 		path: "/media/roof.jpg",
