@@ -568,15 +568,15 @@ const media = [
 		title: "Roof",
 		path: "/media/roof.jpg",
 		thumb: "/media/thumb/roof.jpg",
-		fileSize: "2.83 MB",
-		width: "3884",
-		height: "3884",
-		sphere_fov: 339,
+		fileSize: "5.53 MB",
+		width: "7680",
+		height: "3840",
+		sphere_fov: 338,
 		crop: {
-			top: 68,
-			bot: 103,
-			left: 79,
-			right: 91
+			top: 67,
+			bot: 61,
+			left: 67,
+			right: 3898
 		},
 		world_rotation: {
 			Yaw: 0,
@@ -586,6 +586,20 @@ const media = [
 		camera_initial: {
 			Yaw: 90,
 			Pitch: 0
+		},
+		ch2: {
+			sphere_fov: 338,
+			crop: {
+				top: 50,
+				bot: 40,
+				left: 3884,
+				right: 41
+			},
+			world_rotation: {
+				Yaw: -87,
+				Pitch: 0,
+				Roll: 0
+			},
 		}
 	},
 	{
