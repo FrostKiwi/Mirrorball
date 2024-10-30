@@ -248,6 +248,62 @@ const media_user = [
 			Pitch: 0
 		}
 	},
+	{
+		type: "image",
+		title: "PAGEOS Satelitte Test Inflation 1965 BW",
+		path: "/media_user/C-1965-3412.jpg",
+		thumb: "/media_user/thumb/C-1965-3412.jpg",
+		fileSize: "4.0 MB",
+		width: "2400",
+		height: "3000",
+		submitter: "Lanzaa",
+		submitter_link: "https://github.com/Lanzaa/",
+		source: "https://en.wikipedia.org/wiki/PAGEOS",
+		sphere_fov: 320,
+		crop: {
+			top: 395,
+			bot: 568,
+			left: 147,
+			right: 172
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: -15,
+			Roll: 4.5
+		},
+		camera_initial: {
+			Yaw: 0,
+			Pitch: 0
+		}
+	},
+	{
+		type: "image",
+		title: "PAGEOS Satelitte Test Inflation 1965",
+		path: "/media_user/PAGEOS_Satellite_-_GPN-2000-001896.jpg",
+		thumb: "/media_user/thumb/PAGEOS_Satellite_-_GPN-2000-001896.jpg",
+		fileSize: "4.8 MB",
+		width: "2400",
+		height: "2400",
+		submitter: "Lanzaa",
+		submitter_link: "https://github.com/Lanzaa/",
+		source: "https://en.wikipedia.org/wiki/PAGEOS",
+		sphere_fov: 320,
+		crop: {
+			top: 335,
+			bot: 502,
+			left: 141,
+			right: 668
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: -5,
+			Roll: 0
+		},
+		camera_initial: {
+			Yaw: 0,
+			Pitch: 0
+		}
+	},
 ];
 
 export default media_user;
