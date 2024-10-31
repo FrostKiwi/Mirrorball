@@ -74,8 +74,8 @@ const media_user = [
 		},
 		world_rotation: {
 			Yaw: 0,
-			Pitch: 0,
-			Roll: -0.5
+			Pitch: -1,
+			Roll: -1
 		},
 		camera_initial: {
 			Yaw: 120,
