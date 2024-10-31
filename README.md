@@ -34,6 +34,8 @@ The photos in the "User submissions" tab were provided by:
  * Anonymous via E-Mail
  * Сергей via E-Mail
  * [Chesapeake](https://moth.monster/about/) / [@mothdotmonster on GitHub](https://github.com/mothdotmonster)
+ * [@Lanzaa on GitHub](https://github.com/Lanzaa/)
+ * [@BenBE on GitHub](https://github.com/BenBE)
 
 ## Build instructions
 If you want to run the code locally:
