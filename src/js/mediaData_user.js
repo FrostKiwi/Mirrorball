@@ -67,7 +67,7 @@ const media_user = [
 		source: "https://www.youtube.com/watch?v=ZMByI4s-D-Y",
 		sphere_fov: 303,
 		crop: {
-			top: 17,
+			top: 19,
 			bot: -75,
 			left: 132,
 			right: 167
