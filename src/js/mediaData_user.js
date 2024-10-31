@@ -56,13 +56,41 @@ const media_user = [
 	},
 	{
 		type: "image",
+		title: "World's Roundest Object! 🇺🇸<br>Veritasium YouTube Video",
+		path: "/media_user/veritasium.jpg",
+		thumb: "/media_user/thumb/veritasium.jpg",
+		fileSize: "0.2 MB",
+		width: "1440",
+		height: "1080",
+		submitter: "@BenBE on GitHub",
+		submitter_link: "https://github.com/BenBE",
+		source: "https://www.youtube.com/watch?v=ZMByI4s-D-Y",
+		sphere_fov: 303,
+		crop: {
+			top: 17,
+			bot: -75,
+			left: 132,
+			right: 167
+		},
+		world_rotation: {
+			Yaw: 0,
+			Pitch: 0,
+			Roll: -0.5
+		},
+		camera_initial: {
+			Yaw: 120,
+			Pitch: 0
+		}
+	},
+	{
+		type: "image",
 		title: "PAGEOS Satellite 1965 🇺🇸",
 		path: "/media_user/PAGEOS_Satellite_-_GPN-2000-001896.jpg",
 		thumb: "/media_user/thumb/PAGEOS_Satellite_-_GPN-2000-001896.jpg",
 		fileSize: "4.8 MB",
 		width: "2400",
 		height: "2400",
-		submitter: "Lanzaa",
+		submitter: "@Lanzaa on GitHub",
 		submitter_link: "https://github.com/Lanzaa/",
 		source: "https://en.wikipedia.org/wiki/PAGEOS",
 		sphere_fov: 280,
@@ -90,7 +118,7 @@ const media_user = [
 		fileSize: "4.0 MB",
 		width: "2400",
 		height: "3000",
-		submitter: "Lanzaa",
+		submitter: "@Lanzaa on GitHub",
 		submitter_link: "https://github.com/Lanzaa/",
 		source: "https://en.wikipedia.org/wiki/PAGEOS",
 		sphere_fov: 280,
