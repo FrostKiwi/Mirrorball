@@ -56,7 +56,7 @@ const media_user = [
 	},
 	{
 		type: "image",
-		title: "World's Roundest Object! 🇺🇸<br>Veritasium YouTube Video",
+		title: "Avogadro project 🇦🇺<br>Veritasium YouTube Video",
 		path: "/media_user/veritasium.jpg",
 		thumb: "/media_user/thumb/veritasium.jpg",
 		fileSize: "0.2 MB",
